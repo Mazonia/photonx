@@ -335,3 +335,4 @@ export default function CosmicExplorerTour({ isOpen, onClose }) {
     </div>
   );
 }
+
