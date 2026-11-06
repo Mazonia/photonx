@@ -118,6 +118,25 @@ Expected output:
 
 ---
 
+## ⚡ Automatic GitHub Sync
+
+To automatically sync and push all local code edits to GitHub whenever files change:
+
+- **Double-click** `autopush.bat` in Windows Explorer, OR
+- **Run via PowerShell watcher:**
+  ```powershell
+  .\autopush.ps1
+  ```
+  *(Monitors for file changes every 5 seconds, auto-stages, creates timestamped commits, and pushes to `origin/main` & `origin/master`).*
+- **One-shot quick push:**
+  ```powershell
+  .\autopush.ps1 -Once
+  # OR using the git alias:
+  git autopush
+  ```
+
+---
+
 ## 🎨 Design Philosophy
 
 PhotonX adheres strictly to an **infrared observatory terminal aesthetic**:
