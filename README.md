@@ -8,6 +8,18 @@ PhotonX is an interactive, public-facing infrared sky browser built on live NASA
 
 ---
 
+### 📋 NASA Space Apps 2026 Submission Package
+- 📄 **[Official Project Submission Form (Copy-Paste Ready)](PROJECT_SUBMISSION.md)**
+- 📊 **[Official 7-Slide Pitch Deck (Markdown)](PRESENTATION_7_SLIDES.md)** | 🌐 **[Interactive HTML Presentation Deck](presentation.html)** *(Print-to-PDF ready)*
+- 🎬 **[Official 30-Second Video Demo Script](DEMO_VIDEO_SCRIPT_30S.md)**
+- 🧪 **[Automated Verification Test Suite](test_suite.py)** *(12 / 12 checks passed)*
+
+---
+
+![PhotonX Multi-Spectral Observatory Viewport](docs/screenshots/photonx.png)
+
+---
+
 ## 🌌 What It Does
 
 - **🔭 Interactive Celestial Engine** — Bespoke HTML5 Canvas astronomy engine featuring all-sky pan/zoom, coordinate gridlines, stellar magnitude scaling, and multi-survey overlays (SPHEREx NIR, WISE Mid-IR, 2MASS, DSS Optical).
