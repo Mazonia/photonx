@@ -8,6 +8,15 @@ from __future__ import annotations
 
 import os
 from dataclasses import dataclass, field
+from pathlib import Path
+from dotenv import load_dotenv
+
+# Automatically load environment variables from .env in backend directory
+_backend_env = Path(__file__).resolve().parent / ".env"
+if _backend_env.exists():
+    load_dotenv(_backend_env)
+else:
+    load_dotenv()
 
 
 @dataclass(frozen=True)
@@ -36,7 +45,10 @@ class NASAConfig:
 
     exoplanet_archive_url: str = "https://exoplanetarchive.ipac.caltech.edu/TAP/sync"
     neows_url: str = "https://api.nasa.gov/neo/rest/v1"
-    api_key: str = "DEMO_KEY"
+    apod_url: str = "https://api.nasa.gov/planetary/apod"
+    donki_url: str = "https://api.nasa.gov/DONKI"
+    epic_url: str = "https://api.nasa.gov/EPIC/api"
+    api_key: str = field(default_factory=lambda: os.getenv("NASA_API_KEY", "87HcnBLCPJhH7MWptDkzqqzzfdtpdrWqcWfgJqpP"))
 
 
 @dataclass(frozen=True)
@@ -48,6 +60,17 @@ class OpenWeatherConfig:
     agro_key: str = field(default_factory=lambda: os.getenv("AGRO_API_KEY", ""))
     weather_key: str = field(default_factory=lambda: os.getenv("OPENWEATHER_API_KEY", ""))
     timeout_seconds: float = 10.0
+
+
+@dataclass(frozen=True)
+class MeteomaticsConfig:
+    """Meteomatics & Open-Meteo astronomical meteorology configuration."""
+
+    api_url: str = "https://api.meteomatics.com"
+    username: str = field(default_factory=lambda: os.getenv("METEOMATICS_USERNAME", ""))
+    password: str = field(default_factory=lambda: os.getenv("METEOMATICS_PASSWORD", ""))
+    open_meteo_url: str = "https://api.open-meteo.com/v1/forecast"
+    timeout_seconds: float = 8.0
 
 
 @dataclass(frozen=True)
@@ -80,6 +103,7 @@ class AppConfig:
     simbad: SIMBADConfig = field(default_factory=SIMBADConfig)
     nasa: NASAConfig = field(default_factory=NASAConfig)
     openweather: OpenWeatherConfig = field(default_factory=OpenWeatherConfig)
+    meteomatics: MeteomaticsConfig = field(default_factory=MeteomaticsConfig)
     cache: CacheConfig = field(default_factory=CacheConfig)
 
 

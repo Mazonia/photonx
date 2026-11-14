@@ -7,12 +7,14 @@ import ObservabilityWidget from './ObservabilityWidget';
 import FeaturedTargets from './FeaturedTargets';
 import HuntMode from './HuntMode';
 import LoadingPulse from './LoadingPulse';
+import NasaDashboard from './NasaDashboard';
 import Tooltip from './Tooltip';
 import {
   Telescope,
   Sparkles,
   Target,
   Globe2,
+  Rocket,
 } from 'lucide-react';
 
 export default function DetailPanel() {
@@ -30,7 +32,7 @@ export default function DetailPanel() {
     flagCandidate,
   } = useStore();
 
-  const [activeTab, setActiveTab] = useState('spectrum'); // 'spectrum' | 'diff' | 'crossref'
+  const [activeTab, setActiveTab] = useState('spectrum'); // 'spectrum' | 'diff' | 'crossref' | 'nasa'
 
   // Queries
   const spectrumQuery = useQuery({
@@ -138,6 +140,7 @@ export default function DetailPanel() {
               { id: 'spectrum', label: '102-Band Spectrum', icon: Sparkles },
               { id: 'diff', label: 'Epoch Diff & Movers', icon: Target },
               { id: 'crossref', label: 'Catalogs & Exoplanets', icon: Globe2 },
+              { id: 'nasa', label: 'NASA Live', icon: Rocket },
             ].map((tab) => {
               const Icon = tab.icon;
               return (
@@ -339,6 +342,9 @@ export default function DetailPanel() {
           {/* Observability Widget */}
           {/* Featured Targets Carousel */}
           {mode === 'explore' && <FeaturedTargets />}
+
+          {/* Tab Content 4: NASA Live Dashboard */}
+          {activeTab === 'nasa' && <NasaDashboard />}
         </div>
       )}
 

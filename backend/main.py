@@ -27,6 +27,7 @@ from services.resolver import resolve_name
 from services.enrichment import enrich_position
 from services.observability import check_observability
 from services.skyview import fetch_survey_image
+from services.nasa_apis import get_apod, get_neo_stats, get_space_weather, get_epic_imagery
 
 # ──────────────────────────────────────────────
 # Logging
@@ -337,6 +338,55 @@ async def skyview_cutout(
     except Exception as e:
         logger.error(f"/api/skyview failed: {e}")
         raise HTTPException(status_code=502, detail=f"SkyView query failed: {str(e)}")
+
+
+@app.get("/api/apod")
+async def astronomy_picture_of_day(
+    date: str = Query(None, description="Date YYYY-MM-DD (None = today)"),
+    count: int = Query(1, ge=1, le=10, description="Number of random APODs"),
+):
+    """Fetch NASA Astronomy Picture of the Day."""
+    try:
+        result = await get_apod(date, count)
+        return result
+    except Exception as e:
+        logger.error(f"/api/apod failed: {e}")
+        raise HTTPException(status_code=502, detail=f"APOD fetch failed: {str(e)}")
+
+
+@app.get("/api/neo")
+async def near_earth_objects():
+    """Fetch NEO (Near-Earth Object) feed for the past 7 days from NASA NeoWs."""
+    try:
+        result = await get_neo_stats()
+        return result
+    except Exception as e:
+        logger.error(f"/api/neo failed: {e}")
+        raise HTTPException(status_code=502, detail=f"NEO fetch failed: {str(e)}")
+
+
+@app.get("/api/space-weather")
+async def space_weather():
+    """Fetch recent space weather events (CMEs, geomagnetic storms) from NASA DONKI."""
+    try:
+        result = await get_space_weather()
+        return result
+    except Exception as e:
+        logger.error(f"/api/space-weather failed: {e}")
+        raise HTTPException(status_code=502, detail=f"Space weather fetch failed: {str(e)}")
+
+
+@app.get("/api/epic")
+async def epic_earth_imagery(
+    date: str = Query(None, description="Date YYYY-MM-DD for EPIC imagery"),
+):
+    """Fetch NASA EPIC Earth polychromatic imagery."""
+    try:
+        result = await get_epic_imagery(date)
+        return result
+    except Exception as e:
+        logger.error(f"/api/epic failed: {e}")
+        raise HTTPException(status_code=502, detail=f"EPIC imagery fetch failed: {str(e)}")
 
 
 # ──────────────────────────────────────────────

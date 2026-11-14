@@ -120,3 +120,4 @@ try {
 } finally {
     Write-HostColor "Watcher stopped." "Yellow"
 }
+

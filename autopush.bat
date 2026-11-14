@@ -7,3 +7,4 @@ echo.
 echo Launching PowerShell watcher daemon...
 powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0autopush.ps1" %*
 pause
+

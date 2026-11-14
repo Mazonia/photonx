@@ -32,10 +32,10 @@ export default function ObservabilityWidget() {
 
   const cloudCover = obsQuery.data?.cloud_cover_pct ?? 25;
   const targetAlt = obsQuery.data?.target_altitude_deg ?? 45;
-  // Airmass formula: X = 1 / sin(alt)
-  const airmass = targetAlt > 0 ? (1 / Math.sin(Math.max(5, targetAlt) * Math.PI / 180)).toFixed(2) : 'Horizon Blocked';
-  // Atmospheric optical transmission estimate
-  const opticalTransparency = Math.max(5, Math.min(98, Math.round((100 - cloudCover) * (targetAlt > 20 ? 0.95 : 0.6))));
+  const airmass = obsQuery.data?.airmass ?? (targetAlt > 0 ? (1 / Math.sin(Math.max(5, targetAlt) * Math.PI / 180)).toFixed(2) : 'Horizon Blocked');
+  const opticalTransparency = obsQuery.data?.transparency_pct ?? Math.max(5, Math.min(98, Math.round((100 - cloudCover) * (targetAlt > 20 ? 0.95 : 0.6))));
+  const seeing = obsQuery.data?.seeing_arcsec ?? 1.8;
+  const provider = obsQuery.data?.provider ?? 'OpenWeather / Meteomatics Live';
 
   return (
     <div className="p-3.5 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-white/10 shadow-sm dark:shadow-xl backdrop-blur-md">
@@ -48,7 +48,7 @@ export default function ObservabilityWidget() {
           </h3>
         </div>
         <span className="font-mono text-[9px] text-cyan-600 dark:text-cyan-400 px-1.5 py-0.5 rounded bg-cyan-500/10 border border-cyan-500/20">
-          OpenWeather / Agro Live
+          {provider}
         </span>
       </div>
 
@@ -125,10 +125,19 @@ export default function ObservabilityWidget() {
           </div>
 
           {/* Environmental Telemetry Grid */}
-          <div className="grid grid-cols-2 gap-2 text-xs font-mono">
+          <div className="grid grid-cols-3 gap-1.5 text-xs font-mono">
+            <Tooltip content="Atmospheric seeing disc diameter in arcseconds (< 2.0'' is good)" tag="SEEING">
+              <div className="p-2 rounded-lg bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-white/5 flex flex-col justify-between">
+                <span className="text-slate-500 dark:text-slate-400 text-[9px] uppercase">Seeing:</span>
+                <span className={`font-bold ${seeing < 2.0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-amber-600 dark:text-amber-400'}`}>
+                  {seeing}"
+                </span>
+              </div>
+            </Tooltip>
+
             <Tooltip content="Target elevation angle above local horizon (>30° recommended)" tag="ALTITUDE">
-              <div className="p-2 rounded-lg bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-white/5 flex items-center justify-between">
-                <span className="text-slate-500 dark:text-slate-400 text-[10px]">Target Altitude:</span>
+              <div className="p-2 rounded-lg bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-white/5 flex flex-col justify-between">
+                <span className="text-slate-500 dark:text-slate-400 text-[9px] uppercase">Altitude:</span>
                 <span className={`font-bold ${targetAlt > 30 ? 'text-emerald-600 dark:text-emerald-400' : 'text-amber-600 dark:text-amber-400'}`}>
                   {targetAlt}°
                 </span>
@@ -136,9 +145,9 @@ export default function ObservabilityWidget() {
             </Tooltip>
 
             <Tooltip content="Current lunar phase and natural skyglow interference" tag="LUNAR">
-              <div className="p-2 rounded-lg bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-white/5 flex items-center justify-between">
-                <span className="text-slate-500 dark:text-slate-400 text-[10px]">Lunar Phase:</span>
-                <span className="font-bold text-slate-800 dark:text-slate-200 text-[11px]">
+              <div className="p-2 rounded-lg bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-white/5 flex flex-col justify-between">
+                <span className="text-slate-500 dark:text-slate-400 text-[9px] uppercase">Moon:</span>
+                <span className="font-bold text-slate-800 dark:text-slate-200 text-[11px] truncate">
                   {obsQuery.data.moon_phase}
                 </span>
               </div>

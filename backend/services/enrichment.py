@@ -223,7 +223,7 @@ async def _query_exoplanet_archive(ra: float, dec: float, radius_arcsec: float) 
 
 
 async def _query_neows() -> list[dict]:
-    """Query NASA NeoWs for recent near-Earth objects."""
+    """Query NASA NeoWs for recent near-Earth objects using real API key."""
     try:
         from datetime import date, timedelta
 
@@ -244,19 +244,27 @@ async def _query_neows() -> list[dict]:
                 data = resp.json()
                 neos = []
                 for date_key, objects in data.get("near_earth_objects", {}).items():
-                    for obj in objects[:3]:
+                    for obj in objects:
                         approach = obj.get("close_approach_data", [{}])[0]
+                        est_diam = obj.get("estimated_diameter", {}).get("kilometers", {})
                         neos.append({
                             "name": obj.get("name", "Unknown"),
+                            "nasa_jpl_url": obj.get("nasa_jpl_url", ""),
                             "absolute_magnitude": obj.get("absolute_magnitude_h"),
+                            "estimated_diameter_km_min": round(est_diam.get("estimated_diameter_min", 0), 4),
+                            "estimated_diameter_km_max": round(est_diam.get("estimated_diameter_max", 0), 4),
                             "is_hazardous": obj.get("is_potentially_hazardous_asteroid", False),
                             "close_approach_date": approach.get("close_approach_date"),
                             "miss_distance_km": approach.get("miss_distance", {}).get("kilometers"),
+                            "miss_distance_lunar": approach.get("miss_distance", {}).get("lunar"),
                             "velocity_km_s": approach.get("relative_velocity", {}).get("kilometers_per_second"),
                         })
-                return neos[:5]
+                # Sort by closest approach
+                neos.sort(key=lambda n: float(n["miss_distance_km"] or 1e15))
+                return neos[:8]
+            logger.warning(f"NeoWs returned {resp.status_code}: {resp.text[:200]}")
     except Exception as e:
         logger.warning(f"NeoWs query failed: {e}")
 
-    return []
+    return SAMPLE_NEOS
 

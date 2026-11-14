@@ -51,5 +51,16 @@ export const api = {
 
   skyview: (ra, dec, survey = 'dss', pixels = 400, sizeDeg = 0.5) =>
     request('/skyview', { ra, dec, survey, pixels, size_deg: sizeDeg }),
+
+  // NASA Open APIs
+  apod: (date = null, count = 1) =>
+    request('/apod', { ...(date ? { date } : {}), count }),
+
+  neo: () => request('/neo'),
+
+  spaceWeather: () => request('/space-weather'),
+
+  epic: (date = null) =>
+    request('/epic', { ...(date ? { date } : {}) }),
 };
 

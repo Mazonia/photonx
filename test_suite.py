@@ -89,8 +89,29 @@ def run_tests():
     skyview_data = res.json()
     print(f" [PASS] /api/skyview -> Provenance: {skyview_data['provenance']}, Survey: {skyview_data['survey']}")
 
+    # 10. NASA APOD integration
+    res = client.get("/api/apod")
+    assert res.status_code == 200
+    apod_data = res.json()
+    assert "apods" in apod_data and len(apod_data["apods"]) > 0
+    print(f" [PASS] /api/apod -> NASA Astronomy Picture: '{apod_data['apods'][0]['title']}'")
+
+    # 11. NASA NeoWs near-Earth object tracking
+    res = client.get("/api/neo")
+    assert res.status_code == 200
+    neo_data = res.json()
+    assert "neos" in neo_data
+    print(f" [PASS] /api/neo -> NASA NeoWs Live Tracking: {len(neo_data['neos'])} asteroids monitored")
+
+    # 12. NASA DONKI space weather
+    res = client.get("/api/space-weather")
+    assert res.status_code == 200
+    sw_data = res.json()
+    assert "cmes" in sw_data
+    print(f" [PASS] /api/space-weather -> NASA DONKI Space Weather: {len(sw_data['cmes'])} CMEs analyzed")
+
     print("=" * 60)
-    print(" ALL 9 SYSTEM CHECKS PASSED WITH ZERO ERRORS.")
+    print(" ALL 12 SYSTEM CHECKS PASSED WITH ZERO ERRORS.")
     print("=" * 60)
 
 if __name__ == "__main__":

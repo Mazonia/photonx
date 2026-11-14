@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import useStore from './store/useStore';
 import Header from './components/Header';
 import InteractiveSkyEngine from './components/InteractiveSkyEngine';
@@ -9,7 +9,7 @@ import InitializationScreen from './components/InitializationScreen';
 import CosmicExplorerTour from './components/CosmicExplorerTour';
 
 export default function App() {
-  const { isTourOpen, closeTour } = useStore();
+  const { isTourOpen, closeTour, toggleTheme, setIsBlinking, isBlinking, fov, setFov, toggleGrid, toggleConstellations, toggleMoversOverlay } = useStore();
   const [hasBooted, setHasBooted] = useState(() => {
     if (typeof window !== 'undefined') {
       return sessionStorage.getItem('photonx-booted') === 'true';
@@ -23,6 +23,49 @@ export default function App() {
     }
     setHasBooted(true);
   };
+
+  // Global keyboard shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      // Don't fire if inside an input/textarea
+      if (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)) return;
+
+      switch (e.key) {
+        case 't':
+        case 'T':
+          toggleTheme();
+          break;
+        case ' ':
+          e.preventDefault();
+          setIsBlinking(!isBlinking);
+          break;
+        case '+':
+        case '=':
+          setFov(Math.max(0.05, fov * 0.75));
+          break;
+        case '-':
+          setFov(Math.min(45, fov * 1.33));
+          break;
+        case 'g':
+        case 'G':
+          toggleGrid();
+          break;
+        case 'c':
+        case 'C':
+          toggleConstellations();
+          break;
+        case 'm':
+        case 'M':
+          toggleMoversOverlay();
+          break;
+        default:
+          break;
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [toggleTheme, setIsBlinking, isBlinking, fov, setFov, toggleGrid, toggleConstellations, toggleMoversOverlay]);
 
   return (
     <div className="relative flex flex-col h-screen w-screen overflow-hidden bg-slate-50 dark:bg-space-950 text-slate-900 dark:text-slate-100 transition-colors duration-300 font-sans">

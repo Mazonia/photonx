@@ -17,7 +17,13 @@ PhotonX is an interactive, public-facing infrared sky browser built on live NASA
 - **⚡ Difference Imaging & Mover Detection** — Automated pixel-differencing engine identifies moving objects, candidate Trans-Neptunian Objects (TNOs), and proper-motion stars.
 - **🎯 Citizen Science "Hunt Mode"** — Gamified discovery console with hunter ranks (*Infrared Tracker*, *Kuiper Belt Scout*, *Deep Space Pioneer*), coordinate anomaly flagging, and one-click export of formal NASA discovery briefs (`.md`).
 - **🔗 Cross-Reference Intelligence** — Enriches objects with data from SIMBAD, NASA Exoplanet Archive, and NASA NeoWs (Near-Earth Asteroids).
-- **🌤️ Observability Engine ("Can I See This Tonight?")** — Uses OpenWeather satellite & atmospheric telemetry to compute real-time visibility, target altitude, and moon phase.
+- **🚀 NASA Live Mission Dashboard** — Live integration with official NASA APIs via API key:
+  - **APOD**: High-resolution Astronomy Picture of the Day with full scientific briefing
+  - **NeoWs**: Real-time tracking of Near-Earth Objects, close-approach distances (LD/km), velocities, and hazardous classifications
+  - **DONKI Space Weather**: Live telemetry of Coronal Mass Ejections (CMEs) and Geomagnetic Storms (GST)
+  - **EPIC**: Earth Polychromatic Imaging Camera imagery from DSCOVR at 1.5 million kilometers
+- **🌤️ Multi-Provider Observability & Seeing Engine** — Evaluates ground-based follow-up conditions using a resilient 3-tier meteorological architecture (OpenWeather, Meteomatics, and Open-Meteo astronomical seeing in arcseconds).
+- **⌨️ Keyboard Shortcuts** — Instant accessibility: `T` (Theme Toggle), `Space` (Blink Comparator), `+`/`-` (Zoom), `G` (Gridlines), `C` (Constellations), `M` (Candidate Movers Overlay).
 - **🌓 Dual High-Contrast Themes** — Switch seamlessly between **Deep Space Observatory** (Dark HUD) and **Laboratory Cleanroom Spec Sheet** (Light Technical Blueprint).
 - **🛡️ Secure Web Practices** — Strict Content Security Policy, nosniff headers, referrer origin gating, sanitized query inputs, and synchronous TTL cache.
 
@@ -27,12 +33,14 @@ PhotonX is an interactive, public-facing infrared sky browser built on live NASA
 
 | Source | DOI / Endpoint | Details |
 |--------|----------------|---------|
-| **SPHEREx QR2** (Primary) | DOI: [10.26131/IRSA629](https://doi.org/10.26131/IRSA629) | Weekly calibrated infrared multi-spectral data |
+| **SPHEREx QR2** (Primary) | DOI: [10.26131/IRSA629](https://doi.org/10.26131/IRSA629) | Calibrated infrared multi-spectral data (102 bands) |
 | **SPHEREx QR3** | IRSA TAP Service (`spherex.artifact`) | Advanced footprint metadata via ADQL |
+| **NASA Open APIs** | `api.nasa.gov` | Live APOD, NeoWs Asteroids, DONKI Space Weather, and EPIC |
+| **NASA SkyView** | `skyview.gsfc.nasa.gov` | Multi-survey all-sky imagery from Goddard Space Flight Center |
 | **SIMBAD** | `simbad.cds.unistra.fr` | Astronomical database coordinate & type resolution |
 | **NASA Exoplanet Archive** | `exoplanetarchive.ipac.caltech.edu` | TAP ADQL queries on confirmed planetary systems |
-| **NASA NeoWs** | `api.nasa.gov/neo/rest/v1` | Live feed of near-Earth objects and close approaches |
 | **OpenWeather / Agro API** | `api.openweathermap.org` | Real-time atmospheric cloud cover & visibility |
+| **Meteomatics & Open-Meteo** | `api.meteomatics.com` / `open-meteo.com` | High-resolution astronomical seeing & atmospheric telemetry |
 
 ---
 
