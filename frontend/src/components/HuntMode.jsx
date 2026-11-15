@@ -200,7 +200,7 @@ Tool: PhotonX Sky Browser (NASA Space Apps 2026)
           <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-slate-200 dark:text-slate-200 light:text-slate-800">
             Discovery Catalog ({flaggedCandidates.length})
           </h4>
-          <Tooltip content="Export formal markdown discovery brief with IRSA DOI citation" tag="BRIEF">
+          <Tooltip content="Export formal markdown discovery brief with IRSA DOI citation" tag="BRIEF" position="bottom-left">
             <button
               onClick={handleExportReport}
               className="flex items-center gap-1 px-2.5 py-1 text-xs font-mono rounded-lg bg-white/5 hover:bg-white/10 text-cyan-400 border border-cyan-400/30 transition-colors"
@@ -236,13 +236,15 @@ Tool: PhotonX Sky Browser (NASA Space Apps 2026)
                       {item.name}
                     </span>
                   </div>
-                  <button
-                    onClick={() => removeFlaggedCandidate(item.id)}
-                    className="text-slate-500 hover:text-red-400 p-1"
-                    title="Remove candidate"
-                  >
-                    <Trash2 className="w-3.5 h-3.5" />
-                  </button>
+                  <Tooltip content="Remove candidate record from session catalog" tag="REMOVE" position="bottom-left">
+                    <button
+                      onClick={() => removeFlaggedCandidate(item.id)}
+                      className="text-slate-500 hover:text-red-400 p-1 rounded"
+                      aria-label="Remove candidate"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </Tooltip>
                 </div>
 
                 <div className="flex flex-wrap gap-1 mb-1.5">
@@ -265,13 +267,15 @@ Tool: PhotonX Sky Browser (NASA Space Apps 2026)
                   <span className="font-mono text-[10px] text-slate-400">
                     RA {item.ra}° · DEC {item.dec >= 0 ? '+' : ''}{item.dec}°
                   </span>
-                  <button
-                    onClick={() => setPosition(item.ra, item.dec, item.name)}
-                    className="flex items-center gap-1 font-mono text-[10px] text-cyan-400 hover:underline"
-                  >
-                    <span>View in Reticle</span>
-                    <ArrowUpRight className="w-3 h-3" />
-                  </button>
+                  <Tooltip content="Center telescope optical crosshair on candidate coordinates" tag="NAVIGATE" position="top">
+                    <button
+                      onClick={() => setPosition(item.ra, item.dec, item.name)}
+                      className="flex items-center gap-1 font-mono text-[10px] text-cyan-400 hover:underline"
+                    >
+                      <span>View in Reticle</span>
+                      <ArrowUpRight className="w-3 h-3" />
+                    </button>
+                  </Tooltip>
                 </div>
               </div>
             ))

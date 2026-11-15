@@ -58,6 +58,10 @@ export default function App() {
         case 'M':
           toggleMoversOverlay();
           break;
+        case 'p':
+        case 'P':
+          window.open('presentation.html', '_blank');
+          break;
         default:
           break;
       }

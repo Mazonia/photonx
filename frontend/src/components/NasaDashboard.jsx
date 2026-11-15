@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { api } from '../api/client';
 import LoadingPulse from './LoadingPulse';
+import Tooltip from './Tooltip';
 import { Image, AlertCircle, ExternalLink, Shield, Zap } from 'lucide-react';
 
 export default function NasaDashboard() {
@@ -34,22 +35,22 @@ export default function NasaDashboard() {
       {/* Sub-tab switcher */}
       <div className="flex items-center gap-1 mb-3 p-1 rounded-xl bg-slate-100 dark:bg-slate-950/60 border border-slate-200 dark:border-white/10">
         {[
-          { id: 'today', label: '🌌 APOD', title: 'Astronomy Picture of the Day' },
-          { id: 'neo', label: '☄️ NEOs', title: 'Near-Earth Objects' },
-          { id: 'weather', label: '☀️ Space Wx', title: 'Space Weather' },
+          { id: 'today', label: '🌌 APOD', title: 'Astronomy Picture of the Day', desc: 'NASA Astronomy Picture of the Day with full scientific commentary.' },
+          { id: 'neo', label: '☄️ NEOs', title: 'Near-Earth Objects', desc: 'NASA NeoWs feed tracking asteroid close-approaches and hazardous classifications.' },
+          { id: 'weather', label: '☀️ Space Wx', title: 'Space Weather', desc: 'NASA DONKI real-time telemetry on Coronal Mass Ejections and geomagnetic storms.' },
         ].map((tab) => (
-          <button
-            key={tab.id}
-            title={tab.title}
-            onClick={() => setApodTab(tab.id)}
-            className={`flex-1 py-1 px-1.5 rounded-lg text-[11px] font-mono font-semibold transition-all ${
-              apodTab === tab.id
-                ? 'bg-cyan-500 text-slate-950 shadow-sm'
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-            }`}
-          >
-            {tab.label}
-          </button>
+          <Tooltip key={tab.id} content={tab.desc} tag={tab.label} position="bottom">
+            <button
+              onClick={() => setApodTab(tab.id)}
+              className={`flex-1 py-1 px-1.5 rounded-lg text-[11px] font-mono font-semibold transition-all ${
+                apodTab === tab.id
+                  ? 'bg-cyan-500 text-slate-950 shadow-sm'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+              }`}
+            >
+              {tab.label}
+            </button>
+          </Tooltip>
         ))}
       </div>
 

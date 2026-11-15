@@ -137,25 +137,26 @@ export default function DetailPanel() {
           {/* Tab Selector: Spectra vs Epoch Diff vs CrossRef */}
           <div className="flex items-center p-1 rounded-xl bg-slate-100 dark:bg-slate-900/80 border border-slate-200 dark:border-white/10">
             {[
-              { id: 'spectrum', label: '102-Band Spectrum', icon: Sparkles },
-              { id: 'diff', label: 'Epoch Diff & Movers', icon: Target },
-              { id: 'crossref', label: 'Catalogs & Exoplanets', icon: Globe2 },
-              { id: 'nasa', label: 'NASA Live', icon: Rocket },
+              { id: 'spectrum', label: '102-Band Spectrum', icon: Sparkles, desc: 'Extract full 102-channel spectrophotometric curve (0.75-5.0µm) with molecular ice diagnostic markers.' },
+              { id: 'diff', label: 'Epoch Diff & Movers', icon: Target, desc: 'Compute image subtraction residuals (Epoch B - Epoch A) to detect moving anomalies.' },
+              { id: 'crossref', label: 'Catalogs & Exoplanets', icon: Globe2, desc: 'Multi-mission cross-referencing with SIMBAD, NASA Exoplanet Archive, and Near-Earth Objects.' },
+              { id: 'nasa', label: 'NASA Live', icon: Rocket, desc: 'Live feed from official NASA APIs: APOD, NeoWs Asteroid Radar, DONKI Space Weather, and EPIC Earth view.' },
             ].map((tab) => {
               const Icon = tab.icon;
               return (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-lg text-xs font-mono font-medium transition-all duration-200 ${
-                    activeTab === tab.id
-                      ? 'bg-cyan-500 text-slate-950 font-bold shadow-sm'
-                      : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-                  }`}
-                >
-                  <Icon className="w-3.5 h-3.5" />
-                  <span>{tab.label}</span>
-                </button>
+                <Tooltip key={tab.id} content={tab.desc} tag={tab.label} position="bottom">
+                  <button
+                    onClick={() => setActiveTab(tab.id)}
+                    className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-lg text-xs font-mono font-medium transition-all duration-200 ${
+                      activeTab === tab.id
+                        ? 'bg-cyan-500 text-slate-950 font-bold shadow-sm'
+                        : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                    }`}
+                  >
+                    <Icon className="w-3.5 h-3.5" />
+                    <span>{tab.label}</span>
+                  </button>
+                </Tooltip>
               );
             })}
           </div>

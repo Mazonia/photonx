@@ -3,13 +3,18 @@ import react from '@vitejs/plugin-react';
 
 export default defineConfig({
   plugins: [react()],
+  base: './', // Ensures assets resolve correctly on GitHub Pages (https://mazonia.github.io/photonx/)
   server: {
     port: 5173,
     proxy: {
       '/api': {
-        target: 'http://127.0.0.1:8008',
+        target: 'http://127.0.0.1:8000',
         changeOrigin: true,
       },
     },
+  },
+  build: {
+    outDir: 'dist',
+    chunkSizeWarningLimit: 1200,
   },
 });

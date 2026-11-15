@@ -32,12 +32,12 @@ export default function EpochScrubber() {
   );
 
   const CHANNEL_PRESETS = [
-    { ch: 0, label: '0.75 µm', desc: 'Optical/NIR boundary' },
-    { ch: 20, label: '1.25 µm', desc: 'J-band equivalent' },
-    { ch: 42, label: '2.30 µm', desc: 'Carbon Monoxide absorption' },
-    { ch: 54, label: '3.30 µm', desc: 'PAH / Organic emission' },
-    { ch: 68, label: '4.27 µm', desc: 'CO₂ Ice feature' },
-    { ch: 101, label: '5.00 µm', desc: 'Longest infrared cutoff' },
+    { ch: 0, label: '0.75 µm', desc: 'Optical/NIR cutoff boundary — High-temperature stellar photosphere continuum' },
+    { ch: 20, label: '1.25 µm', desc: 'J-band equivalent — Low-mass stellar continuum and background star anchors' },
+    { ch: 42, label: '2.30 µm', desc: 'Carbon Monoxide (CO) first overtone bandhead — Primary brown dwarf diagnostic' },
+    { ch: 54, label: '3.30 µm', desc: 'Polycyclic Aromatic Hydrocarbon (PAH) C-H stretch — Interstellar organic tracing' },
+    { ch: 68, label: '4.27 µm', desc: 'CO₂ Ice asymmetric stretch mode — Planet X & protostellar ice mantle marker' },
+    { ch: 101, label: '5.00 µm', desc: 'Longest SPHEREx NIR cutoff — Cold sub-stellar thermal emission limit' },
   ];
 
   return (

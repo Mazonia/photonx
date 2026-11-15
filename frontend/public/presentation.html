@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PhotonX — NASA Space Apps Challenge 2026 Presentation (7 Slides)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=IBM+Plex+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #030712;
+      --card-bg: rgba(15, 23, 42, 0.85);
+      --cyan: #38bdf8;
+      --amber: #f59e0b;
+      --emerald: #10b981;
+      --border: rgba(255, 255, 255, 0.12);
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Subtle observatory scanlines effect */
+    body::before {
+      content: " ";
+      display: block;
+      position: absolute;
+      top: 0; left: 0; bottom: 0; right: 0;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.2) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.02), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.02));
+      z-index: 20;
+      background-size: 100% 4px, 6px 100%;
+      pointer-events: none;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 24px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(3, 7, 18, 0.9);
+      backdrop-filter: blur(12px);
+      z-index: 30;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-weight: 700;
+      font-size: 15px;
+      letter-spacing: 2px;
+    }
+
+    .brand span.accent {
+      color: var(--amber);
+    }
+
+    .badge {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      padding: 3px 8px;
+      border-radius: 6px;
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      color: var(--cyan);
+      letter-spacing: 1px;
+    }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.2s ease;
+    }
+
+    .btn:hover {
+      background: rgba(255, 255, 255, 0.16);
+      border-color: var(--cyan);
+    }
+
+    .btn-primary {
+      background: var(--cyan);
+      color: #030712;
+      border-color: var(--cyan);
+      font-weight: 700;
+    }
+
+    .btn-primary:hover {
+      background: #7dd3fc;
+    }
+
+    main {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px 24px;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 16px 24px;
+      opacity: 0;
+      pointer-events: none;
+      transform: scale(0.98) translateY(10px);
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      flex-direction: column;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px 36px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(16px);
+      overflow-y: auto;
+    }
+
+    .slide.active {
+      opacity: 1;
+      pointer-events: auto;
+      transform: scale(1) translateY(0);
+    }
+
+    .slide-number {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      color: var(--cyan);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    h1 {
+      font-size: 40px;
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 8px;
+      letter-spacing: -0.5px;
+    }
+
+    h2 {
+      font-size: 26px;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 8px;
+      color: #fff;
+    }
+
+    p.lead {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin-bottom: 16px;
+      max-width: 960px;
+    }
+
+    .split-layout {
+      display: grid;
+      grid-template-columns: 1.15fr 1fr;
+      gap: 20px;
+      flex: 1;
+      min-height: 0;
+    }
+
+    .screenshot-frame {
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      border-radius: 12px;
+      overflow: hidden;
+      background: #020617;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+    }
+
+    .screenshot-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .screenshot-caption {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      color: var(--text-muted);
+      padding: 6px 12px;
+      background: rgba(3, 7, 18, 0.95);
+      border-top: 1px solid var(--border);
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-top: 6px;
+      flex: 1;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+      margin-top: 8px;
+    }
+
+    .card {
+      background: rgba(3, 7, 18, 0.6);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .card h3 {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--cyan);
+      font-family: 'IBM Plex Mono', monospace;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .card p {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .highlight-card {
+      border-color: rgba(245, 158, 11, 0.4);
+      background: rgba(245, 158, 11, 0.05);
+    }
+
+    .highlight-card h3 {
+      color: var(--amber);
+    }
+
+    ul.bullet-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    ul.bullet-list li {
+      font-size: 12px;
+      color: var(--text);
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      line-height: 1.45;
+    }
+
+    ul.bullet-list li::before {
+      content: "✦";
+      color: var(--cyan);
+      font-size: 11px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .speaker-note {
+      margin-top: 14px;
+      padding: 8px 14px;
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      border-radius: 8px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      color: #6ee7b7;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      line-height: 1.4;
+    }
+
+    .speaker-note strong {
+      color: var(--emerald);
+      text-transform: uppercase;
+      font-size: 10px;
+      letter-spacing: 1px;
+      flex-shrink: 0;
+    }
+
+    footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 24px;
+      border-top: 1px solid var(--border);
+      background: rgba(3, 7, 18, 0.9);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      color: var(--text-muted);
+      z-index: 30;
+    }
+
+    .dots {
+      display: flex;
+      gap: 8px;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .dot.active {
+      background: var(--cyan);
+      box-shadow: 0 0 8px var(--cyan);
+      transform: scale(1.3);
+    }
+
+    @media print {
+      body {
+        overflow: visible;
+        height: auto;
+        background: #030712 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      header, footer, body::before {
+        display: none !important;
+      }
+      main {
+        display: block;
+        padding: 0;
+      }
+      .slide {
+        position: relative !important;
+        inset: 0 !important;
+        opacity: 1 !important;
+        transform: none !important;
+        page-break-after: always;
+        break-after: page;
+        height: 100vh;
+        border: none;
+        border-radius: 0;
+        margin-bottom: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="brand">
+      PHOTON<span class="accent">X</span>
+      <span class="badge">NASA SPACE APPS 2026</span>
+    </div>
+    <div class="controls">
+      <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--text-muted);">
+        Keys: &larr; / &rarr; or Spacebar
+      </span>
+      <button class="btn" onclick="prevSlide()">&larr; Prev</button>
+      <button class="btn btn-primary" onclick="nextSlide()">Next &rarr;</button>
+      <a href="./" class="btn" title="Launch Interactive Sky Engine">🚀 Launch Live App</a>
+      <a href="PhotonX_Official_Presentation.pptx" download class="btn" style="color:var(--amber); border-color:rgba(245,158,11,0.4);">📥 Download .pptx</a>
+      <button class="btn" onclick="window.print()" title="Print 7-Slide Deck to PDF">🖨️ PDF</button>
+    </div>
+  </header>
+
+  <!-- Main Slides -->
+  <main>
+
+    <!-- SLIDE 1 -->
+    <section class="slide active" id="slide-1">
+      <div class="slide-number">
+        <span>SLIDE 01 / 07 &bull; TITLE & TEAM CREDENTIALS</span>
+        <span class="badge">CHALLENGE: PLANET X &amp; SPHEREx</span>
+      </div>
+      <div style="margin-top: 16px;">
+        <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--amber); letter-spacing: 2px; font-weight: 700;">
+          NASA INTERNATIONAL SPACE APPS CHALLENGE 2026
+        </span>
+        <h1 style="font-size: 52px; margin-top: 6px; background: linear-gradient(to right, #fff, #93c5fd); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+          PHOTONX
+        </h1>
+        <p class="lead" style="font-size: 18px; color: #cbd5e1; margin-bottom: 14px;">
+          SPHEREx Infrared Sky Browser &amp; Outer Solar System Discovery Engine
+        </p>
+      </div>
+
+      <div class="grid-3" style="margin-top: 10px;">
+        <div class="card">
+          <h3>👤 Team Creator</h3>
+          <p><strong>Team PhotonX</strong><br>Mazonia (Solo Developer)<br>Software Engineer &amp; Astrophysics Enthusiast</p>
+        </div>
+        <div class="card highlight-card">
+          <h3>🛰️ Challenge Selected</h3>
+          <p><strong>Planet X and SPHEREx</strong><br>NASA Astrophysics Division<br>Focus: Detecting outer-solar system moving objects</p>
+        </div>
+        <div class="card">
+          <h3>🔗 Provenance &amp; Code</h3>
+          <p><strong>Primary Data:</strong> SPHEREx QR2 (DOI: 10.26131/IRSA629)<br><strong>Repo:</strong> github.com/Mazonia/photonx<br><strong>License:</strong> MIT Open Source</p>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top: 12px; background: rgba(56, 189, 248, 0.05); border-color: rgba(56, 189, 248, 0.25);">
+        <p style="font-size: 12px; color: #cbd5e1; text-align: center;">
+          Strict 7-Slide Rule Adherence &bull; Zero-Install Universal Web Access &bull; Full Keyboard &amp; WCAG AA Accessibility
+        </p>
+      </div>
+
+      <div class="speaker-note">
+        <strong>Speaker Note:</strong>
+        "Judges, welcome. My name is Mazonia, and this is PhotonX. NASA's SPHEREx mission is mapping the entire celestial sphere in 102 infrared bands every six months. We built PhotonX to turn that massive flood of raw FITS files into an interactive web observatory where professional astronomers and citizen scientists can spot shifting centroids and discover the hidden giants of our outer solar system."
+      </div>
+    </section>
+
+    <!-- SLIDE 2 -->
+    <section class="slide" id="slide-2">
+      <div class="slide-number">
+        <span>SLIDE 02 / 07 &bull; THE PHYSICAL PROBLEM</span>
+        <span class="badge">PHYSICS OF THE OUTER SOLAR SYSTEM</span>
+      </div>
+      <h2>The Physical Challenge: Why Optical Telescopes Fail</h2>
+      <p class="lead">
+        The inverse-fourth-power optical illumination collapse vs. Wien's law thermal near-infrared emission.
+      </p>
+
+      <div class="grid-2">
+        <div class="card highlight-card">
+          <h3>❄️ 1/r⁴ Solar Illumination Collapse</h3>
+          <ul class="bullet-list">
+            <li>Reflected sunlight falls off as 1/r² out, and 1/r² back: Total Flux &prop; 1/r⁴.</li>
+            <li>At 400 AU, solar irradiance is 1/25,600,000,000th of Earth's solar constant.</li>
+            <li>A 5-Earth-mass planet at 400 AU has visual magnitude V &gt; 23.5—pitch black in optical surveys like Hubble, Gaia, or Pan-STARRS.</li>
+            <li>Even cold bodies at 30–40 K radiate their own primordial internal heat in the infrared.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>📊 The SPHEREx Opportunity &amp; Data Flood</h3>
+          <ul class="bullet-list">
+            <li>SPHEREx observes from 0.75 µm to 5.00 µm continuously across 102 distinct spectral channels.</li>
+            <li>Full-sky survey repeated every 6 months generates pristine multi-epoch temporal baselines.</li>
+            <li><strong>The Bottleneck:</strong> Billions of raw spectral pixels locked in complex FITS archives.</li>
+            <li><strong>The Signal:</strong> An outer solar system object moves against fixed background stars between 6-month epochs.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="speaker-note">
+        <strong>Speaker Note:</strong>
+        "Why is Planet X still undiscovered after decades of searching? Because out at 400 AU, reflected sunlight drops off as one over distance to the fourth power—25 billion times fainter than Earth! Optical surveys see only empty black space. But in the near-infrared, these bodies glow with their own heat. SPHEREx captures this across 102 bands, but astronomers are drowning in raw data. PhotonX solves that bottleneck."
+      </div>
+    </section>
+
+    <!-- SLIDE 3 -->
+    <section class="slide" id="slide-3">
+      <div class="slide-number">
+        <span>SLIDE 03 / 07 &bull; APPLICATION WALKTHROUGH</span>
+        <span class="badge">PHOTONX LIVE VIEWPORT</span>
+      </div>
+      <h2>PhotonX: Real-Time Infrared Celestial Observatory</h2>
+      <p class="lead">
+        A zero-install, GPU-accelerated web platform turning multi-epoch SPHEREx data into an intuitive discovery lab.
+      </p>
+
+      <div class="split-layout">
+        <div class="screenshot-frame">
+          <img src="docs/screenshots/photonx.png" alt="PhotonX Celestial Viewport" />
+          <div class="screenshot-caption">
+            Figure 1: PhotonX Live Viewport — Real-Time Sky Engine, 102-Band Spectrum Plot, and Clyde Tombaugh Blink Comparator
+          </div>
+        </div>
+        <div class="card">
+          <h3>🔭 Core Capabilities</h3>
+          <ul class="bullet-list">
+            <li><strong>HTML5 Canvas Celestial Engine:</strong> Fluid navigation from 45° constellations down to 0.05° deep fields with dynamic limiting magnitude scaling.</li>
+            <li><strong>Clyde Tombaugh Optical Blink Comparator:</strong> Rapidly alternates between 6-month survey epochs with one tap of the Spacebar.</li>
+            <li><strong>102-Band Spectrophotometry:</strong> Instantaneous 0.75–5.0 µm curve plotting with water ice (1.4, 1.9 µm), CO (2.3 µm), and CO₂ (4.27 µm) absorption markers.</li>
+            <li><strong>Interactive Target Resolution:</strong> Jump to Barnard's Star, WISE 0855, Orion Nebula, or any custom RA/Dec coordinate.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="speaker-note">
+        <strong>Speaker Note:</strong>
+        "Here is PhotonX in action. On the left is our real-time sky engine, running smoothly in any web browser. You can navigate from full constellations down to deep-sky fields. With our Clyde Tombaugh blink engine, pressing spacebar toggles between 6-month survey epochs so moving objects leap out at your eyes. And clicking any target extracts a live 102-band spectrophotometric curve."
+      </div>
+    </section>
+
+    <!-- SLIDE 4 -->
+    <section class="slide" id="slide-4">
+      <div class="slide-number">
+        <span>SLIDE 04 / 07 &bull; DETECTION PIPELINE</span>
+        <span class="badge">IMAGE DIFFERENCING ENGINE</span>
+      </div>
+      <h2>Automated Mover Detection &amp; Pixel Differencing</h2>
+      <p class="lead">
+        Sub-pixel coordinate alignment, flux differencing, and automated centroid shift isolation.
+      </p>
+
+      <div class="split-layout">
+        <div class="screenshot-frame">
+          <img src="docs/screenshots/diff_tab_active.png" alt="Pixel Differencing Engine" />
+          <div class="screenshot-caption">
+            Figure 2: Image Subtraction Residuals (Epoch B &minus; Epoch A) and automated mover candidate list
+          </div>
+        </div>
+        <div class="card highlight-card">
+          <h3>⚡ Mathematical Difference Pipeline</h3>
+          <ul class="bullet-list">
+            <li><strong>Step 1: Point-Spread Normalization:</strong> Aligns coordinate geometry and balances flux scales across survey epochs.</li>
+            <li><strong>Step 2: Subtraction Matrix:</strong> Evaluates &Delta;I(x, y) = I_B(x, y) &minus; I_A(x, y). Stationary stars subtract to zero.</li>
+            <li><strong>Step 3: Background Noise (&sigma;):</strong> Computes local median and noise variance across the field.</li>
+            <li><strong>Step 4: 3&sigma; Thresholding:</strong> Flags negative residuals at Epoch A and positive residuals at Epoch B.</li>
+            <li><strong>Step 5: Centroid Clustering:</strong> Computes sub-pixel RA/Dec centers, total shift in arcseconds, and position angle (&theta;).</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="speaker-note">
+        <strong>Speaker Note:</strong>
+        "Under the hood, PhotonX does not rely purely on the human eye; it runs a mathematically rigorous image differencing pipeline. When comparing two epochs, the system normalizes the point-spread functions and subtracts Epoch A from Epoch B. Stationary stars cancel out, while moving objects leave a classic dipole signature. Our algorithm flags clusters exceeding three sigma, computes the shift in arcseconds, and ranks them for follow-up."
+      </div>
+    </section>
+
+    <!-- SLIDE 5 -->
+    <section class="slide" id="slide-5">
+      <div class="slide-number">
+        <span>SLIDE 05 / 07 &bull; MULTI-MISSION ECOSYSTEM</span>
+        <span class="badge">NASA OPEN APIS &amp; OBSERVABILITY</span>
+      </div>
+      <h2>Multi-Mission NASA Ecosystem &amp; Seeing Radar</h2>
+      <p class="lead">
+        Fusing space telescope telemetry with live weather conditions for ground follow-up.
+      </p>
+
+      <div class="split-layout">
+        <div class="screenshot-frame">
+          <img src="docs/screenshots/observability_radar.png" alt="Astronomical Seeing Radar" />
+          <div class="screenshot-caption">
+            Figure 3: Astronomical Seeing Radar — Target altitude, Pickering airmass, and atmospheric seeing disc
+          </div>
+        </div>
+        <div class="card">
+          <h3>🚀 Live Data Integrations</h3>
+          <ul class="bullet-list">
+            <li><strong>NASA SPHEREx QR2:</strong> Caltech/IPAC IRSA collection (DOI: 10.26131/IRSA629) with SIA2 query service.</li>
+            <li><strong>NASA NeoWs Asteroid Radar:</strong> Real-time near-Earth asteroid tracking and miss distances in Lunar Distances.</li>
+            <li><strong>NASA DONKI Space Weather:</strong> Live solar flare and Coronal Mass Ejection monitoring.</li>
+            <li><strong>3-Tier Weather Intelligence:</strong> Meteomatics MCP &rarr; OpenWeather &rarr; Open-Meteo astronomical seeing fallback.</li>
+            <li><strong>Pickering Airmass (X = 1/sin(alt)):</strong> Evaluates ground atmospheric seeing disc in arcseconds (e.g. 1.8&quot;).</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="speaker-note">
+        <strong>Speaker Note:</strong>
+        "Space science does not exist in isolation. PhotonX integrates a multi-mission NASA ecosystem. We query Caltech/IPAC SPHEREx QR2 data, while also connecting live NASA APIs with our registered key: tracking near-Earth asteroids through NeoWs and solar storms through DONKI. Furthermore, our 3-tier seeing radar calculates target altitude and atmospheric seeing in arcseconds, verifying whether ground telescopes can confirm the object tonight."
+      </div>
+    </section>
+
+    <!-- SLIDE 6 -->
+    <section class="slide" id="slide-6">
+      <div class="slide-number">
+        <span>SLIDE 06 / 07 &bull; CITIZEN SCIENCE</span>
+        <span class="badge">HUNT MODE &amp; CLASSROOM IMPACT</span>
+      </div>
+      <h2>Democratizing Discovery: Hunt Mode &amp; Scientific Briefs</h2>
+      <p class="lead">
+        Turning passive readers into active contributors to planetary astrophysics.
+      </p>
+
+      <div class="split-layout">
+        <div class="screenshot-frame">
+          <img src="docs/screenshots/hunt_mode_active.png" alt="Hunt Mode Console" />
+          <div class="screenshot-caption">
+            Figure 4: Hunt Mode Console — Candidate verification, hunter rank progression, and scientific brief generator
+          </div>
+        </div>
+        <div class="card highlight-card">
+          <h3>🎮 Citizen Science Framework</h3>
+          <ul class="bullet-list">
+            <li><strong>Gamified Hunter Ranks:</strong> Progressive levels: <em>Infrared Tracker</em> &rarr; <em>Kuiper Belt Scout</em> &rarr; <em>Deep Space Pioneer</em>.</li>
+            <li><strong>Citable Discovery Briefs:</strong> One-click export of formal Markdown observation reports citing IRSA DOI 10.26131/IRSA629.</li>
+            <li><strong>Guided Cosmic Tour:</strong> Interactive educational journey for students explaining high-proper motion stars and cold brown dwarfs.</li>
+            <li><strong>Chromebook &amp; Mobile Ready:</strong> Zero software installation; works in any modern browser with Section 508 / WCAG AA accessibility.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="speaker-note">
+        <strong>Speaker Note:</strong>
+        "The greatest strength of PhotonX is that it democratizes science. You do not need a supercomputer or a PhD in astrophysics to make a discovery. With Hunt Mode, a high school student in a classroom or an amateur astronomer at home can inspect authentic NASA data, tag an anomaly, and export a formal scientific discovery brief citing the official IRSA DOI. We turn spectators into active planetary investigators."
+      </div>
+    </section>
+
+    <!-- SLIDE 7 -->
+    <section class="slide" id="slide-7">
+      <div class="slide-number">
+        <span>SLIDE 07 / 07 &bull; ROADMAP &amp; SUMMARY</span>
+        <span class="badge">LOOKING FORWARD</span>
+      </div>
+      <h2>The Road to Planet X: Scalability &amp; Vision</h2>
+      <p class="lead">
+        From Space Apps prototype to an open-source global observatory network.
+      </p>
+
+      <div class="grid-3">
+        <div class="card">
+          <h3>🌐 Full Mission Ingestion</h3>
+          <p>Ingest subsequent SPHEREx data releases across 2025–2027. Multi-year baselines will dramatically amplify sensitivity to slow, distant trans-Neptunian objects.</p>
+        </div>
+        <div class="card highlight-card">
+          <h3>🤖 In-Browser Orbit Fitting</h3>
+          <p>Implement Gauss and V&auml;is&auml;l&auml; initial orbit determination in WebAssembly to compute semi-major axis (a) and inclination (i) directly from 3-epoch candidate detections.</p>
+        </div>
+        <div class="card">
+          <h3>🔭 Robotic Telescope Relay</h3>
+          <p>Automated INDI/ASCOM alerts triggering immediate optical follow-up from ground observatories worldwide within hours of candidate detection.</p>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top: 14px; text-align: center; padding: 16px; border-color: rgba(56, 189, 248, 0.4);">
+        <p style="font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 6px;">
+          &ldquo;The next great discovery in our solar system could come from anyone looking at the infrared sky.&rdquo;
+        </p>
+        <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--cyan);">
+          Open Source Repository: github.com/Mazonia/photonx &bull; Live Web: mazonia.github.io/photonx
+        </span>
+      </div>
+
+      <div class="speaker-note">
+        <strong>Speaker Note:</strong>
+        "To conclude: PhotonX is ready today, but it is architected for the future. As SPHEREx continues its survey over 2025 through 2027, longer time baselines will let us detect even slower and farther bodies. We plan to implement in-browser orbital fitting and automated relays to robotic ground telescopes worldwide. Planet X may be hiding in the dark, but with NASA's open infrared data and PhotonX, we now have the vision to find it. Thank you, judges!"
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer Navigation -->
+  <footer>
+    <div style="display: flex; align-items: center; gap: 8px;">
+      <span id="slide-indicator">Slide 1 of 7</span>
+    </div>
+    <div class="dots" id="dots-container">
+      <div class="dot active" onclick="goToSlide(0)"></div>
+      <div class="dot" onclick="goToSlide(1)"></div>
+      <div class="dot" onclick="goToSlide(2)"></div>
+      <div class="dot" onclick="goToSlide(3)"></div>
+      <div class="dot" onclick="goToSlide(4)"></div>
+      <div class="dot" onclick="goToSlide(5)"></div>
+      <div class="dot" onclick="goToSlide(6)"></div>
+    </div>
+    <div>
+      <span>PhotonX &bull; NASA Space Apps 2026</span>
+    </div>
+  </footer>
+
+  <script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const dots = document.querySelectorAll('.dot');
+    const indicator = document.getElementById('slide-indicator');
+
+    function updateSlide() {
+      slides.forEach((s, idx) => {
+        s.classList.toggle('active', idx === currentSlide);
+      });
+      dots.forEach((d, idx) => {
+        d.classList.toggle('active', idx === currentSlide);
+      });
+      indicator.textContent = `Slide ${currentSlide + 1} of ${slides.length}`;
+    }
+
+    function nextSlide() {
+      if (currentSlide < slides.length - 1) {
+        currentSlide++;
+        updateSlide();
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 0) {
+        currentSlide--;
+        updateSlide();
+      }
+    }
+
+    function goToSlide(index) {
+      currentSlide = index;
+      updateSlide();
+    }
+
+    // Keyboard navigation
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+        e.preventDefault();
+        nextSlide();
+      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        e.preventDefault();
+        prevSlide();
+      } else if (e.key === 'Home') {
+        e.preventDefault();
+        goToSlide(0);
+      } else if (e.key === 'End') {
+        e.preventDefault();
+        goToSlide(slides.length - 1);
+      } else if (e.key === 'p' || e.key === 'P') {
+        window.print();
+      }
+    });
+  </script>
+</body>
+</html>

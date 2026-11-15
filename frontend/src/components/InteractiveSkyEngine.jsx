@@ -797,7 +797,7 @@ export default function InteractiveSkyEngine() {
 
         <div className="w-px h-5 bg-slate-300 dark:bg-white/10" />
 
-        <Tooltip content="Toggle Candidate Mover detection rings and proper-motion vectors." tag="MOVERS" position="bottom">
+        <Tooltip content="Toggle candidate mover identification rings and proper-motion displacement vectors (arcsec shift between epochs)." tag="MOVERS" shortcut="M" position="bottom-left">
           <button
             onClick={toggleMoversOverlay}
             className={`p-1.5 rounded-lg transition-colors ${
@@ -810,7 +810,7 @@ export default function InteractiveSkyEngine() {
           </button>
         </Tooltip>
 
-        <Tooltip content="Toggle Equatorial Right Ascension & Declination coordinate gridlines." tag="GRID" position="bottom">
+        <Tooltip content="Toggle J2000 Equatorial coordinate gridlines with RA (hours/deg) and Declination (°)." tag="GRID" shortcut="G" position="bottom-left">
           <button
             onClick={toggleGrid}
             className={`p-1.5 rounded-lg transition-colors ${
@@ -823,7 +823,7 @@ export default function InteractiveSkyEngine() {
           </button>
         </Tooltip>
 
-        <Tooltip content="Toggle Constellation lines, lore, and famous star patterns (Ursa Major, Orion, Cassiopeia, Ophiuchus)." tag="CONSTELLATIONS" position="bottom">
+        <Tooltip content="Toggle IAU constellation boundaries, asterism vectors, and celestial navigational lore (Orion, Ursa Major, Cassiopeia, Ophiuchus)." tag="CONSTELLATIONS" shortcut="C" position="bottom-left">
           <button
             onClick={toggleConstellations}
             className={`p-1.5 rounded-lg transition-colors ${
@@ -836,7 +836,7 @@ export default function InteractiveSkyEngine() {
           </button>
         </Tooltip>
 
-        <Tooltip content="Zoom in (narrow field of view)" tag="ZOOM IN" shortcut="+" position="bottom">
+        <Tooltip content="Magnify celestial reticle (narrow FOV down to 0.05° deep field). Increases limiting magnitude to 18.0 mv." tag="ZOOM IN" shortcut="+" position="bottom-left">
           <button
             onClick={() => setFov(fov * 0.75)}
             className="p-1.5 text-slate-500 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5 rounded-lg transition-colors"
@@ -845,7 +845,7 @@ export default function InteractiveSkyEngine() {
           </button>
         </Tooltip>
 
-        <Tooltip content="Zoom out (wide all-sky view)" tag="ZOOM OUT" shortcut="-" position="bottom">
+        <Tooltip content="Widen observatory aperture (up to 45° all-sky constellation perspective)." tag="ZOOM OUT" shortcut="-" position="bottom-left">
           <button
             onClick={() => setFov(fov * 1.33)}
             className="p-1.5 text-slate-500 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5 rounded-lg transition-colors"
@@ -854,7 +854,7 @@ export default function InteractiveSkyEngine() {
           </button>
         </Tooltip>
 
-        <Tooltip content="Reset camera to 1.2° standard observatory framing." tag="RESET" position="bottom">
+        <Tooltip content="Reset optical field of view to standard 1.20° observatory target framing." tag="RESET" position="bottom-left">
           <button
             onClick={() => setFov(1.2)}
             className="p-1.5 text-slate-500 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5 rounded-lg transition-colors"
