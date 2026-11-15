@@ -123,8 +123,23 @@ const CURATED_TARGETS = [
   },
 ];
 
+// Detect static hosting environments (e.g. GitHub Pages) where no backend process is running
+const isStaticHosting =
+  typeof window !== 'undefined' &&
+  (window.location.hostname.endsWith('github.io') ||
+    window.location.hostname.includes('github.io') ||
+    window.location.hostname.includes('vercel.app') ||
+    window.location.hostname.includes('netlify.app') ||
+    window.location.origin.startsWith('file:') ||
+    (window.location.hostname === 'localhost' && window.location.port !== '5173' && window.location.port !== '8000'));
+
 async function request(endpoint, params = {}) {
-  // If running on GitHub Pages (or static preview without backend), check whether to try fetch
+  // On static hosting (like GitHub Pages), immediately use the high-fidelity in-browser
+  // astrophysics calculations and catalog data for zero-latency, zero-404 performance
+  if (isStaticHosting) {
+    return getClientFallback(endpoint, params);
+  }
+
   const url = new URL(`${window.location.origin}${API_BASE}${endpoint}`);
   Object.entries(params).forEach(([key, val]) => {
     if (val !== undefined && val !== null && val !== '') {
@@ -134,13 +149,13 @@ async function request(endpoint, params = {}) {
 
   try {
     const res = await fetch(url.toString(), {
-      signal: AbortSignal.timeout ? AbortSignal.timeout(4000) : undefined,
+      signal: AbortSignal.timeout ? AbortSignal.timeout(3000) : undefined,
     });
     if (res.ok) {
       return await res.json();
     }
   } catch (err) {
-    // Network failure, 404, or static GitHub Pages hosting — fall through to client fallback
+    // Network failure or backend unavailable — fall through to client fallback
   }
 
   // Graceful client fallback

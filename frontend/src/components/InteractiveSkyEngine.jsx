@@ -575,10 +575,18 @@ export default function InteractiveSkyEngine() {
         const res = await api.skyview(ra, dec, surveyLayer, 500, queryFov);
         if (isCurrent && res && res.image_base64) {
           const img = new Image();
-          img.src = `data:image/jpeg;base64,${res.image_base64}`;
+          img.src = res.image_base64.startsWith('data:')
+            ? res.image_base64
+            : `data:image/png;base64,${res.image_base64}`;
           img.onload = () => {
             if (isCurrent) {
               setNasaImage(img);
+              setIsImageryLoading(false);
+            }
+          };
+          img.onerror = () => {
+            if (isCurrent) {
+              setNasaImage(null);
               setIsImageryLoading(false);
             }
           };
