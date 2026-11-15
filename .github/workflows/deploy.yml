@@ -38,6 +38,7 @@ jobs:
         run: |
           cp presentation.html frontend/dist/presentation.html 2>/dev/null || true
           cp PhotonX_Official_Presentation.pptx frontend/dist/PhotonX_Official_Presentation.pptx 2>/dev/null || true
+          cp SLIDES_SPEAKER_SCRIPT_LAYMAN.md frontend/dist/SLIDES_SPEAKER_SCRIPT_LAYMAN.md 2>/dev/null || true
           mkdir -p frontend/dist/docs
           cp -r docs/screenshots frontend/dist/docs/ 2>/dev/null || true
           touch frontend/dist/.nojekyll

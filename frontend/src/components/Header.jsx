@@ -58,7 +58,7 @@ export default function Header() {
     <>
       <header className="relative z-30 flex items-center justify-between px-4 py-2 bg-sand-50/95 dark:bg-space-900/95 border-b border-sand-300 dark:border-ocean-900/60 backdrop-blur-xl shadow-sm select-none transition-colors duration-200">
         {/* Left: Branding & Status */}
-        <div className="flex items-center gap-3">
+        <div data-tour="brand-logo" className="flex items-center gap-3">
           {/* Logo */}
           <div className="flex items-center gap-2">
             <div className="relative flex items-center justify-center w-7 h-7 rounded-lg bg-ocean-500/10 border border-ocean-500/30 text-ocean-600 dark:text-ocean-400">
@@ -91,14 +91,14 @@ export default function Header() {
         </div>
 
         {/* Middle: High-precision Search Bar */}
-        <div className="flex-1 max-w-lg mx-4">
+        <div data-tour="search-bar" className="flex-1 max-w-lg mx-4">
           <SearchBar />
         </div>
 
         {/* Right: Mode Selector, Tutorial, Deck, Observability, Help, & Theme */}
         <div className="flex items-center gap-2">
           {/* Navigation Mode Pill */}
-          <div className="flex items-center p-0.5 rounded-xl bg-sand-200/60 dark:bg-space-950/80 border border-sand-300 dark:border-white/10 shadow-inner">
+          <div data-tour="mode-selector" className="flex items-center p-0.5 rounded-xl bg-sand-200/60 dark:bg-space-950/80 border border-sand-300 dark:border-white/10 shadow-inner">
             <Tooltip position="bottom" content="All-sky browser with multi-spectral NIR maps and curated catalog targets." tag="VIEW">
               <button
                 onClick={() => setMode('explore')}
@@ -145,6 +145,7 @@ export default function Header() {
           {/* Interactive Tutorial Button (Always available for both first-time and constant visitors) */}
           <Tooltip position="bottom" content="Take a step-by-step interactive tutorial explaining what every button and section shows" tag="HOW IT WORKS">
             <button
+              data-tour="tutorial-btn"
               onClick={openTutorial}
               className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border border-ocean-500/40 bg-ocean-500/10 hover:bg-ocean-500/20 text-xs font-mono font-bold text-ocean-700 dark:text-ocean-300 transition-all shadow-sm"
               aria-label="Open full site tutorial"
@@ -157,6 +158,7 @@ export default function Header() {
           {/* Official Presentation Deck Button (7-Slide Official Submission) */}
           <Tooltip position="bottom" content="View the official 7-slide NASA Space Apps presentation deck (or download .pptx)" tag="PRESENTATION" shortcut="P">
             <a
+              data-tour="slides-btn"
               href="presentation.html"
               target="_blank"
               rel="noopener noreferrer"
@@ -181,6 +183,7 @@ export default function Header() {
           {/* Atmospheric Observability Button */}
           <Tooltip position="bottom" content="Evaluate tonight's atmospheric seeing (Meteomatics + OpenWeather), target airmass, and seeing disc." tag="ATMOSPHERE">
             <button
+              data-tour="observability-btn"
               onClick={toggleObservability}
               className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border border-sand-300 dark:border-white/10 bg-white dark:bg-space-950/80 text-xs font-mono text-slate-700 dark:text-slate-300 hover:border-ocean-400/40 hover:text-ocean-600 dark:hover:text-ocean-400 transition-colors shadow-sm"
             >

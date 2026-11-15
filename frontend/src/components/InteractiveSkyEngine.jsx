@@ -701,6 +701,7 @@ export default function InteractiveSkyEngine() {
 
   return (
     <div
+      data-tour="sky-canvas"
       ref={containerRef}
       className="relative w-full h-full select-none overflow-hidden bg-lab-50 dark:bg-space-950 font-sans"
       onMouseDown={handleMouseDown}
@@ -715,7 +716,7 @@ export default function InteractiveSkyEngine() {
 
       {/* Top Left: Mission HUD & Survey Switcher */}
       <div className="absolute top-3 left-3 flex flex-col gap-2 z-10 pointer-events-auto">
-        <div className="relative z-20 flex items-center gap-1 p-1 rounded-xl bg-white/90 dark:bg-slate-900/80 border border-slate-300 dark:border-white/10 shadow-xl backdrop-blur-md">
+        <div data-tour="survey-switcher" className="relative z-20 flex items-center gap-1 p-1 rounded-xl bg-white/90 dark:bg-slate-900/80 border border-slate-300 dark:border-white/10 shadow-xl backdrop-blur-md">
           <span className="text-[10px] font-mono uppercase tracking-widest text-slate-500 dark:text-slate-400 px-2 font-bold">
             SURVEY:
           </span>
@@ -755,7 +756,7 @@ export default function InteractiveSkyEngine() {
       </div>
 
       {/* Top Right: Observatory Controls (Blink, Real Imagery, Grid, Zoom) */}
-      <div className="absolute top-3 right-3 flex items-center gap-1.5 p-1 rounded-xl bg-white/90 dark:bg-slate-900/80 border border-slate-300 dark:border-white/10 shadow-xl backdrop-blur-md z-10 pointer-events-auto">
+      <div data-tour="sky-controls" className="absolute top-3 right-3 flex items-center gap-1.5 p-1 rounded-xl bg-white/90 dark:bg-slate-900/80 border border-slate-300 dark:border-white/10 shadow-xl backdrop-blur-md z-10 pointer-events-auto">
         <Tooltip
           content="Toggle authentic NASA Goddard SkyView deep-space survey imagery underlay."
           tag="REAL IMAGERY"

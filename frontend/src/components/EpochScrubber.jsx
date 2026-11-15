@@ -42,6 +42,7 @@ export default function EpochScrubber() {
 
   return (
     <footer
+      data-tour="epoch-scrubber"
       className="relative z-20 flex flex-wrap items-center justify-between gap-3 px-4 py-2 bg-sand-50/95 dark:bg-space-900/95 border-t border-sand-300 dark:border-ocean-900/60 backdrop-blur-xl shadow-lg select-none transition-colors duration-200"
       onKeyDown={handleKeyDown}
       tabIndex={0}
@@ -57,7 +58,7 @@ export default function EpochScrubber() {
       </div>
 
       {/* Center: Epoch Scrub Timeline */}
-      <div className="flex-1 max-w-xl flex items-center gap-3">
+      <div data-tour="epoch-timeline" className="flex-1 max-w-xl flex items-center gap-3">
         <span className="font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400 font-semibold hidden md:inline">
           EPOCHS:
         </span>
@@ -119,7 +120,7 @@ export default function EpochScrubber() {
       </div>
 
       {/* Right: Quick Spectral Wavelength Channel presets */}
-      <div className="flex items-center gap-1.5">
+      <div data-tour="spectral-bands" className="flex items-center gap-1.5">
         <span className="font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400 mr-1 hidden lg:inline">
           BAND:
         </span>

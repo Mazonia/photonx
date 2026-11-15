@@ -66,7 +66,7 @@ export default function DetailPanel() {
   });
 
   return (
-    <div className="flex flex-col h-full bg-sand-50/95 dark:bg-space-900/80 backdrop-blur-xl border-l border-sand-300 dark:border-ocean-900/60 overflow-y-auto transition-colors duration-200">
+    <div data-tour="detail-panel" className="flex flex-col h-full bg-sand-50/95 dark:bg-space-900/80 backdrop-blur-xl border-l border-sand-300 dark:border-ocean-900/60 overflow-y-auto transition-colors duration-200">
       {/* Target Header Banner */}
       <div className="p-4 border-b border-sand-200 dark:border-ocean-900/40 bg-sand-100/70 dark:bg-space-950/60">
         <div className="flex items-center justify-between gap-2 mb-1.5">
@@ -135,7 +135,7 @@ export default function DetailPanel() {
           </div>
 
           {/* Tab Selector: Spectra vs Epoch Diff vs CrossRef */}
-          <div className="flex items-center p-1 rounded-xl bg-slate-100 dark:bg-slate-900/80 border border-slate-200 dark:border-white/10">
+          <div data-tour="detail-tabs" className="flex items-center p-1 rounded-xl bg-slate-100 dark:bg-slate-900/80 border border-slate-200 dark:border-white/10">
             {[
               { id: 'spectrum', label: '102-Band Spectrum', icon: Sparkles, desc: 'Extract full 102-channel spectrophotometric curve (0.75-5.0µm) with molecular ice diagnostic markers.' },
               { id: 'diff', label: 'Epoch Diff & Movers', icon: Target, desc: 'Compute image subtraction residuals (Epoch B - Epoch A) to detect moving anomalies.' },
