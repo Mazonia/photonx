@@ -61,7 +61,7 @@ export default function App() {
           setFov(Math.max(0.05, fov * 0.75));
           break;
         case '-':
-          setFov(Math.min(45, fov * 1.33));
+          setFov(Math.min(95.0, fov * 1.33));
           break;
         case 'g':
         case 'G':

@@ -697,14 +697,14 @@ export default function InteractiveSkyEngine() {
     const onWheel = (e) => {
       e.preventDefault();
       const factor = e.deltaY > 0 ? 1.18 : 0.85;
-      setFov(Math.max(0.05, Math.min(45.0, fov * factor)));
+      setFov(Math.max(0.05, Math.min(95.0, fov * factor)));
     };
     el.addEventListener('wheel', onWheel, { passive: false });
     return () => el.removeEventListener('wheel', onWheel);
   }, [fov, setFov]);
 
   const limitingMag = useMemo(() => {
-    return Math.min(18.5, Math.max(9.5, 8.0 + Math.log2(50.0 / Math.max(0.04, fov)) * 1.6));
+    return Math.min(18.5, Math.max(7.8, 8.0 + Math.log2(50.0 / Math.max(0.04, fov)) * 1.6));
   }, [fov]);
 
   // Hierarchical Multi-Resolution Starfield with Spatial Grid Cache for Silky 60FPS Panning
@@ -734,7 +734,9 @@ export default function InteractiveSkyEngine() {
 
     // Dynamic grid step size for optimal performance & visual richness
     let stepDeg = 0.5;
-    if (fov > 25.0) {
+    if (fov > 50.0) {
+      stepDeg = 6.0;
+    } else if (fov > 25.0) {
       stepDeg = 3.0;
     } else if (fov > 10.0) {
       stepDeg = 1.8;
@@ -756,7 +758,7 @@ export default function InteractiveSkyEngine() {
     const totalCells = numRSteps * numDSteps;
 
     // Distribute star budget evenly across all cells so every quadrant of the viewport is fully populated
-    const targetBudget = fov > 20.0 ? 1900 : fov > 5.0 ? 1500 : 1200;
+    const targetBudget = fov > 50.0 ? 2200 : fov > 20.0 ? 1900 : fov > 5.0 ? 1500 : 1200;
     const basePerCell = Math.max(1, Math.min(10, Math.round(targetBudget / totalCells)));
 
     for (let r = minRa; r <= maxRa; r += stepDeg) {
@@ -770,7 +772,7 @@ export default function InteractiveSkyEngine() {
           const starSeed = cellSeed + i * 137.5;
           const p = pseudoRandom(starSeed + 2);
           // Realistic astronomical power-law magnitude distribution
-          const magPow = fov > 20.0 ? 0.65 : 0.45;
+          const magPow = fov > 50.0 ? 0.75 : fov > 20.0 ? 0.65 : 0.45;
           const mag = 1.5 + Math.pow(p, magPow) * (maxVisibleMag - 1.5);
 
           const sRa = (((normR + pseudoRandom(starSeed) * stepDeg) % 360) + 360) % 360;
@@ -983,14 +985,13 @@ export default function InteractiveSkyEngine() {
         ctx.restore();
       }
 
-      // 3.5. Constellations & Asterisms (Ursa Major, Orion, Cassiopeia, Ophiuchus)
-      // Only render constellation figures when FOV >= 5.0° (when zoomed in, hide to avoid single random lines cutting across deep fields)
-      if (showConstellations && fov >= 5.0) {
-        const constAlpha = Math.min(1.0, (fov - 5.0) / 2.5);
+      // 3.5. Constellations & Asterisms (Ursa Major, Orion, Cassiopeia, Ophiuchus, Canis Major, Taurus, Scorpius, etc.)
+      if (showConstellations && fov >= 3.5) {
+        const constAlpha = Math.min(1.0, (fov - 3.5) / 2.5);
         ctx.save();
-        ctx.globalAlpha = constAlpha * (theme === 'dark' ? 0.65 : 0.45);
+        ctx.globalAlpha = constAlpha * (theme === 'dark' ? 0.75 : 0.55);
         ctx.strokeStyle = theme === 'dark' ? '#38BDF8' : '#0284C7';
-        ctx.lineWidth = 1.4;
+        ctx.lineWidth = fov > 45 ? 1.6 : 1.4;
         ctx.setLineDash([5, 4]);
 
         CONSTELLATIONS.forEach((c) => {
@@ -1002,6 +1003,9 @@ export default function InteractiveSkyEngine() {
             const deltaRa1 = normalizeAngleDiff(line.from.ra - ra);
             const deltaRa2 = normalizeAngleDiff(line.to.ra - ra);
 
+            // Prevent lines connecting across the 180° meridian in reverse
+            if (Math.abs(deltaRa1 - deltaRa2) > 90) return;
+
             const x1 = centerX - deltaRa1 * pixelsPerDegree * cosDec;
             const y1 = centerY - (line.from.dec - dec) * pixelsPerDegree;
 
@@ -1009,8 +1013,8 @@ export default function InteractiveSkyEngine() {
             const y2 = centerY - (line.to.dec - dec) * pixelsPerDegree;
 
             if (
-              (x1 >= -80 && x1 <= w + 80 && y1 >= -80 && y1 <= h + 80) ||
-              (x2 >= -80 && x2 <= w + 80 && y2 >= -80 && y2 <= h + 80)
+              (x1 >= -100 && x1 <= w + 100 && y1 >= -100 && y1 <= h + 100) ||
+              (x2 >= -100 && x2 <= w + 100 && y2 >= -100 && y2 <= h + 100)
             ) {
               ctx.beginPath();
               ctx.moveTo(x1, y1);
@@ -1019,12 +1023,12 @@ export default function InteractiveSkyEngine() {
 
               // Anchor nodes with star names
               ctx.beginPath();
-              ctx.arc(x1, y1, 2.5, 0, Math.PI * 2);
-              ctx.arc(x2, y2, 2.5, 0, Math.PI * 2);
+              ctx.arc(x1, y1, fov > 45 ? 2.0 : 2.5, 0, Math.PI * 2);
+              ctx.arc(x2, y2, fov > 45 ? 2.0 : 2.5, 0, Math.PI * 2);
               ctx.fillStyle = theme === 'dark' ? '#38BDF8' : '#0284C7';
               ctx.fill();
 
-              if (line.from.name && fov < 28) {
+              if (line.from.name && fov < 40) {
                 ctx.fillStyle = theme === 'dark' ? 'rgba(224, 242, 254, 0.85)' : 'rgba(3, 105, 161, 0.85)';
                 ctx.font = '600 10px "Plus Jakarta Sans", sans-serif';
                 ctx.fillText(line.from.name, Math.round(x1 + 4), Math.round(y1 - 4));
@@ -1040,10 +1044,10 @@ export default function InteractiveSkyEngine() {
           if (visibleLineCount > 0) {
             const labelX = sumX / visibleLineCount;
             const labelY = sumY / visibleLineCount;
-            if (labelX >= 30 && labelX <= w - 30 && labelY >= 30 && labelY <= h - 30) {
+            if (labelX >= 25 && labelX <= w - 25 && labelY >= 25 && labelY <= h - 25) {
               ctx.save();
               ctx.fillStyle = theme === 'dark' ? 'rgba(125, 211, 252, 0.95)' : 'rgba(3, 105, 161, 0.95)';
-              ctx.font = '700 12px "Plus Jakarta Sans", sans-serif';
+              ctx.font = fov > 45 ? '700 11px "Plus Jakarta Sans", sans-serif' : '700 12px "Plus Jakarta Sans", sans-serif';
               ctx.textAlign = 'center';
               ctx.shadowColor = theme === 'dark' ? '#020617' : '#FFFFFF';
               ctx.shadowBlur = 6;
@@ -1853,9 +1857,9 @@ export default function InteractiveSkyEngine() {
           </button>
         </Tooltip>
 
-        <Tooltip content="Widen observatory aperture (up to 45° all-sky constellation perspective)." tag="ZOOM OUT" shortcut="-" position="bottom-left">
+        <Tooltip content="Widen observatory aperture (up to 95° all-sky constellation perspective)." tag="ZOOM OUT" shortcut="-" position="bottom-left">
           <button
-            onClick={() => setFov(fov * 1.33)}
+            onClick={() => setFov(Math.min(95.0, fov * 1.33))}
             className="p-1.5 text-slate-500 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5 rounded-lg transition-colors"
           >
             <ZoomOut className="w-4 h-4" />
@@ -1892,7 +1896,8 @@ export default function InteractiveSkyEngine() {
           FOV:
         </span>
         {[
-          { label: '30° ALL-SKY', fovVal: 30.0, tip: 'Wide all-sky constellation & Milky Way view' },
+          { label: '90° ALL-SKY', fovVal: 90.0, tip: 'True wide all-sky dome & constellation perspective' },
+          { label: '35° CONSTELLATION', fovVal: 35.0, tip: 'Full constellation asterisms & star cloud context' },
           { label: '10° WIDE', fovVal: 10.0, tip: 'Constellation asterism & wide starfield' },
           { label: '1.2° DEEP SKY', fovVal: 1.2, tip: 'Standard deep-sky telescope framing' },
           { label: '0.25° PLANET', fovVal: 0.25, tip: 'Planetary disk magnification & moon systems' },
@@ -1916,7 +1921,7 @@ export default function InteractiveSkyEngine() {
       </div>
 
       {/* Bottom Left: Reticle Center Coordinates Readout */}
-      <div className="absolute bottom-3 left-3 p-2.5 rounded-xl bg-white/90 dark:bg-slate-900/80 border border-slate-300 dark:border-white/10 shadow-xl backdrop-blur-md font-mono text-xs z-10 pointer-events-auto">
+      <div className="absolute bottom-12 left-3 p-2 rounded-xl bg-white/90 dark:bg-slate-900/80 border border-slate-300 dark:border-white/10 shadow-lg backdrop-blur-md font-mono text-[11px] z-10 pointer-events-none hidden md:block">
         <div className="text-[9px] uppercase tracking-widest text-slate-500 dark:text-slate-400 font-bold mb-1">
           CENTER TARGET
         </div>

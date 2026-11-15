@@ -103,7 +103,7 @@ const useStore = create((set, get) => ({
   setIsBlinking: (val) => set({ isBlinking: typeof val === 'boolean' ? val : !get().isBlinking }),
   setBlinkSpeedMs: (ms) => set({ blinkSpeedMs: ms }),
   setFov: (fov) => {
-    const validFov = Number.isFinite(fov) ? Math.max(0.05, Math.min(45, fov)) : 1.2;
+    const validFov = Number.isFinite(fov) ? Math.max(0.05, Math.min(95.0, fov)) : 1.2;
     set({ fov: validFov });
   },
   toggleGrid: () => set((s) => ({ showGrid: !s.showGrid })),
