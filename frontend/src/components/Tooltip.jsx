@@ -57,21 +57,21 @@ export default function Tooltip({
         <div
           role="tooltip"
           className={`absolute z-[9999] pointer-events-none whitespace-normal min-w-[160px] max-w-[280px] p-2.5 rounded-xl text-xs leading-tight transition-all duration-150 animate-in fade-in zoom-in-95 ${positionClasses}
-            bg-slate-900/95 text-slate-100 border border-cyan-500/30 dark:border-cyan-400/30 shadow-2xl shadow-cyan-950/60 backdrop-blur-xl`}
+            bg-space-900/95 dark:bg-space-950/95 text-sand-50 border border-ocean-500/40 shadow-2xl shadow-ocean-950/50 backdrop-blur-xl`}
         >
           <div className="flex items-center justify-between gap-2 mb-0.5">
             {tag && (
-              <span className="font-mono text-[9px] uppercase tracking-wider text-cyan-400 dark:text-cyan-300 font-semibold">
+              <span className="font-mono text-[9px] uppercase tracking-wider text-ocean-400 font-bold">
                 {tag}
               </span>
             )}
             {shortcut && (
-              <kbd className="font-mono text-[9px] px-1 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">
+              <kbd className="font-mono text-[9px] px-1 py-0.5 rounded bg-space-850 text-sand-100 border border-ocean-800/80">
                 {shortcut}
               </kbd>
             )}
           </div>
-          <div className="text-[11px] font-sans text-slate-200 leading-snug">
+          <div className="text-[11px] font-sans text-sand-100 leading-snug">
             {content}
           </div>
         </div>

@@ -7,9 +7,25 @@ import EpochScrubber from './components/EpochScrubber';
 import StarField from './components/StarField';
 import InitializationScreen from './components/InitializationScreen';
 import CosmicExplorerTour from './components/CosmicExplorerTour';
+import AppTutorialModal from './components/AppTutorialModal';
 
 export default function App() {
-  const { isTourOpen, closeTour, toggleTheme, setIsBlinking, isBlinking, fov, setFov, toggleGrid, toggleConstellations, toggleMoversOverlay } = useStore();
+  const {
+    isTourOpen,
+    closeTour,
+    isTutorialOpen,
+    openTutorial,
+    closeTutorial,
+    toggleTheme,
+    setIsBlinking,
+    isBlinking,
+    fov,
+    setFov,
+    toggleGrid,
+    toggleConstellations,
+    toggleMoversOverlay,
+  } = useStore();
+
   const [hasBooted, setHasBooted] = useState(() => {
     if (typeof window !== 'undefined') {
       return sessionStorage.getItem('photonx-booted') === 'true';
@@ -23,6 +39,19 @@ export default function App() {
     }
     setHasBooted(true);
   };
+
+  // First-time visitor tutorial auto-launcher
+  useEffect(() => {
+    if (typeof window !== 'undefined' && hasBooted) {
+      const tutorialDone = localStorage.getItem('photonx_tutorial_completed');
+      if (!tutorialDone) {
+        const timer = setTimeout(() => {
+          openTutorial();
+        }, 750);
+        return () => clearTimeout(timer);
+      }
+    }
+  }, [hasBooted, openTutorial]);
 
   // Global keyboard shortcuts
   useEffect(() => {
@@ -72,15 +101,14 @@ export default function App() {
   }, [toggleTheme, setIsBlinking, isBlinking, fov, setFov, toggleGrid, toggleConstellations, toggleMoversOverlay]);
 
   return (
-    <div className="relative flex flex-col h-screen w-screen overflow-hidden bg-slate-50 dark:bg-space-950 text-slate-900 dark:text-slate-100 transition-colors duration-300 font-sans">
+    <div className="relative flex flex-col h-screen w-screen overflow-hidden bg-sand-50 dark:bg-space-950 text-slate-800 dark:text-sand-50 transition-colors duration-300 font-sans">
       {/* Initialization & Orbital Calibration Sequence */}
       {!hasBooted && <InitializationScreen onComplete={handleBootComplete} />}
 
-      {/* Background Ambience */}
+      {/* Coastal Night Star Field Ambience */}
       <StarField />
-      <div className="scan-lines" aria-hidden="true" />
 
-      {/* Header Navigation */}
+      {/* Header Navigation with Tutorial Button */}
       <Header />
 
       {/* Main Workspace: 65% Interactive Sky Viewport | 35% Science Telemetry */}
@@ -104,6 +132,9 @@ export default function App() {
 
       {/* Bottom Orbital Epoch Scrubber */}
       <EpochScrubber />
+
+      {/* Full Site Interactive Tutorial (First-time auto & button trigger) */}
+      <AppTutorialModal isOpen={isTutorialOpen} onClose={closeTutorial} />
 
       {/* Interactive Guided Cosmic Tour for Kids & Beginners */}
       <CosmicExplorerTour isOpen={isTourOpen} onClose={closeTour} />

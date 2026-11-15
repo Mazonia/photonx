@@ -30,6 +30,8 @@ frontend/build/
 .DS_Store
 Thumbs.db
 desktop.ini
+~$*
+*.tmp
 
 # Docker
 docker-compose.override.yml

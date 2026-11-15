@@ -42,7 +42,7 @@ export default function EpochScrubber() {
 
   return (
     <footer
-      className="relative z-20 flex flex-wrap items-center justify-between gap-3 px-4 py-2 bg-white/95 dark:bg-slate-950/90 border-t border-slate-200 dark:border-white/10 backdrop-blur-xl shadow-lg select-none transition-colors duration-200"
+      className="relative z-20 flex flex-wrap items-center justify-between gap-3 px-4 py-2 bg-sand-50/95 dark:bg-space-900/95 border-t border-sand-300 dark:border-ocean-900/60 backdrop-blur-xl shadow-lg select-none transition-colors duration-200"
       onKeyDown={handleKeyDown}
       tabIndex={0}
       role="region"

@@ -66,13 +66,13 @@ export default function DetailPanel() {
   });
 
   return (
-    <div className="flex flex-col h-full bg-white/95 dark:bg-slate-950/70 backdrop-blur-xl border-l border-slate-200 dark:border-white/10 overflow-y-auto transition-colors duration-200">
+    <div className="flex flex-col h-full bg-sand-50/95 dark:bg-space-900/80 backdrop-blur-xl border-l border-sand-300 dark:border-ocean-900/60 overflow-y-auto transition-colors duration-200">
       {/* Target Header Banner */}
-      <div className="p-4 border-b border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-slate-900/40">
+      <div className="p-4 border-b border-sand-200 dark:border-ocean-900/40 bg-sand-100/70 dark:bg-space-950/60">
         <div className="flex items-center justify-between gap-2 mb-1.5">
           <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-cyan-500 dark:bg-cyan-400 shadow-hud-glow animate-pulse" />
-            <h2 className="text-base font-display font-bold text-slate-900 dark:text-white leading-tight">
+            <span className="w-2.5 h-2.5 rounded-full bg-ocean-500 dark:bg-ocean-400 shadow-hud-glow animate-pulse" />
+            <h2 className="text-base font-display font-bold text-slate-900 dark:text-sand-50 leading-tight">
               {targetName}
             </h2>
           </div>
