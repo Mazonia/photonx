@@ -3,6 +3,26 @@ import useStore from '../store/useStore';
 import Tooltip from './Tooltip';
 import { api } from '../api/client';
 import { CONSTELLATIONS } from '../data/constellations';
+import { MASTER_CELESTIAL_TARGETS } from '../data/celestialCatalog';
+import {
+  drawJupiter,
+  drawSaturn,
+  drawMars,
+  drawVenus,
+  drawSun,
+  drawEarth,
+  drawMoon,
+  drawUranus,
+  drawNeptune,
+  drawPluto,
+  drawPlanetNine,
+  drawAndromedaGalaxy,
+  drawOrionNebula,
+  drawPleiadesCluster,
+  drawSagittariusA,
+  drawTelescopeEyepieceMask,
+  drawPrecisionReticle,
+} from './CelestialRenderers';
 import {
   ZoomIn,
   ZoomOut,
@@ -17,6 +37,7 @@ import {
   Eye,
   Camera,
   Orbit,
+  Telescope,
 } from 'lucide-react';
 
 // Curated bright anchor stars & famous benchmarks with astrophysics metadata
@@ -418,6 +439,55 @@ function drawDiffractionSpikes(ctx, x, y, length, color, alpha) {
   ctx.restore();
 }
 
+function getPlanetarySymbol(name) {
+  const n = (name || '').toLowerCase();
+  if (n.includes('sun') || n.includes('sol')) return '☉';
+  if (n.includes('mercury')) return '☿';
+  if (n.includes('venus')) return '♀';
+  if (n.includes('earth')) return '♁';
+  if (n.includes('moon') || n.includes('luna')) return '☾';
+  if (n.includes('mars')) return '♂';
+  if (n.includes('ceres')) return '⚳';
+  if (n.includes('vesta')) return '⚴';
+  if (n.includes('jupiter')) return '♃';
+  if (n.includes('saturn')) return '♄';
+  if (n.includes('uranus')) return '♅';
+  if (n.includes('neptune')) return '♆';
+  if (n.includes('pluto')) return '♇';
+  if (n.includes('planet nine') || n.includes('planet 9') || n.includes('planet x')) return '⯓';
+  return '🪐';
+}
+
+function drawTargetBadge(ctx, x, y, radius, target, theme, isBlinking, blinkEpoch, activeEpoch) {
+  ctx.save();
+  ctx.fillStyle = target.mover
+    ? theme === 'dark' ? '#F59E0B' : '#D97706'
+    : target.isPlanet
+    ? theme === 'dark' ? '#38BDF8' : '#0284C7'
+    : theme === 'dark' ? '#F8FAFC' : '#0F172A';
+  ctx.font = 'bold 11px "IBM Plex Sans", sans-serif';
+  ctx.fillText(target.name, x + radius + 6, y + 2);
+
+  ctx.fillStyle = theme === 'dark' ? '#94A3B8' : '#64748B';
+  ctx.font = '9.5px "IBM Plex Mono", monospace';
+  const magText = target.mag !== undefined
+    ? `Mag ${target.mag.toFixed(1)}${target.bayer ? ` · ${target.bayer}` : target.orbit ? ` · ${target.orbit}` : ''}`
+    : target.type || 'Celestial Object';
+  ctx.fillText(magText, x + radius + 6, y + 14);
+
+  if (target.mover) {
+    ctx.fillStyle = theme === 'dark' ? '#38BDF8' : '#0284C7';
+    ctx.font = '9px "IBM Plex Mono", monospace';
+    const arcsecShift = (Math.hypot(target.shiftRa || 0, target.shiftDec || 0) * 3600).toFixed(1);
+    ctx.fillText(
+      `Δ ${arcsecShift}" · ${isBlinking ? `Epoch ${blinkEpoch}` : activeEpoch}`,
+      x + radius + 6,
+      y + 26
+    );
+  }
+  ctx.restore();
+}
+
 export default function InteractiveSkyEngine() {
   const canvasRef = useRef(null);
   const containerRef = useRef(null);
@@ -454,7 +524,32 @@ export default function InteractiveSkyEngine() {
   const [showRealImagery, setShowRealImagery] = useState(false);
   const [nasaImage, setNasaImage] = useState(null);
   const [isImageryLoading, setIsImageryLoading] = useState(false);
+  const [showEyepieceFrame, setShowEyepieceFrame] = useState(false);
   const dragInfoRef = useRef({ startX: 0, startY: 0, startTime: 0 });
+
+  // Unified master celestial targets pool combining catalog anchors and solar system / deep space worlds
+  const allCelestialTargets = useMemo(() => {
+    const map = new Map();
+    CATALOG_STARS.forEach((s) => map.set(s.name.toLowerCase(), s));
+    MASTER_CELESTIAL_TARGETS.forEach((t) => {
+      const key = t.name.toLowerCase();
+      const existing = map.get(key);
+      const isPlanet =
+        (t.category && (t.category.includes('Planet') || t.category === 'Moon')) ||
+        t.category === 'Solar System Star' ||
+        t.category === 'Asteroid' ||
+        t.category === 'Comet';
+      const isExo = (t.category && t.category.includes('Exoplanet')) || (t.type && t.type.includes('Exoplanet'));
+      map.set(key, {
+        ...existing,
+        ...t,
+        isPlanet: existing?.isPlanet || isPlanet,
+        isExoplanet: existing?.isExoplanet || isExo,
+        type: t.category === 'Solar System Star' ? 'Sun' : existing?.type || t.type || 'Star',
+      });
+    });
+    return Array.from(map.values());
+  }, []);
 
   useEffect(() => {
     if (!isBlinking) return;
@@ -900,39 +995,168 @@ export default function InteractiveSkyEngine() {
       });
       ctx.globalAlpha = 1.0;
 
-      // 5. Render Curated Catalog Targets & High Proper-Motion Benchmark Sources
-      CATALOG_STARS.forEach((star) => {
-        let deltaRa = star.ra - ra;
+      // 5. Render Curated Catalog Targets, Photorealistic Planets & Benchmark Sources
+      let closestTargetToCenter = null;
+
+      allCelestialTargets.forEach((target) => {
+        let deltaRa = target.ra - ra;
         while (deltaRa > 180) deltaRa -= 360;
         while (deltaRa < -180) deltaRa += 360;
 
         let currentDeltaRa = deltaRa;
-        let currentDec = star.dec;
-        const isCurrentlyMover = star.mover && showMoversOverlay;
+        let currentDec = target.dec;
+        const isCurrentlyMover = target.mover && showMoversOverlay;
 
         if (isCurrentlyMover && isBlinking && blinkEpoch === 'B') {
-          currentDeltaRa += star.shiftRa;
-          currentDec += star.shiftDec;
+          currentDeltaRa += target.shiftRa || 0;
+          currentDec += target.shiftDec || 0;
         }
 
         const x = centerX - currentDeltaRa * pixelsPerDegree * cosDec;
         const y = centerY - (currentDec - dec) * pixelsPerDegree;
 
-        if (x >= -45 && x <= w + 45 && y >= -45 && y <= h + 45) {
-          const colorDef = SPECTRAL_COLORS[star.type] || SPECTRAL_COLORS.A;
-          const targetColor = star.mover
+        if (x >= -120 && x <= w + 120 && y >= -120 && y <= h + 120) {
+          // Check proximity to optical center for reticle target lock-on
+          const distToCenter = Math.hypot(x - centerX, y - centerY);
+          if (distToCenter < 40 && (!closestTargetToCenter || distToCenter < closestTargetToCenter.dist)) {
+            closestTargetToCenter = { target, dist: distToCenter, x, y };
+          }
+
+          const lowerName = target.name.toLowerCase();
+          const isSolar = target.isPlanet || (target.category && (target.category.includes('Solar') || target.category === 'Moon' || target.category === 'Dwarf Planet' || target.category === 'Asteroid' || target.category === 'Comet'));
+
+          // HIGH-MAGNIFICATION TELESCOPIC RESOLVED DISK RENDERING (FOV < 1.8°)
+          if (fov < 1.8) {
+            if (lowerName.includes('jupiter')) {
+              const jupR = Math.max(14, Math.min(110, 26 / fov));
+              drawJupiter(ctx, x, y, jupR, fov, theme);
+              drawTargetBadge(ctx, x, y, jupR, target, theme, isBlinking, blinkEpoch, activeEpoch);
+              return;
+            }
+            if (lowerName.includes('saturn')) {
+              const satR = Math.max(12, Math.min(90, 22 / fov));
+              drawSaturn(ctx, x, y, satR, fov, theme);
+              drawTargetBadge(ctx, x, y, satR * 1.6, target, theme, isBlinking, blinkEpoch, activeEpoch);
+              return;
+            }
+            if (lowerName.includes('mars')) {
+              const marsR = Math.max(8, Math.min(75, 15 / fov));
+              drawMars(ctx, x, y, marsR, fov, theme);
+              drawTargetBadge(ctx, x, y, marsR, target, theme, isBlinking, blinkEpoch, activeEpoch);
+              return;
+            }
+            if (lowerName.includes('venus')) {
+              const venR = Math.max(9, Math.min(80, 16 / fov));
+              drawVenus(ctx, x, y, venR, fov, theme);
+              drawTargetBadge(ctx, x, y, venR, target, theme, isBlinking, blinkEpoch, activeEpoch);
+              return;
+            }
+            if (lowerName.includes('sun') || lowerName.includes('sol')) {
+              const sunR = Math.max(16, Math.min(125, 30 / fov));
+              drawSun(ctx, x, y, sunR, fov, theme);
+              drawTargetBadge(ctx, x, y, sunR * 1.2, target, theme, isBlinking, blinkEpoch, activeEpoch);
+              return;
+            }
+            if (lowerName.includes('earth') && !lowerName.includes('2.0') && !lowerName.includes('cousin')) {
+              const earthR = Math.max(10, Math.min(85, 18 / fov));
+              drawEarth(ctx, x, y, earthR, fov, theme);
+              drawTargetBadge(ctx, x, y, earthR, target, theme, isBlinking, blinkEpoch, activeEpoch);
+              return;
+            }
+            if (lowerName.includes('moon') || lowerName.includes('luna')) {
+              const moonR = Math.max(12, Math.min(95, 24 / fov));
+              drawMoon(ctx, x, y, moonR, fov, theme);
+              drawTargetBadge(ctx, x, y, moonR, target, theme, isBlinking, blinkEpoch, activeEpoch);
+              return;
+            }
+            if (lowerName.includes('uranus')) {
+              const uraR = Math.max(8, Math.min(65, 14 / fov));
+              drawUranus(ctx, x, y, uraR, fov, theme);
+              drawTargetBadge(ctx, x, y, uraR, target, theme, isBlinking, blinkEpoch, activeEpoch);
+              return;
+            }
+            if (lowerName.includes('neptune')) {
+              const nepR = Math.max(8, Math.min(65, 14 / fov));
+              drawNeptune(ctx, x, y, nepR, fov, theme);
+              drawTargetBadge(ctx, x, y, nepR, target, theme, isBlinking, blinkEpoch, activeEpoch);
+              return;
+            }
+            if (lowerName.includes('pluto')) {
+              const pluR = Math.max(6, Math.min(48, 10 / fov));
+              drawPluto(ctx, x, y, pluR, fov, theme);
+              drawTargetBadge(ctx, x, y, pluR, target, theme, isBlinking, blinkEpoch, activeEpoch);
+              return;
+            }
+            if (lowerName.includes('planet nine') || lowerName.includes('planet 9') || lowerName.includes('planet x')) {
+              const p9R = Math.max(8, Math.min(60, 13 / fov));
+              drawPlanetNine(ctx, x, y, p9R, fov, theme);
+              drawTargetBadge(ctx, x, y, p9R, target, theme, isBlinking, blinkEpoch, activeEpoch);
+              return;
+            }
+            if (lowerName.includes('andromeda') || lowerName.includes('m31')) {
+              const m31R = Math.max(18, Math.min(145, 36 / fov));
+              drawAndromedaGalaxy(ctx, x, y, m31R, fov, theme);
+              drawTargetBadge(ctx, x, y, m31R, target, theme, isBlinking, blinkEpoch, activeEpoch);
+              return;
+            }
+            if (lowerName.includes('orion nebula') || lowerName.includes('m42')) {
+              const m42R = Math.max(18, Math.min(135, 34 / fov));
+              drawOrionNebula(ctx, x, y, m42R, fov, theme);
+              drawTargetBadge(ctx, x, y, m42R, target, theme, isBlinking, blinkEpoch, activeEpoch);
+              return;
+            }
+            if (lowerName.includes('pleiades') || lowerName.includes('m45')) {
+              const pleiR = Math.max(18, Math.min(140, 35 / fov));
+              drawPleiadesCluster(ctx, x, y, pleiR, fov, theme);
+              drawTargetBadge(ctx, x, y, pleiR, target, theme, isBlinking, blinkEpoch, activeEpoch);
+              return;
+            }
+            if (lowerName.includes('sagittarius a*') || lowerName.includes('sgr a*')) {
+              const sgrR = Math.max(12, Math.min(80, 20 / fov));
+              drawSagittariusA(ctx, x, y, sgrR, fov, theme);
+              drawTargetBadge(ctx, x, y, sgrR, target, theme, isBlinking, blinkEpoch, activeEpoch);
+              return;
+            }
+          }
+
+          // STANDARD OBSERVATORY ALL-SKY / INTERMEDIATE RENDERING
+          const colorDef = SPECTRAL_COLORS[target.type] || (isSolar ? SPECTRAL_COLORS.Planet : SPECTRAL_COLORS.A);
+          const targetColor = target.mover
             ? theme === 'dark' ? '#F59E0B' : '#D97706'
+            : isSolar
+            ? theme === 'dark' ? '#38BDF8' : '#0284C7'
             : theme === 'dark' ? colorDef.dark : colorDef.light;
 
-          const baseSize = Math.max(2.5, Math.min(6.5, 6.0 - (star.mag || 9) * 0.3));
+          const baseSize = isSolar
+            ? Math.max(4.5, Math.min(9.0, 7.5 - (target.mag || 5) * 0.2))
+            : Math.max(2.5, Math.min(6.5, 6.0 - (target.mag || 9) * 0.3));
 
+          // Draw object disk
           ctx.beginPath();
           ctx.arc(x, y, baseSize, 0, Math.PI * 2);
           ctx.fillStyle = targetColor;
           ctx.fill();
 
-          if (star.mag < 3.5) {
-            const spikeLen = Math.max(12, (4.5 - star.mag) * 16);
+          // Planet steady indicator ring (planets do not twinkle)
+          if (isSolar) {
+            ctx.save();
+            ctx.strokeStyle = targetColor;
+            ctx.globalAlpha = 0.45;
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.arc(x, y, baseSize + 4, 0, Math.PI * 2);
+            ctx.stroke();
+
+            // Draw planetary symbol
+            const sym = getPlanetarySymbol(target.name);
+            ctx.fillStyle = targetColor;
+            ctx.font = 'bold 9px monospace';
+            ctx.textAlign = 'center';
+            ctx.fillText(sym, x, y - baseSize - 5);
+            ctx.restore();
+          } else if (target.mag < 3.5) {
+            // Bright optical stars get diffraction spikes
+            const spikeLen = Math.max(12, (4.5 - target.mag) * 16);
             drawDiffractionSpikes(ctx, x, y, spikeLen, targetColor, 0.85);
           }
 
@@ -947,10 +1171,10 @@ export default function InteractiveSkyEngine() {
             ctx.arc(x, y, baseSize + 7 + pulse, 0, Math.PI * 2);
             ctx.stroke();
 
-            if (star.shiftRa || star.shiftDec) {
+            if (target.shiftRa || target.shiftDec) {
               const vectorLengthMult = Math.min(250, pixelsPerDegree * 8);
-              const vectorX = x - (star.shiftRa || 0) * vectorLengthMult;
-              const vectorY = y - (star.shiftDec || 0) * vectorLengthMult;
+              const vectorX = x - (target.shiftRa || 0) * vectorLengthMult;
+              const vectorY = y - (target.shiftDec || 0) * vectorLengthMult;
               ctx.setLineDash([]);
               ctx.strokeStyle = '#F59E0B';
               ctx.lineWidth = 1.8;
@@ -971,75 +1195,48 @@ export default function InteractiveSkyEngine() {
             ctx.restore();
           }
 
-          // Star name and magnitude badge (clears up "what are they?")
-          ctx.save();
-          ctx.fillStyle = star.mover
-            ? theme === 'dark' ? '#F59E0B' : '#D97706'
-            : theme === 'dark' ? '#F8FAFC' : '#0F172A';
-          ctx.font = 'bold 11px "IBM Plex Sans", sans-serif';
-          ctx.fillText(star.name, x + baseSize + 6, y + 2);
-
-          // Star magnitude badge
-          ctx.fillStyle = theme === 'dark' ? '#94A3B8' : '#64748B';
-          ctx.font = '9.5px "IBM Plex Mono", monospace';
-          const magText = `Mag ${star.mag.toFixed(1)}${star.bayer ? ` · ${star.bayer}` : ''}`;
-          ctx.fillText(magText, x + baseSize + 6, y + 14);
-
-          if (star.mover) {
-            ctx.fillStyle = theme === 'dark' ? '#38BDF8' : '#0284C7';
-            ctx.font = '9px "IBM Plex Mono", monospace';
-            const arcsecShift = (Math.hypot(star.shiftRa || 0, star.shiftDec || 0) * 3600).toFixed(1);
-            ctx.fillText(
-              `Δ ${arcsecShift}" · ${isBlinking ? `Epoch ${blinkEpoch}` : activeEpoch}`,
-              x + baseSize + 6,
-              y + 26
-            );
-          }
-          ctx.restore();
+          // Target name and magnitude badge
+          drawTargetBadge(ctx, x, y, baseSize, target, theme, isBlinking, blinkEpoch, activeEpoch);
         }
       });
 
-      // 6. Center Precision Optical Reticle
-      ctx.save();
-      ctx.strokeStyle = theme === 'dark' ? 'rgba(6, 182, 212, 0.85)' : 'rgba(2, 132, 199, 0.8)';
-      ctx.lineWidth = 1.5;
+      // 6. High-Precision Reticle with Celestial Compass & Target Lock
+      const targetLockInfo = closestTargetToCenter
+        ? {
+            name: closestTargetToCenter.target.name,
+            radius: closestTargetToCenter.target.isPlanet ? 26 : 16,
+            angularDia:
+              closestTargetToCenter.target.name.includes('Jupiter')
+                ? '46.8″ (Giant Oblate Disk)'
+                : closestTargetToCenter.target.name.includes('Saturn')
+                ? '18.4″ (Rings 42.1″)'
+                : closestTargetToCenter.target.name.includes('Mars')
+                ? '14.2″ (Terrestrial Disk)'
+                : closestTargetToCenter.target.name.includes('Venus')
+                ? '24.5″ (Cloud Deck)'
+                : closestTargetToCenter.target.name.includes('Sun')
+                ? '32.1′ (Solar Disk)'
+                : closestTargetToCenter.target.name.includes('Moon')
+                ? '31.2′ (Lunar Surface)'
+                : closestTargetToCenter.target.isPlanet
+                ? 'Resolved Disc'
+                : null,
+          }
+        : targetName && !targetName.startsWith('Target (')
+        ? {
+            name: targetName,
+            radius: 20,
+            angularDia: null,
+          }
+        : null;
 
-      ctx.beginPath();
-      ctx.arc(centerX, centerY, 16, 0, Math.PI * 2);
-      ctx.stroke();
+      drawPrecisionReticle(ctx, centerX, centerY, w, h, fov, theme, targetLockInfo);
 
-      ctx.setLineDash([4, 4]);
-      ctx.beginPath();
-      ctx.arc(centerX, centerY, 28, 0, Math.PI * 2);
-      ctx.stroke();
-      ctx.setLineDash([]);
-
-      ctx.beginPath();
-      ctx.moveTo(centerX - 8, centerY);
-      ctx.lineTo(centerX + 8, centerY);
-      ctx.moveTo(centerX, centerY - 8);
-      ctx.lineTo(centerX, centerY + 8);
-      ctx.stroke();
-
-      const frameR = Math.min(w, h) * 0.28;
-      const cornerLen = 14;
-
-      ctx.beginPath();
-      ctx.moveTo(centerX - frameR, centerY - frameR + cornerLen);
-      ctx.lineTo(centerX - frameR, centerY - frameR);
-      ctx.lineTo(centerX - frameR + cornerLen, centerY - frameR);
-      ctx.moveTo(centerX + frameR - cornerLen, centerY - frameR);
-      ctx.lineTo(centerX + frameR, centerY - frameR);
-      ctx.lineTo(centerX + frameR, centerY - frameR + cornerLen);
-      ctx.moveTo(centerX - frameR, centerY + frameR - cornerLen);
-      ctx.lineTo(centerX - frameR, centerY + frameR);
-      ctx.lineTo(centerX - frameR + cornerLen, centerY + frameR);
-      ctx.moveTo(centerX + frameR - cornerLen, centerY + frameR);
-      ctx.lineTo(centerX + frameR, centerY + frameR);
-      ctx.lineTo(centerX + frameR, centerY + frameR - cornerLen);
-      ctx.stroke();
-
-      ctx.restore();
+      // 7. Telescope Eyepiece Frame Vignette (if toggled)
+      if (showEyepieceFrame) {
+        const eyepieceRadius = Math.min(w, h) * 0.46;
+        drawTelescopeEyepieceMask(ctx, w, h, centerX, centerY, eyepieceRadius, theme);
+      }
 
       // 7. Physical Field Scale Bar (Bottom Left)
       ctx.save();
@@ -1088,6 +1285,8 @@ export default function InteractiveSkyEngine() {
     activeEpoch,
     showRealImagery,
     nasaImage,
+    allCelestialTargets,
+    showEyepieceFrame,
   ]);
 
   const handleMouseDown = (e) => {
@@ -1131,23 +1330,23 @@ export default function InteractiveSkyEngine() {
       return;
     }
 
-    // Hit-testing for star hover tooltip
+    // Hit-testing for celestial target hover tooltip
     let found = null;
-    const hitRadius = 18;
 
-    // 1. Check Catalog Stars
-    for (const star of CATALOG_STARS) {
-      let deltaRa = star.ra - ra;
+    // 1. Check Primary Celestial Targets (Planets, Moons, Anchors, Deep Sky)
+    for (const target of allCelestialTargets) {
+      let deltaRa = target.ra - ra;
       while (deltaRa > 180) deltaRa -= 360;
       while (deltaRa < -180) deltaRa += 360;
       const sx = w / 2 - deltaRa * pixelsPerDegree * cosDec;
-      const sy = h / 2 - (star.dec - dec) * pixelsPerDegree;
+      const sy = h / 2 - (target.dec - dec) * pixelsPerDegree;
+      const hitRadius = target.isPlanet ? 26 : 18;
       if (Math.hypot(x - sx, y - sy) < hitRadius) {
         found = {
-          ...star,
+          ...target,
           screenX: x,
           screenY: y,
-          isBrightAnchor: (star.mag < 4.5),
+          isBrightAnchor: target.mag < 4.5,
         };
         break;
       }
@@ -1180,6 +1379,29 @@ export default function InteractiveSkyEngine() {
     }
 
     setHoveredStar(found);
+  };
+
+  const handleDoubleClick = (e) => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const rect = canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const w = rect.width;
+    const h = rect.height;
+    const pixelsPerDegree = Math.min(w, h) / fov;
+    const cosDec = Math.cos((dec * Math.PI) / 180);
+    const clickDec = dec - (y - h / 2) / pixelsPerDegree;
+    const clickRa = (ra - (x - w / 2) / (pixelsPerDegree * cosDec) + 360) % 360;
+
+    // Slew and zoom in to target
+    setFov(Math.max(0.05, fov * 0.45));
+    if (hoveredStar) {
+      setPosition(hoveredStar.ra, hoveredStar.dec, hoveredStar.name);
+      setSelectedObject(hoveredStar);
+    } else {
+      setPosition(clickRa, clickDec, `Target (${clickRa.toFixed(4)}°, ${clickDec >= 0 ? '+' : ''}${clickDec.toFixed(4)}°)`);
+    }
   };
 
   const handleMouseUp = (e) => {
@@ -1222,6 +1444,7 @@ export default function InteractiveSkyEngine() {
     >
       <canvas
         ref={canvasRef}
+        onDoubleClick={handleDoubleClick}
         className="block w-full h-full cursor-crosshair touch-none"
       />
 
@@ -1236,30 +1459,40 @@ export default function InteractiveSkyEngine() {
         >
           <div className="flex items-center justify-between gap-2 mb-1.5">
             <span className="font-bold text-slate-900 dark:text-white font-mono flex items-center gap-1.5 truncate">
-              ⭐ {hoveredStar.name}
+              {hoveredStar.isPlanet ? '🪐' : '⭐'} {hoveredStar.name}
             </span>
             <span className="px-1.5 py-0.5 rounded bg-ocean-500/10 text-ocean-700 dark:text-ocean-300 font-mono text-[9px] font-bold shrink-0">
-              Class {hoveredStar.type || 'A'}
+              {hoveredStar.category || hoveredStar.type || 'Object'}
             </span>
           </div>
           <div className="space-y-1 font-mono text-[10px] text-slate-600 dark:text-sand-200">
             <div>Coordinates: RA {hoveredStar.ra.toFixed(4)}° · Dec {hoveredStar.dec.toFixed(4)}°</div>
             <div>
-              Brightness: Mag {hoveredStar.mag ? hoveredStar.mag.toFixed(2) : '—'} {hoveredStar.mag < 3 ? '(Naked-Eye Optical Anchor)' : '(Infrared Source)'}
+              Brightness: Mag {hoveredStar.mag !== undefined ? hoveredStar.mag.toFixed(2) : '—'} {hoveredStar.isPlanet ? '(Solar System Body)' : hoveredStar.mag < 3 ? '(Naked-Eye Optical Anchor)' : '(Infrared Source)'}
             </div>
+            {hoveredStar.diameter_km && (
+              <div className="text-cyan-700 dark:text-cyan-300">
+                Diameter: {hoveredStar.diameter_km.toLocaleString()} km
+              </div>
+            )}
+            {hoveredStar.surface_temp_c !== undefined && (
+              <div className="text-amber-700 dark:text-amber-300">
+                Temp: {hoveredStar.surface_temp_c > 0 ? `+${hoveredStar.surface_temp_c}` : hoveredStar.surface_temp_c}°C
+              </div>
+            )}
             {hoveredStar.notes && (
-              <div className="text-amber-700 dark:text-amber-300 pt-0.5 border-t border-sand-200 dark:border-white/10">
+              <div className="text-slate-600 dark:text-slate-300 pt-0.5 border-t border-sand-200 dark:border-white/10">
                 {hoveredStar.notes}
               </div>
             )}
-            {hoveredStar.isBrightAnchor && (
+            {hoveredStar.isBrightAnchor && !hoveredStar.isPlanet && (
               <div className="text-[9.5px] text-ocean-800 dark:text-ocean-200 bg-ocean-500/15 border border-ocean-500/30 p-1.5 rounded-lg mt-1 font-sans leading-tight">
                 ✨ <strong>Why big spikes?</strong> These are optical diffraction spikes from light bending around the telescope's secondary mirror spider vanes.
               </div>
             )}
           </div>
           <div className="mt-2 text-[9.5px] font-sans text-ocean-600 dark:text-ocean-400 font-semibold flex items-center gap-1">
-            <span>👉 Click star to inspect in Detail Panel</span>
+            <span>👉 Click to select & lock reticle</span>
           </div>
         </div>
       )}
@@ -1430,6 +1663,51 @@ export default function InteractiveSkyEngine() {
             <Crosshair className="w-4 h-4" />
           </button>
         </Tooltip>
+
+        <div className="w-px h-5 bg-slate-300 dark:bg-white/10" />
+
+        <Tooltip content="Toggle realistic circular telescope eyepiece barrel mask & vignette frame." tag="EYEPIECE" position="bottom-left">
+          <button
+            onClick={() => setShowEyepieceFrame(!showEyepieceFrame)}
+            className={`p-1.5 rounded-lg transition-colors ${
+              showEyepieceFrame
+                ? 'text-cyan-600 dark:text-cyan-400 bg-cyan-500/10'
+                : 'text-slate-500 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5'
+            }`}
+          >
+            <Eye className="w-4 h-4" />
+          </button>
+        </Tooltip>
+      </div>
+
+      {/* Bottom Center: Magnification Presets Bar */}
+      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-1 p-1 rounded-xl bg-white/90 dark:bg-slate-900/85 border border-slate-300 dark:border-white/10 shadow-2xl backdrop-blur-md z-10 pointer-events-auto">
+        <span className="text-[9px] font-mono uppercase tracking-widest text-slate-500 dark:text-slate-400 px-2 font-bold hidden sm:inline">
+          FOV:
+        </span>
+        {[
+          { label: '30° ALL-SKY', fovVal: 30.0, tip: 'Wide all-sky constellation & Milky Way view' },
+          { label: '10° WIDE', fovVal: 10.0, tip: 'Constellation asterism & wide starfield' },
+          { label: '1.2° DEEP SKY', fovVal: 1.2, tip: 'Standard deep-sky telescope framing' },
+          { label: '0.25° PLANET', fovVal: 0.25, tip: 'Planetary disk magnification & moon systems' },
+          { label: '0.05° ULTRA', fovVal: 0.05, tip: 'Ultra-high resolution surface & ring inspection' },
+        ].map((p) => {
+          const isActive = Math.abs(fov - p.fovVal) < 0.04;
+          return (
+            <Tooltip key={p.label} content={p.tip} position="top">
+              <button
+                onClick={() => setFov(p.fovVal)}
+                className={`px-2 py-1 text-[10px] font-mono rounded-lg transition-all duration-200 whitespace-nowrap ${
+                  isActive
+                    ? 'bg-cyan-500 text-slate-950 font-bold shadow-hud-glow'
+                    : 'text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5'
+                }`}
+              >
+                {p.label}
+              </button>
+            </Tooltip>
+          );
+        })}
       </div>
 
       {/* Bottom Left: Reticle Center Coordinates Readout */}

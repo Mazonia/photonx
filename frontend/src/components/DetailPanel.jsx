@@ -133,11 +133,85 @@ export default function DetailPanel() {
                 {celestialInfo.desc}
               </p>
 
+              {/* Physical Telemetry Grid (Diameter, Temp, Gravity, Mass) */}
+              {(celestialInfo.diameter_km || celestialInfo.surface_temp_c !== undefined || celestialInfo.gravity_g || celestialInfo.mass_earth) && (
+                <div className="grid grid-cols-2 gap-1.5 mb-2.5">
+                  {celestialInfo.diameter_km && (
+                    <div className="p-2 rounded-xl bg-sand-100 dark:bg-space-900/80 border border-sand-200 dark:border-ocean-900/40">
+                      <div className="text-[9px] font-mono uppercase text-slate-500 dark:text-slate-400">Diameter</div>
+                      <div className="text-xs font-mono font-bold text-ocean-700 dark:text-ocean-300">{celestialInfo.diameter_km.toLocaleString()} km</div>
+                    </div>
+                  )}
+                  {celestialInfo.surface_temp_c !== undefined && (
+                    <div className="p-2 rounded-xl bg-sand-100 dark:bg-space-900/80 border border-sand-200 dark:border-ocean-900/40">
+                      <div className="text-[9px] font-mono uppercase text-slate-500 dark:text-slate-400">Surface Temp</div>
+                      <div className="text-xs font-mono font-bold text-amber-600 dark:text-amber-400">
+                        {celestialInfo.surface_temp_c > 0 ? `+${celestialInfo.surface_temp_c}` : celestialInfo.surface_temp_c}°C
+                      </div>
+                    </div>
+                  )}
+                  {celestialInfo.gravity_g !== undefined && (
+                    <div className="p-2 rounded-xl bg-sand-100 dark:bg-space-900/80 border border-sand-200 dark:border-ocean-900/40">
+                      <div className="text-[9px] font-mono uppercase text-slate-500 dark:text-slate-400">Surface Gravity</div>
+                      <div className="text-xs font-mono font-bold text-slate-800 dark:text-slate-200">{celestialInfo.gravity_g} g</div>
+                    </div>
+                  )}
+                  {celestialInfo.mass_earth && (
+                    <div className="p-2 rounded-xl bg-sand-100 dark:bg-space-900/80 border border-sand-200 dark:border-ocean-900/40">
+                      <div className="text-[9px] font-mono uppercase text-slate-500 dark:text-slate-400">Mass (Earths)</div>
+                      <div className="text-xs font-mono font-bold text-slate-800 dark:text-slate-200">{celestialInfo.mass_earth} M⊕</div>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Atmosphere & Spectroscopic Signature */}
+              {celestialInfo.atmosphere && (
+                <div className="p-2 rounded-xl bg-sand-100 dark:bg-space-900/80 border border-sand-200 dark:border-ocean-900/40 text-[11px] mb-2 font-mono">
+                  <div className="text-[9px] uppercase text-slate-500 dark:text-slate-400 font-bold mb-0.5">Atmosphere & Composition</div>
+                  <div className="text-slate-700 dark:text-slate-300 leading-snug">{celestialInfo.atmosphere}</div>
+                </div>
+              )}
+
+              {/* SPHEREx Science Diagnostic */}
+              {celestialInfo.spherex_diag && (
+                <div className="p-2 rounded-xl bg-cyan-500/10 border border-cyan-500/25 text-[11px] mb-2 font-sans">
+                  <div className="text-[9px] uppercase text-cyan-600 dark:text-cyan-400 font-mono font-bold mb-0.5">SPHEREx Infrared Diagnostics</div>
+                  <div className="text-cyan-900 dark:text-cyan-200 leading-snug">{celestialInfo.spherex_diag}</div>
+                </div>
+              )}
+
               {celestialInfo.orbit && (
                 <div className="flex items-center gap-2 p-2 rounded-xl bg-sand-100 dark:bg-space-900/90 border border-sand-200 dark:border-ocean-900/40 text-[11px] font-mono text-sand-800 dark:text-sand-200 mb-2">
                   <Orbit className="w-3.5 h-3.5 text-amber-500 shrink-0" />
                   <span className="font-semibold text-ocean-700 dark:text-ocean-300">Orbit / Distance:</span>
                   <span className="truncate">{celestialInfo.orbit}</span>
+                </div>
+              )}
+
+              {/* Moons System with clickable slew buttons */}
+              {celestialInfo.moons && celestialInfo.moons.length > 0 && (
+                <div className="mb-2 p-2 rounded-xl bg-sand-100 dark:bg-space-900/80 border border-sand-200 dark:border-ocean-900/40">
+                  <div className="text-[9px] font-mono uppercase text-slate-500 dark:text-slate-400 font-bold mb-1.5 flex items-center justify-between">
+                    <span>Major Satellites & Moons ({celestialInfo.moons_count || celestialInfo.moons.length})</span>
+                    <span className="text-[8px] text-ocean-600 dark:text-ocean-400">Click to Slew</span>
+                  </div>
+                  <div className="flex flex-wrap gap-1.5">
+                    {celestialInfo.moons.map((moon) => (
+                      <button
+                        key={moon}
+                        onClick={() => {
+                          const mInfo = resolveCelestialTarget(moon);
+                          if (mInfo) {
+                            setPosition(mInfo.ra, mInfo.dec, mInfo.name);
+                          }
+                        }}
+                        className="px-2 py-0.5 rounded-lg bg-white dark:bg-space-800 border border-sand-300 dark:border-ocean-800 text-[10px] font-mono text-ocean-800 dark:text-ocean-300 hover:bg-ocean-500 hover:text-white transition-all shadow-xs"
+                      >
+                        🌕 {moon}
+                      </button>
+                    ))}
+                  </div>
                 </div>
               )}
 
