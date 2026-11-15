@@ -1,5 +1,5 @@
 /**
- * PhotonX Global State — Zustand Store with Theme & Scientific HUD settings
+ * PhotonX Global State: Zustand Store with Theme & Scientific HUD settings
  */
 
 import { create } from 'zustand';
@@ -117,17 +117,21 @@ const useStore = create((set, get) => ({
   setCompareEpoch: (epoch) => set({ compareEpoch: epoch }),
   setActiveChannel: (channel) => set({ activeChannel: channel }),
   setMode: (mode) => set({ mode }),
-  setSelectedObject: (obj) => set({ selectedObject: obj, mode: obj ? 'investigate' : 'explore' }),
+  setSelectedObject: (obj) =>
+    set((state) => ({
+      selectedObject: obj,
+      mode: state.mode === 'hunt' ? 'hunt' : obj ? 'investigate' : 'explore',
+    })),
   toggleObservability: () => set((s) => ({ showObservability: !s.showObservability })),
-  openTour: () => set({ isTourOpen: true }),
+  openTour: () => set({ isTourOpen: true, isTutorialOpen: false, isNavigatorOpen: false }),
   closeTour: () => set({ isTourOpen: false }),
-  toggleTour: () => set((s) => ({ isTourOpen: !s.isTourOpen })),
-  openTutorial: () => set({ isTutorialOpen: true }),
+  toggleTour: () => set((s) => ({ isTourOpen: !s.isTourOpen, isTutorialOpen: false, isNavigatorOpen: false })),
+  openTutorial: () => set({ isTutorialOpen: true, isTourOpen: false, isNavigatorOpen: false }),
   closeTutorial: () => set({ isTutorialOpen: false }),
-  toggleTutorial: () => set((s) => ({ isTutorialOpen: !s.isTutorialOpen })),
-  openNavigator: () => set({ isNavigatorOpen: true }),
+  toggleTutorial: () => set((s) => ({ isTutorialOpen: !s.isTutorialOpen, isTourOpen: false, isNavigatorOpen: false })),
+  openNavigator: () => set({ isNavigatorOpen: true, isTourOpen: false, isTutorialOpen: false }),
   closeNavigator: () => set({ isNavigatorOpen: false }),
-  toggleNavigator: () => set((s) => ({ isNavigatorOpen: !s.isNavigatorOpen })),
+  toggleNavigator: () => set((s) => ({ isNavigatorOpen: !s.isNavigatorOpen, isTourOpen: false, isTutorialOpen: false })),
   setObserverLocation: (lat, lon) => set({ observerLat: lat, observerLon: lon }),
   setEpochs: (epochs) => set({ epochs }),
 

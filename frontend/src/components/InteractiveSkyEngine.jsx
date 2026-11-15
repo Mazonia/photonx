@@ -455,26 +455,28 @@ function getPlanetarySymbol(name) {
   if (n.includes('neptune')) return '♆';
   if (n.includes('pluto')) return '♇';
   if (n.includes('planet nine') || n.includes('planet 9') || n.includes('planet x')) return '⯓';
-  return '🪐';
+  return '●';
 }
 
 function drawTargetBadge(ctx, x, y, radius, target, theme, isBlinking, blinkEpoch, activeEpoch) {
   ctx.save();
-  const tx = Math.round(x + radius + 6);
-  const ty1 = Math.round(y + 2);
-  const ty2 = Math.round(y + 14);
-  const ty3 = Math.round(y + 26);
+  const tx = Math.round(x + radius + 7);
+  const ty1 = Math.round(y - 6);
+  const ty2 = Math.round(y + 7);
+  const ty3 = Math.round(y + 19);
+
+  ctx.textBaseline = 'alphabetic';
 
   ctx.fillStyle = target.mover
     ? theme === 'dark' ? '#F59E0B' : '#D97706'
     : target.isPlanet
       ? theme === 'dark' ? '#38BDF8' : '#0284C7'
       : theme === 'dark' ? '#F8FAFC' : '#0F172A';
-  ctx.font = '700 11.5px "Plus Jakarta Sans", system-ui, sans-serif';
+  ctx.font = '700 12px "Plus Jakarta Sans", system-ui, sans-serif';
   ctx.fillText(target.name, tx, ty1);
 
   ctx.fillStyle = theme === 'dark' ? '#94A3B8' : '#64748B';
-  ctx.font = '500 10px "JetBrains Mono", monospace';
+  ctx.font = '500 11px "JetBrains Mono", monospace';
   const magText = target.mag !== undefined
     ? `Mag ${target.mag.toFixed(1)}${target.bayer ? ` · ${target.bayer}` : target.orbit ? ` · ${target.orbit}` : ''}`
     : target.type || 'Celestial Object';
@@ -482,7 +484,7 @@ function drawTargetBadge(ctx, x, y, radius, target, theme, isBlinking, blinkEpoc
 
   if (target.mover) {
     ctx.fillStyle = theme === 'dark' ? '#38BDF8' : '#0284C7';
-    ctx.font = '600 9.5px "JetBrains Mono", monospace';
+    ctx.font = '600 10px "JetBrains Mono", monospace';
     const arcsecShift = (Math.hypot(target.shiftRa || 0, target.shiftDec || 0) * 3600).toFixed(1);
     ctx.fillText(
       `Δ ${arcsecShift}" · ${isBlinking ? `Epoch ${blinkEpoch}` : activeEpoch}`,
@@ -614,13 +616,17 @@ export default function InteractiveSkyEngine() {
     if (!canvas || !container) return;
 
     const dpr = window.devicePixelRatio || 1;
-    const width = container.clientWidth;
-    const height = container.clientHeight;
+    const width = Math.round(container.clientWidth);
+    const height = Math.round(container.clientHeight);
+    const targetW = Math.round(width * dpr);
+    const targetH = Math.round(height * dpr);
 
-    canvas.width = width * dpr;
-    canvas.height = height * dpr;
-    canvas.style.width = `${width}px`;
-    canvas.style.height = `${height}px`;
+    if (canvas.width !== targetW || canvas.height !== targetH) {
+      canvas.width = targetW;
+      canvas.height = targetH;
+      canvas.style.width = `${width}px`;
+      canvas.style.height = `${height}px`;
+    }
   }, []);
 
   useEffect(() => {
@@ -845,7 +851,7 @@ export default function InteractiveSkyEngine() {
           ctx.stroke();
 
           ctx.fillStyle = theme === 'dark' ? 'rgba(6, 182, 212, 0.75)' : 'rgba(15, 23, 42, 0.65)';
-          ctx.font = '600 10.5px "JetBrains Mono", monospace';
+          ctx.font = '600 11px "JetBrains Mono", monospace';
           ctx.fillText(`${d >= 0 ? '+' : ''}${d.toFixed(d < 1 && d > -1 ? 2 : 1)}°`, 8, Math.round(y - 4));
         }
 
@@ -862,7 +868,7 @@ export default function InteractiveSkyEngine() {
             ctx.stroke();
 
             ctx.fillStyle = theme === 'dark' ? 'rgba(6, 182, 212, 0.75)' : 'rgba(15, 23, 42, 0.65)';
-            ctx.font = '600 10.5px "JetBrains Mono", monospace';
+            ctx.font = '600 11px "JetBrains Mono", monospace';
             const hours = (r / 15).toFixed(1);
             ctx.fillText(`${hours}h`, Math.round(x + 4), Math.round(h - 8));
           }
@@ -918,7 +924,7 @@ export default function InteractiveSkyEngine() {
 
               if (line.from.name && fov < 28) {
                 ctx.fillStyle = theme === 'dark' ? 'rgba(224, 242, 254, 0.85)' : 'rgba(3, 105, 161, 0.85)';
-                ctx.font = '600 9.5px "Plus Jakarta Sans", sans-serif';
+                ctx.font = '600 10px "Plus Jakarta Sans", sans-serif';
                 ctx.fillText(line.from.name, Math.round(x1 + 4), Math.round(y1 - 4));
               }
 
@@ -935,7 +941,7 @@ export default function InteractiveSkyEngine() {
             if (labelX >= 30 && labelX <= w - 30 && labelY >= 30 && labelY <= h - 30) {
               ctx.save();
               ctx.fillStyle = theme === 'dark' ? 'rgba(125, 211, 252, 0.95)' : 'rgba(3, 105, 161, 0.95)';
-              ctx.font = '700 11.5px "Plus Jakarta Sans", sans-serif';
+              ctx.font = '700 12px "Plus Jakarta Sans", sans-serif';
               ctx.textAlign = 'center';
               ctx.shadowColor = theme === 'dark' ? '#020617' : '#FFFFFF';
               ctx.shadowBlur = 6;
@@ -1172,7 +1178,7 @@ export default function InteractiveSkyEngine() {
             // Draw planetary symbol
             const sym = getPlanetarySymbol(target.name);
             ctx.fillStyle = targetColor;
-            ctx.font = '700 10.5px "Plus Jakarta Sans", sans-serif';
+            ctx.font = '700 11px "Plus Jakarta Sans", sans-serif';
             ctx.textAlign = 'center';
             ctx.fillText(sym, Math.round(x), Math.round(y - baseSize - 5));
             ctx.restore();
@@ -1278,7 +1284,7 @@ export default function InteractiveSkyEngine() {
       ctx.stroke();
 
       ctx.fillStyle = theme === 'dark' ? '#E2E8F0' : '#1E293B';
-      ctx.font = '600 10.5px "JetBrains Mono", monospace';
+      ctx.font = '600 11px "JetBrains Mono", monospace';
       ctx.textAlign = 'left';
       const scaleLabel = scaleArcsec >= 60 ? `${(scaleArcsec / 60).toFixed(1)}′ (${scaleArcsec.toFixed(0)}″)` : `${scaleArcsec.toFixed(1)}″ arcsec`;
       ctx.fillText(`Scale: ${scaleLabel}`, barX, Math.round(barY - 7));
@@ -1481,7 +1487,7 @@ export default function InteractiveSkyEngine() {
         >
           <div className="flex items-center justify-between gap-2 mb-1.5">
             <span className="font-bold text-slate-900 dark:text-white font-mono flex items-center gap-1.5 truncate">
-              {hoveredStar.isPlanet ? '🪐' : '⭐'} {hoveredStar.name}
+              <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" /> {hoveredStar.name}
             </span>
             <span className="px-1.5 py-0.5 rounded bg-ocean-500/10 text-ocean-700 dark:text-ocean-300 font-mono text-[9px] font-bold shrink-0">
               {hoveredStar.category || hoveredStar.type || 'Object'}
@@ -1490,7 +1496,7 @@ export default function InteractiveSkyEngine() {
           <div className="space-y-1 font-mono text-[10px] text-slate-600 dark:text-sand-200">
             <div>Coordinates: RA {hoveredStar.ra.toFixed(4)}° · Dec {hoveredStar.dec.toFixed(4)}°</div>
             <div>
-              Brightness: Mag {hoveredStar.mag !== undefined ? hoveredStar.mag.toFixed(2) : '—'} {hoveredStar.isPlanet ? '(Solar System Body)' : hoveredStar.mag < 3 ? '(Naked-Eye Optical Anchor)' : '(Infrared Source)'}
+              Brightness: Mag {hoveredStar.mag !== undefined ? hoveredStar.mag.toFixed(2) : 'N/A'} {hoveredStar.isPlanet ? '(Solar System Body)' : hoveredStar.mag < 3 ? '(Naked-Eye Optical Anchor)' : '(Infrared Source)'}
             </div>
             {hoveredStar.diameter_km && (
               <div className="text-cyan-700 dark:text-cyan-300">
@@ -1508,13 +1514,13 @@ export default function InteractiveSkyEngine() {
               </div>
             )}
             {hoveredStar.isBrightAnchor && !hoveredStar.isPlanet && (
-              <div className="text-[9.5px] text-ocean-800 dark:text-ocean-200 bg-ocean-500/15 border border-ocean-500/30 p-1.5 rounded-lg mt-1 font-sans leading-tight">
-                ✨ <strong>Why big spikes?</strong> These are optical diffraction spikes from light bending around the telescope's secondary mirror spider vanes.
+              <div className="text-[10px] text-ocean-800 dark:text-ocean-200 bg-ocean-500/15 border border-ocean-500/30 p-1.5 rounded-lg mt-1 font-sans leading-tight">
+                <strong>Optical Diffraction:</strong> Spikes caused by light diffraction around the telescope secondary mirror spider supports.
               </div>
             )}
           </div>
-          <div className="mt-2 text-[9.5px] font-sans text-ocean-600 dark:text-ocean-400 font-semibold flex items-center gap-1">
-            <span>👉 Click to select & lock reticle</span>
+          <div className="mt-2 text-[10px] font-sans text-ocean-600 dark:text-ocean-400 font-semibold flex items-center gap-1">
+            <span>Click to select and lock reticle</span>
           </div>
         </div>
       )}

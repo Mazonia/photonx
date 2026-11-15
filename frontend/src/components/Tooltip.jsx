@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 
 /**
- * Tooltip — Awwwards-style sleek, accessible micro-interaction tooltip.
+ * Tooltip: Awwwards-style sleek, accessible micro-interaction tooltip.
  * Provides rich metadata, shortcuts, and scientific explanations.
  */
 export default function Tooltip({

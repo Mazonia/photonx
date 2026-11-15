@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useCallback } from 'react';
 import useStore from '../store/useStore';
 
 /**
- * SkyMap — Aladin Lite v3 interactive sky viewer.
+ * SkyMap: Aladin Lite v3 interactive sky viewer.
  * Initialized with 2MASS survey, handles click events
  * for coordinate selection, and flies to search results.
  */
@@ -88,7 +88,7 @@ export default function SkyMap() {
       {/* Survey label */}
       <div className="absolute top-3 left-3 px-2 py-1 bg-deep-space/70 backdrop-blur-sm border border-nebula-blue/20 rounded-sm">
         <span className="text-[9px] font-mono uppercase tracking-widest text-muted">
-          SPHEREx QR2 · NIR 0.75–5µm · 102 Bands
+          SPHEREx QR2 · NIR 0.75-5µm · 102 Bands
         </span>
       </div>
     </div>

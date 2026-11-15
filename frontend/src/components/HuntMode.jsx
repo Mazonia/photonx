@@ -8,6 +8,7 @@ export default function HuntMode() {
     ra,
     dec,
     targetName,
+    selectedObject,
     activeEpoch,
     compareEpoch,
     flaggedCandidates,
@@ -16,6 +17,7 @@ export default function HuntMode() {
     setPosition,
   } = useStore();
 
+  const [candidateName, setCandidateName] = useState('');
   const [notes, setNotes] = useState('');
   const [selectedTag, setSelectedTag] = useState('Planet X / TNO Candidate');
   const [confidence, setConfidence] = useState('High');
@@ -25,15 +27,16 @@ export default function HuntMode() {
   const totalLogged = flaggedCandidates.length;
   const hunterRank =
     totalLogged >= 5
-      ? { title: 'Deep Space Pioneer', badge: '🪐 Master Investigator', color: 'text-amber-400' }
+      ? { title: 'Deep Space Pioneer', badge: 'Master Investigator', color: 'text-amber-400' }
       : totalLogged >= 3
-      ? { title: 'Kuiper Belt Scout', badge: '🔭 Advanced Surveyor', color: 'text-cyan-400' }
-      : { title: 'Infrared Tracker', badge: '🛰️ Citizen Observer', color: 'text-emerald-400' };
+      ? { title: 'Kuiper Belt Scout', badge: 'Advanced Surveyor', color: 'text-cyan-400' }
+      : { title: 'Infrared Tracker', badge: 'Citizen Observer', color: 'text-emerald-400' };
 
   const handleFlagCurrent = (e) => {
     e.preventDefault();
+    const finalName = candidateName.trim() || (selectedObject ? `Anomaly at ${selectedObject.name}` : `Anomaly at ${targetName}`);
     flagCandidate({
-      name: `Anomaly at ${targetName}`,
+      name: finalName,
       ra: Number(ra.toFixed(4)),
       dec: Number(dec.toFixed(4)),
       epochA: activeEpoch,
@@ -43,13 +46,14 @@ export default function HuntMode() {
       notes: notes.trim() || 'Candidate identified during SPHEREx temporal blink review.',
       confidence,
     });
+    setCandidateName('');
     setNotes('');
   };
 
   const handleExportReport = () => {
     const report = `# PHOTONX CITIZEN SCIENCE DISCOVERY REPORT
 Generated: ${new Date().toUTCString()}
-Mission: NASA Space Apps Challenge 2026 — Planet X and SPHEREx
+Mission: NASA Space Apps Challenge 2026: Planet X and SPHEREx
 Data Source: NASA/IPAC IRSA SPHEREx QR2 (DOI: 10.26131/IRSA629)
 
 ## Observer Summary
@@ -129,6 +133,19 @@ Tool: PhotonX Sky Browser (NASA Space Apps 2026)
         </div>
 
         <form onSubmit={handleFlagCurrent} className="space-y-2.5">
+          <div>
+            <label className="block text-[10px] font-mono text-slate-400 mb-1 uppercase tracking-wider">
+              Candidate Label
+            </label>
+            <input
+              type="text"
+              value={candidateName}
+              onChange={(e) => setCandidateName(e.target.value)}
+              placeholder={selectedObject ? `Anomaly at ${selectedObject.name}` : `Anomaly at ${targetName}`}
+              className="w-full px-2.5 py-1.5 text-xs font-mono rounded-xl bg-slate-950/80 dark:bg-slate-950/80 light:bg-white border border-white/10 dark:border-white/10 light:border-slate-300 text-slate-200 dark:text-slate-200 light:text-slate-900 placeholder:text-slate-500 focus:outline-none focus:border-cyan-400"
+            />
+          </div>
+
           <div>
             <label className="block text-[10px] font-mono text-slate-400 mb-1 uppercase tracking-wider">
               Classification Tag

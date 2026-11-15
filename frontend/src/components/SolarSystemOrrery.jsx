@@ -300,16 +300,21 @@ export default function SolarSystemOrrery({ onSelectPlanet, onClose }) {
     if (!ctx) return;
 
     const dpr = window.devicePixelRatio || 1;
-    const width = container.clientWidth;
-    const height = container.clientHeight;
+    const width = Math.round(container.clientWidth);
+    const height = Math.round(container.clientHeight);
+    const targetW = Math.round(width * dpr);
+    const targetH = Math.round(height * dpr);
 
-    canvas.width = width * dpr;
-    canvas.height = height * dpr;
-    canvas.style.width = `${width}px`;
-    canvas.style.height = `${height}px`;
+    if (canvas.width !== targetW || canvas.height !== targetH) {
+      canvas.width = targetW;
+      canvas.height = targetH;
+      canvas.style.width = `${width}px`;
+      canvas.style.height = `${height}px`;
+    }
 
     ctx.save();
-    ctx.scale(dpr, dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, width, height);
 
     const cx = width / 2 + panOffset.x;
     const cy = height / 2 + panOffset.y;
@@ -819,7 +824,7 @@ export default function SolarSystemOrrery({ onSelectPlanet, onClose }) {
             </div>
 
             {/* Description */}
-            <p className="text-[11.5px] text-sand-700 dark:text-sand-300 leading-relaxed mb-3">
+            <p className="text-xs text-sand-700 dark:text-sand-300 leading-relaxed mb-3">
               {selectedMeta.desc}
             </p>
 
@@ -871,10 +876,10 @@ export default function SolarSystemOrrery({ onSelectPlanet, onClose }) {
 
             {/* SPHEREx Infrared Science Fingerprint */}
             {selectedMeta.spherex_diag && (
-              <div className="p-2 rounded-xl bg-amber-500/10 border border-amber-500/25 text-[10.5px] text-amber-900 dark:text-amber-200 mb-3 flex items-start gap-1.5 leading-snug">
+              <div className="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/25 text-xs text-amber-900 dark:text-amber-200 mb-3 flex items-start gap-1.5 leading-snug">
                 <Sparkles className="w-3.5 h-3.5 text-amber-500 shrink-0 mt-0.5" />
                 <div>
-                  <strong className="font-semibold block font-mono text-[9.5px] uppercase text-amber-700 dark:text-amber-300">
+                  <strong className="font-semibold block font-mono text-[10px] uppercase text-amber-700 dark:text-amber-300">
                     SPHEREx NIR Science
                   </strong>
                   <span>{selectedMeta.spherex_diag}</span>

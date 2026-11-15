@@ -2,7 +2,7 @@ import React from 'react';
 import useStore from '../store/useStore';
 
 /**
- * ObjectCard — Displays a candidate moving object detected in diff analysis.
+ * ObjectCard: Displays a candidate moving object detected in diff analysis.
  * Shows RA/Dec, shift, interestingness score, and action buttons.
  */
 export default function ObjectCard({ candidate, index }) {

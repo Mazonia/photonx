@@ -34,7 +34,7 @@ export default function ShortcutsModal({ isOpen, onClose }) {
                 PHOTONX COMMAND SHORTCUTS
               </h3>
               <p className="font-mono text-[10px] text-slate-500 dark:text-slate-400">
-                NASA Space Apps 2026 — Planet X &amp; SPHEREx
+                NASA Space Apps 2026: Planet X &amp; SPHEREx
               </p>
             </div>
           </div>

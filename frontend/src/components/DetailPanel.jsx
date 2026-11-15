@@ -208,7 +208,7 @@ export default function DetailPanel() {
                         }}
                         className="px-2 py-0.5 rounded-lg bg-white dark:bg-space-800 border border-sand-300 dark:border-ocean-800 text-[10px] font-mono text-ocean-800 dark:text-ocean-300 hover:bg-ocean-500 hover:text-white transition-all shadow-xs"
                       >
-                        🌕 {moon}
+                        {moon}
                       </button>
                     ))}
                   </div>
@@ -570,8 +570,9 @@ export default function DetailPanel() {
                     {enrichQuery.data?.exoplanets?.length > 0 ? (
                       <div className="space-y-1.5 mt-1">
                         {enrichQuery.data.exoplanets.map((exo, i) => (
-                          <div key={i} className="text-[11px] text-amber-600 dark:text-amber-300">
-                            🪐 {exo.name} (Period: {exo.orbital_period_days?.toFixed(1)}d)
+                          <div key={i} className="text-[11px] text-amber-600 dark:text-amber-300 flex items-center gap-1.5">
+                            <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+                            <span>{exo.name} (Period: {exo.orbital_period_days?.toFixed(1)}d)</span>
                           </div>
                         ))}
                       </div>

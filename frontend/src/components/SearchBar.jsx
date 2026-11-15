@@ -264,10 +264,10 @@ export default function SearchBar() {
           <div className="flex items-center gap-1 overflow-x-auto pb-1.5 mb-1.5 border-b border-sand-200 dark:border-ocean-900/60 custom-scrollbar">
             {[
               { id: 'all', label: 'All Targets' },
-              { id: 'solar', label: '🪐 Solar System' },
-              { id: 'exoplanet', label: '🌟 Exoplanets' },
-              { id: 'constellation', label: '✨ Constellations' },
-              { id: 'deep', label: '🌠 Deep Space' },
+              { id: 'solar', label: 'Solar System' },
+              { id: 'exoplanet', label: 'Exoplanets' },
+              { id: 'constellation', label: 'Constellations' },
+              { id: 'deep', label: 'Deep Space' },
             ].map((pill) => (
               <button
                 key={pill.id}

@@ -35,9 +35,9 @@ export default function NasaDashboard() {
       {/* Sub-tab switcher */}
       <div className="flex items-center gap-1 mb-3 p-1 rounded-xl bg-slate-100 dark:bg-slate-950/60 border border-slate-200 dark:border-white/10">
         {[
-          { id: 'today', label: '🌌 APOD', title: 'Astronomy Picture of the Day', desc: 'NASA Astronomy Picture of the Day with full scientific commentary.' },
-          { id: 'neo', label: '☄️ NEOs', title: 'Near-Earth Objects', desc: 'NASA NeoWs feed tracking asteroid close-approaches and hazardous classifications.' },
-          { id: 'weather', label: '☀️ Space Wx', title: 'Space Weather', desc: 'NASA DONKI real-time telemetry on Coronal Mass Ejections and geomagnetic storms.' },
+          { id: 'today', label: 'APOD', title: 'Astronomy Picture of the Day', desc: 'NASA Astronomy Picture of the Day with full scientific commentary.' },
+          { id: 'neo', label: 'NEOs', title: 'Near-Earth Objects', desc: 'NASA NeoWs feed tracking asteroid close-approaches and hazardous classifications.' },
+          { id: 'weather', label: 'Space Wx', title: 'Space Weather', desc: 'NASA DONKI real-time telemetry on Coronal Mass Ejections and geomagnetic storms.' },
         ].map((tab) => (
           <Tooltip key={tab.id} content={tab.desc} tag={tab.label} position="bottom">
             <button
@@ -118,8 +118,8 @@ export default function NasaDashboard() {
               {/* Stats Banner */}
               <div className="grid grid-cols-3 gap-1.5 mb-2">
                 {[
-                  { label: 'TOTAL', value: neoQuery.data?.element_count ?? '—', color: 'text-slate-200' },
-                  { label: 'HAZARDOUS', value: neoQuery.data?.hazardous_count ?? '—', color: 'text-red-400' },
+                  { label: 'TOTAL', value: neoQuery.data?.element_count ?? 'N/A', color: 'text-slate-200' },
+                  { label: 'HAZARDOUS', value: neoQuery.data?.hazardous_count ?? 'N/A', color: 'text-red-400' },
                   { label: 'TRACKED', value: neos.length, color: 'text-cyan-400' },
                 ].map((stat) => (
                   <div
@@ -163,13 +163,13 @@ export default function NasaDashboard() {
                       )}
                     </div>
                     <div className="flex gap-3 text-slate-500 dark:text-slate-400">
-                      <span>📅 {neo.close_approach_date}</span>
-                      <span>🌍 {neo.miss_distance_lunar?.toFixed(1)} LD</span>
-                      <span>💨 {neo.velocity_km_s} km/s</span>
+                      <span>Date: {neo.close_approach_date}</span>
+                      <span>Dist: {neo.miss_distance_lunar?.toFixed(1)} LD</span>
+                      <span>Vel: {neo.velocity_km_s} km/s</span>
                     </div>
                     {neo.diameter_km_max && (
                       <div className="text-slate-500 dark:text-slate-500 mt-0.5">
-                        Ø {neo.diameter_km_min?.toFixed(3)}–{neo.diameter_km_max?.toFixed(3)} km
+                        Ø {neo.diameter_km_min?.toFixed(3)} - {neo.diameter_km_max?.toFixed(3)} km
                       </div>
                     )}
                   </div>
@@ -217,12 +217,12 @@ export default function NasaDashboard() {
               {(weatherQuery.data?.geomagnetic_storms || []).length > 0 && (
                 <div>
                   <div className="font-mono text-[10px] uppercase tracking-widest text-purple-400 mb-1.5">
-                    🌐 Geomagnetic Storms
+                    Geomagnetic Storms
                   </div>
                   <div className="space-y-1.5">
                     {(weatherQuery.data?.geomagnetic_storms || []).map((gst, i) => (
                       <div key={i} className="p-2 rounded-xl bg-purple-950/20 border border-purple-500/20 font-mono text-[10px]">
-                        <div className="text-purple-300">Kp Index: {gst.kp_index ?? '—'}</div>
+                        <div className="text-purple-300">Kp Index: {gst.kp_index ?? 'N/A'}</div>
                         <div className="text-slate-400">{gst.start_time?.replace('T', ' ').slice(0, 16)}</div>
                       </div>
                     ))}

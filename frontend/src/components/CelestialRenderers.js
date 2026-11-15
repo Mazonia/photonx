@@ -740,7 +740,7 @@ export function drawPluto(ctx, x, y, r, fov, theme) {
 
     if (fov < 0.6) {
       ctx.fillStyle = theme === 'dark' ? '#CBD5E1' : '#475569';
-      ctx.font = '600 9.5px "Plus Jakarta Sans", sans-serif';
+      ctx.font = '600 10px "Plus Jakarta Sans", sans-serif';
       ctx.fillText('Charon', Math.round(charonX - 12), Math.round(charonY - 6));
     }
   }
@@ -1066,7 +1066,7 @@ export function drawPrecisionReticle(ctx, cx, cy, w, h, fov, theme, targetLockIn
   ctx.closePath();
   ctx.fill();
 
-  ctx.font = '700 9.5px "Plus Jakarta Sans", sans-serif';
+  ctx.font = '700 10px "Plus Jakarta Sans", sans-serif';
   ctx.textAlign = 'center';
   ctx.fillText('N', Math.round(cx), Math.round(cy - compassR - 4));
 
@@ -1114,13 +1114,13 @@ export function drawPrecisionReticle(ctx, cx, cy, w, h, fov, theme, targetLockIn
 
     // Lock Tag
     ctx.fillStyle = '#F59E0B';
-    ctx.font = '600 10.5px "JetBrains Mono", monospace';
+    ctx.font = '600 11px "JetBrains Mono", monospace';
     ctx.textAlign = 'center';
     ctx.fillText(`[ TRACKING: ${targetLockInfo.name.toUpperCase()} ]`, Math.round(cx), Math.round(by - 8));
 
     if (targetLockInfo.angularDia) {
       ctx.fillStyle = theme === 'dark' ? '#94A3B8' : '#64748B';
-      ctx.font = '500 9.5px "JetBrains Mono", monospace';
+      ctx.font = '500 10px "JetBrains Mono", monospace';
       ctx.fillText(`Apparent Ø: ${targetLockInfo.angularDia}`, Math.round(cx), Math.round(by + bh + 14));
     }
     ctx.restore();

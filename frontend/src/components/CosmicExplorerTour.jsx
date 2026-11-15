@@ -19,9 +19,9 @@ const TOUR_STOPS = [
   {
     step: 1,
     id: 'barnard',
-    title: "Barnard's Star — The Cosmic Speed Demon!",
+    title: "Barnard's Star: The Cosmic Speed Demon!",
     subtitle: "Why do some stars move?",
-    emoji: "🏃‍♂️⭐",
+    tag: "High Velocity",
     ra: 269.4521,
     dec: 4.6933,
     targetName: "Barnard's Star",
@@ -31,54 +31,54 @@ const TOUR_STOPS = [
     actionTip: "Click the 'BLINK' button on the sky viewer to watch Barnard's Star jump across 6 months of space time!",
     funFact: "In about 10,000 years, Barnard's Star will become the closest star to Earth, passing even closer than Proxima Centauri!",
     question: "Why does Barnard's star seem to move faster than other stars?",
-    answer: "It's both moving very fast AND it's one of the closest stars to our Solar System (only 6 light-years away)!",
+    answer: "It is both moving very fast and it is one of the closest stars to our Solar System (only 6 light-years away)!",
   },
   {
     step: 2,
     id: 'wise0855',
-    title: "WISE 0855 — The Frozen Brown Dwarf (Planet X Cousin)!",
+    title: "WISE 0855: The Frozen Brown Dwarf (Planet X Cousin)!",
     subtitle: "A star as cold as the North Pole",
-    emoji: "🧊🪐",
+    tag: "Brown Dwarf",
     ra: 133.7933,
     dec: -7.2451,
     targetName: "WISE 0855-0714",
     fov: 0.6,
     category: "Sub-Stellar Brown Dwarf / Planet X Analog",
-    story: "Is there a secret 'Planet X' hiding in the dark frozen edges of our solar system? WISE 0855 is our closest example! It's a 'failed star'—it has the mass of a giant planet, but it never got hot enough to ignite nuclear fusion.\n\nIts temperature is -13°C (8°F)—colder than an ice cube! Because it emits zero visible light, your eyes would see nothing. But SPHEREx's near-infrared sensors can spot its faint, cozy body heat!",
+    story: "Is there a secret 'Planet X' hiding in the dark frozen edges of our solar system? WISE 0855 is our closest example! It is a failed star: it has the mass of a giant planet, but it never got hot enough to ignite nuclear fusion.\n\nIts temperature is -13°C (8°F), colder than an ice cube! Because it emits zero visible light, your eyes would see nothing. But SPHEREx near-infrared sensors can spot its faint, cozy body heat!",
     actionTip: "Look at the '102-Band Spectrum' panel to see its cold water ice clouds absorption signature!",
     funFact: "WISE 0855 has water ice clouds in its atmosphere, just like Earth and Jupiter!",
     question: "Why do we need infrared telescopes like SPHEREx to find Planet X?",
-    answer: "Cold objects don't shine with visible light, but they glow softly in infrared heat!",
+    answer: "Cold objects do not shine with visible light, but they glow softly in infrared heat!",
   },
   {
     step: 3,
     id: 'trappist1',
-    title: "TRAPPIST-1 — The 7 Alien Earths!",
+    title: "TRAPPIST-1: The 7 Alien Earths!",
     subtitle: "A crowded alien solar system",
-    emoji: "🪐👨‍🚀",
+    tag: "Exoplanets",
     ra: 346.6223,
     dec: -5.0413,
     targetName: "TRAPPIST-1",
     fov: 0.7,
     category: "Multi-Planet Exoplanet System",
-    story: "Imagine a cozy little red dwarf star with SEVEN rocky planets orbiting around it! Three of them are in the 'Habitable Zone'—the sweet spot where temperatures could allow liquid oceans and rivers to exist.\n\nAll 7 planets are so close together that if you stood on one, the other planets would look bigger in your sky than the Moon looks from Earth!",
+    story: "Imagine a cozy little red dwarf star with SEVEN rocky planets orbiting around it! Three of them are in the 'Habitable Zone', the sweet spot where temperatures could allow liquid oceans and rivers to exist.\n\nAll 7 planets are so close together that if you stood on one, the other planets would look bigger in your sky than the Moon looks from Earth!",
     actionTip: "Click the 'Catalogs & Exoplanets' tab on the right to see the orbital periods of all 7 planets (b through h)!",
-    funFact: "TRAPPIST-1 is so calm and long-lived that it could survive for 12 trillion years—over 800 times longer than the current age of our universe!",
+    funFact: "TRAPPIST-1 is so calm and long-lived that it could survive for 12 trillion years, over 800 times longer than the current age of our universe!",
     question: "What is the 'Habitable Zone'?",
-    answer: "The orbital region where it's not too hot and not too cold for liquid water to exist on a planet's surface.",
+    answer: "The orbital region where it is not too hot and not too cold for liquid water to exist on a planet's surface.",
   },
   {
     step: 4,
     id: 'm42',
-    title: "Orion Nebula (M42) — The Star Nursery!",
+    title: "Orion Nebula (M42): The Star Nursery!",
     subtitle: "Where baby stars are born",
-    emoji: "✨👶",
+    tag: "Star Nursery",
     ra: 83.8221,
     dec: -5.3911,
     targetName: "Orion Nebula (M42)",
     fov: 1.5,
     category: "Stellar Nursery & Emission Nebula",
-    story: "You are looking at a cosmic incubator! Inside this gigantic glowing cloud of interstellar gas and dust, gravity is pulling particles together right now to create brand new stars and infant solar systems.\n\nThick dust blocks normal visible light, but SPHEREx's infrared detectors can peer right through the dust blankets to see baby stars forming inside!",
+    story: "You are looking at a cosmic incubator! Inside this gigantic glowing cloud of interstellar gas and dust, gravity is pulling particles together right now to create brand new stars and infant solar systems.\n\nThick dust blocks normal visible light, but SPHEREx infrared detectors can peer right through the dust blankets to see baby stars forming inside!",
     actionTip: "Switch surveys between 'DSS Optical' and 'SPHEREx NIR' to see how infrared pierces straight through the thick space dust!",
     funFact: "The Orion Nebula is 24 light-years across. That means a beam of light would take 24 years just to travel from one side of the nursery to the other!",
     question: "What are stars made of when they form?",
@@ -87,15 +87,15 @@ const TOUR_STOPS = [
   {
     step: 5,
     id: 'm31',
-    title: "Andromeda Galaxy (M31) — Island of 1 Trillion Stars!",
+    title: "Andromeda Galaxy (M31): Island of 1 Trillion Stars!",
     subtitle: "Our giant spiral neighbor",
-    emoji: "🌀🌌",
+    tag: "Spiral Galaxy",
     ra: 10.6847,
     dec: 41.2687,
     targetName: "Messier 31 (Andromeda)",
     fov: 2.2,
     category: "Spiral Galaxy",
-    story: "Look at this grand spiral whirlpool! Andromeda is our nearest galactic neighbor, containing over ONE TRILLION stars—more than twice as many as our Milky Way!\n\nEven though it looks peaceful, Andromeda is currently speeding toward our Milky Way at 110 kilometers per second. But don't worry: they won't meet for another 4.5 billion years!",
+    story: "Look at this grand spiral whirlpool! Andromeda is our nearest galactic neighbor, containing over ONE TRILLION stars, more than twice as many as our Milky Way!\n\nEven though it looks peaceful, Andromeda is currently speeding toward our Milky Way at 110 kilometers per second. But don't worry: they will not meet for another 4.5 billion years!",
     actionTip: "Look at the coordinate readout: the light hitting your screen left Andromeda 2.5 million years ago, when early human ancestors were first discovering stone tools!",
     funFact: "On a clear, dark night away from city lights, you can actually see Andromeda with your naked eyes as a faint fuzzy oval in the sky!",
     question: "How long does light take to reach Earth from Andromeda?",
@@ -210,7 +210,9 @@ export default function CosmicExplorerTour({ isOpen, onClose }) {
         <div className="p-6 overflow-y-auto space-y-4 text-sm leading-relaxed">
           {/* Stop Title Card */}
           <div className="flex items-start gap-3">
-            <span className="text-3xl shrink-0">{stop.emoji}</span>
+            <div className="p-2 rounded-xl bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border border-cyan-500/30 shrink-0">
+              <Sparkles className="w-5 h-5" />
+            </div>
             <div>
               <h3 className="font-display font-bold text-lg text-slate-900 dark:text-white leading-tight">
                 {stop.title}
@@ -231,7 +233,7 @@ export default function CosmicExplorerTour({ isOpen, onClose }) {
             <Compass className="w-5 h-5 text-cyan-600 dark:text-cyan-400 shrink-0 mt-0.5" />
             <div>
               <span className="font-mono text-xs font-bold uppercase text-cyan-700 dark:text-cyan-300">
-                🔭 Try It Now on the Sky Viewer:
+                Try It Now on the Sky Viewer:
               </span>
               <p className="text-xs text-slate-600 dark:text-slate-300 mt-0.5">
                 {stop.actionTip}
@@ -244,7 +246,7 @@ export default function CosmicExplorerTour({ isOpen, onClose }) {
             <Lightbulb className="w-5 h-5 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
             <div>
               <span className="font-mono text-xs font-bold uppercase text-amber-700 dark:text-amber-300">
-                💡 Fun Cosmic Fact:
+                Fun Cosmic Fact:
               </span>
               <p className="text-xs text-slate-600 dark:text-slate-300 mt-0.5">
                 {stop.funFact}
@@ -263,7 +265,7 @@ export default function CosmicExplorerTour({ isOpen, onClose }) {
                 onClick={() => setShowAnswer(!showAnswer)}
                 className="text-[11px] font-mono font-bold text-purple-600 dark:text-purple-400 hover:underline"
               >
-                {showAnswer ? 'Hide Answer' : 'Reveal Answer 🔍'}
+                {showAnswer ? 'Hide Answer' : 'Reveal Answer'}
               </button>
             </div>
             <p className="text-xs font-medium text-slate-800 dark:text-slate-200 mt-1">
@@ -271,7 +273,7 @@ export default function CosmicExplorerTour({ isOpen, onClose }) {
             </p>
             {showAnswer && (
               <div className="mt-2 pt-2 border-t border-purple-200 dark:border-purple-500/20 text-xs text-purple-800 dark:text-purple-200 bg-purple-500/10 p-2 rounded-lg animate-in fade-in">
-                ✨ <strong>Answer:</strong> {stop.answer}
+                <strong>Answer:</strong> {stop.answer}
               </div>
             )}
           </div>
@@ -310,7 +312,7 @@ export default function CosmicExplorerTour({ isOpen, onClose }) {
             className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-mono font-bold bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-slate-200 hover:bg-slate-300 dark:hover:bg-slate-700 transition-colors"
           >
             <Compass className="w-4 h-4 text-cyan-500" />
-            <span>Center on Sky 🎯</span>
+            <span>Center on Sky</span>
           </button>
 
           {currentStep < TOUR_STOPS.length - 1 ? (

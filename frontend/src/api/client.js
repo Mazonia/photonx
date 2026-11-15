@@ -45,7 +45,7 @@ const CURATED_TARGETS = [
     name: "Barnard's Star",
     ra: 269.4521,
     dec: 4.6933,
-    description: "Second-closest star system. Fastest proper motion (10.3\"/yr) — gold-standard SPHEREx mover test.",
+    description: "Second-closest star system. Fastest proper motion (10.3\"/yr): gold-standard SPHEREx mover test.",
     category: "High Proper Motion",
     why_interesting: "Guaranteed to show positional shift between SPHEREx 6-month survey epochs.",
   },
@@ -109,7 +109,7 @@ const CURATED_TARGETS = [
     name: "Pleiades (M45)",
     ra: 56.6011,
     dec: 24.1141,
-    description: "The Seven Sisters — bright young open cluster at 444 ly with reflection nebulosity.",
+    description: "The Seven Sisters: bright young open cluster at 444 ly with reflection nebulosity.",
     category: "Star Cluster",
     why_interesting: "Benchmark calibration field for SPHEREx wide-field point spread function (PSF).",
   },
@@ -155,7 +155,7 @@ async function request(endpoint, params = {}) {
       return await res.json();
     }
   } catch (err) {
-    // Network failure or backend unavailable — fall through to client fallback
+    // Network failure or backend unavailable: fall through to client fallback
   }
 
   // Graceful client fallback
@@ -415,11 +415,11 @@ function getClientFallback(endpoint, params) {
         airmass,
         seeing_arcsec: seeing,
         transparency_pct: 92,
-        moon_phase: 'Waxing Crescent 🌒',
+        moon_phase: 'Waxing Crescent ',
         moon_illumination_pct: 22,
         is_night: true,
         is_observable: true,
-        recommendation: `✨ Prime optical window! Clear sky, airmass ${airmass}, target at ${alt.toFixed(1)}° alt, seeing ~${seeing}". Waxing Crescent 🌒`,
+        recommendation: `✨ Prime optical window! Clear sky, airmass ${airmass}, target at ${alt.toFixed(1)}° alt, seeing ~${seeing}". Waxing Crescent `,
       };
     }
 

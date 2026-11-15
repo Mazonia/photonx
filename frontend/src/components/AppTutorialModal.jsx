@@ -76,13 +76,13 @@ const TOUR_STEPS = [
         </p>
         <div className="space-y-1.5">
           <div className="p-2 rounded-lg bg-sand-100 dark:bg-space-950/80 border border-sand-200 dark:border-ocean-900/60">
-            <span className="font-bold text-ocean-700 dark:text-ocean-300">🧭 Explore Mode:</span> Free-roam celestial browsing across stars, constellations, and celestial coordinates.
+            <span className="font-bold text-ocean-700 dark:text-ocean-300">Explore Mode:</span> Free-roam celestial browsing across stars, constellations, and celestial coordinates.
           </div>
           <div className="p-2 rounded-lg bg-sand-100 dark:bg-space-950/80 border border-sand-200 dark:border-ocean-900/60">
-            <span className="font-bold text-ocean-700 dark:text-ocean-300">🎯 Investigate Mode:</span> Detailed scientific dissection: extracts 102 infrared color channels, temperature, and distance telemetry.
+            <span className="font-bold text-ocean-700 dark:text-ocean-300">Investigate Mode:</span> Detailed scientific dissection: extracts 102 infrared color channels, temperature, and distance telemetry.
           </div>
           <div className="p-2 rounded-lg bg-amber-500/10 border border-amber-500/30">
-            <span className="font-bold text-amber-700 dark:text-amber-300">🏆 Hunt Mode:</span> Citizen science! Spot moving candidate objects, tag them, earn hunter badges, and export verified discovery logs.
+            <span className="font-bold text-amber-700 dark:text-amber-300">Hunt Mode:</span> Citizen science! Spot moving candidate objects, tag them, earn hunter badges, and export verified discovery logs.
           </div>
         </div>
       </div>
@@ -129,7 +129,7 @@ const TOUR_STEPS = [
           Compare the exact same patch of sky across different famous NASA and international sky surveys:
         </p>
         <ul className="space-y-1 list-disc list-inside text-slate-600 dark:text-sand-200">
-          <li><strong>SPHEREx NIR:</strong> 102 near-infrared channels (0.75 - 5.0µm) — where cold outer solar system bodies shine.</li>
+          <li><strong>SPHEREx NIR:</strong> 102 near-infrared channels (0.75 - 5.0µm): where cold outer solar system bodies shine.</li>
           <li><strong>WISE Mid-IR:</strong> NASA's thermal infrared sky survey (3.4 - 22µm).</li>
           <li><strong>2MASS:</strong> Two Micron All-Sky Survey (J, H, Ks bands).</li>
           <li><strong>DSS Optical:</strong> Standard visible photographic sky. Notice how faint cold objects disappear completely here!</li>
