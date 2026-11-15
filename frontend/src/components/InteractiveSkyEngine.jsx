@@ -3,18 +3,27 @@ import useStore from '../store/useStore';
 import Tooltip from './Tooltip';
 import { api } from '../api/client';
 import { CONSTELLATIONS } from '../data/constellations';
-import { MASTER_CELESTIAL_TARGETS } from '../data/celestialCatalog';
+import { MASTER_CELESTIAL_TARGETS, COSMIC_TOUR_DESTINATIONS } from '../data/celestialCatalog';
 import {
   drawJupiter,
   drawSaturn,
   drawMars,
   drawVenus,
+  drawMercury,
   drawSun,
   drawEarth,
   drawMoon,
   drawUranus,
   drawNeptune,
   drawPluto,
+  drawCeres,
+  drawTitan,
+  drawEuropa,
+  drawGanymede,
+  drawCallisto,
+  drawEnceladus,
+  drawComet,
+  drawExoplanetWorld,
   drawPlanetNine,
   drawAndromedaGalaxy,
   drawOrionNebula,
@@ -559,6 +568,31 @@ export default function InteractiveSkyEngine() {
         type: t.category === 'Solar System Star' ? 'Sun' : existing?.type || t.type || 'Star',
       });
     });
+
+    // Ensure all curated cosmic tour destinations are registered as valid targets
+    if (COSMIC_TOUR_DESTINATIONS) {
+      COSMIC_TOUR_DESTINATIONS.forEach((group) => {
+        group.items.forEach((item) => {
+          const key = item.name.toLowerCase();
+          if (!map.has(key)) {
+            const isSolar = group.category === 'Solar System Worlds';
+            const isExo = group.category === 'Exoplanetary Systems';
+            map.set(key, {
+              name: item.name,
+              ra: item.ra,
+              dec: item.dec,
+              mag: isSolar ? 1.0 : isExo ? 8.5 : 4.0,
+              type: isSolar ? 'Planet' : isExo ? 'Exoplanet' : 'Star',
+              category: group.category,
+              desc: item.desc,
+              isPlanet: isSolar,
+              isExoplanet: isExo,
+            });
+          }
+        });
+      });
+    }
+
     return Array.from(map.values());
   }, []);
 
@@ -663,7 +697,7 @@ export default function InteractiveSkyEngine() {
   }, [fov, setFov]);
 
   const limitingMag = useMemo(() => {
-    return Math.min(18.0, 6.2 + Math.log2(35.0 / Math.max(0.05, fov)) * 1.9);
+    return Math.min(18.5, Math.max(9.5, 8.0 + Math.log2(50.0 / Math.max(0.04, fov)) * 1.6));
   }, [fov]);
 
   // Hierarchical Multi-Resolution Starfield (Regional Stars + Deep-Field Infrared Sources)
@@ -672,47 +706,54 @@ export default function InteractiveSkyEngine() {
     const spectralTypes = ['O', 'B', 'A', 'F', 'G', 'K', 'M'];
     const maxVisibleMag = limitingMag + 0.5;
 
-    // Scale grid step and density dynamically based on FOV to maintain silky 60+ FPS
-    let stepDeg = 1;
-    let starsPerCell = 18;
-    let patchRadius = Math.max(1.2, Math.min(18.0, fov * 0.85));
+    const cosDec = Math.cos((dec * Math.PI) / 180);
+    const safeCosDec = Math.max(0.01, Math.abs(cosDec));
+
+    // Cover the full canvas viewport with margin (including widescreen aspect ratio)
+    const patchRadiusDec = Math.min(90, Math.max(1.8, fov * 0.75));
+    const patchRadiusRa = Math.min(180, Math.max(1.8, (fov * 0.75) / safeCosDec));
+
+    // Dynamic grid step size for optimal performance & visual richness
+    let stepDeg = 0.5;
+    let starsPerCell = 16;
 
     if (fov > 25.0) {
-      stepDeg = 6;
+      stepDeg = 3.0;
+      starsPerCell = 6;
+    } else if (fov > 10.0) {
+      stepDeg = 1.8;
       starsPerCell = 8;
-    } else if (fov > 12.0) {
-      stepDeg = 4;
-      starsPerCell = 10;
-    } else if (fov > 5.0) {
-      stepDeg = 2;
+    } else if (fov > 3.0) {
+      stepDeg = 1.0;
+      starsPerCell = 12;
+    } else if (fov > 1.0) {
+      stepDeg = 0.4;
       starsPerCell = 14;
-    } else if (fov > 2.0) {
-      stepDeg = 1.5;
+    } else {
+      stepDeg = 0.15;
       starsPerCell = 16;
     }
 
-    const minRa = Math.floor((ra - patchRadius) / stepDeg) * stepDeg;
-    const maxRa = Math.ceil((ra + patchRadius) / stepDeg) * stepDeg;
-    const minDec = Math.max(-90, Math.floor((dec - patchRadius) / stepDeg) * stepDeg);
-    const maxDec = Math.min(90, Math.ceil((dec + patchRadius) / stepDeg) * stepDeg);
+    const minRa = Math.floor((ra - patchRadiusRa) / stepDeg) * stepDeg;
+    const maxRa = Math.ceil((ra + patchRadiusRa) / stepDeg) * stepDeg;
+    const minDec = Math.max(-90, Math.floor((dec - patchRadiusDec) / stepDeg) * stepDeg);
+    const maxDec = Math.min(90, Math.ceil((dec + patchRadiusDec) / stepDeg) * stepDeg);
 
-    const MAX_REGIONAL_STARS = 1200;
+    const MAX_REGIONAL_STARS = 1400;
 
     outerLoop:
     for (let r = minRa; r <= maxRa; r += stepDeg) {
       for (let d = minDec; d <= maxDec; d += stepDeg) {
-        const normR = (((Math.round(r) % 360) + 360) % 360);
-        const normD = Math.round(d);
+        const normR = (((Math.round(r * 10) / 10 % 360) + 360) % 360);
+        const normD = Math.round(d * 10) / 10;
         const cellSeed = (normR * 1000 + (normD + 90)) * 17;
-        const count = Math.max(4, Math.floor(starsPerCell * (0.8 + pseudoRandom(cellSeed) * 0.4)));
+        const count = Math.max(2, Math.floor(starsPerCell * (0.7 + pseudoRandom(cellSeed) * 0.6)));
 
         for (let i = 0; i < count; i++) {
           const starSeed = cellSeed + i * 137.5;
           const p = pseudoRandom(starSeed + 2);
-          const mag = 4.0 + Math.pow(p, 0.45) * 13.5;
-
-          // Prune stars too faint to be visible at current FOV before allocating memory
-          if (mag > maxVisibleMag) continue;
+          // Realistic astronomical power-law magnitude distribution
+          const mag = 1.5 + Math.pow(p, 0.35) * (maxVisibleMag - 1.5);
 
           const sRa = (((normR + pseudoRandom(starSeed) * stepDeg) % 360) + 360) % 360;
           const sDec = Math.max(-90, Math.min(90, normD + pseudoRandom(starSeed + 1) * stepDeg));
@@ -735,11 +776,9 @@ export default function InteractiveSkyEngine() {
 
     // 2. High-Density Deep-Field Sub-Arcminute Infrared Point Sources (when FOV < 3.0°)
     if (fov < 3.0) {
-      const deepCount = Math.floor(Math.min(70, 25 + (3.0 - fov) * 20));
+      const deepCount = Math.floor(Math.min(90, 35 + (3.0 - fov) * 25));
       const deepSeed = (Math.floor(ra * 10) * 31337 + Math.floor(dec * 10) * 1337) % 100000;
       const fovRadius = fov * 0.92;
-      const cosDec = Math.cos((dec * Math.PI) / 180);
-      const safeCosDec = Math.max(0.01, Math.abs(cosDec));
 
       for (let j = 0; j < deepCount; j++) {
         const sSeed = deepSeed + j * 97.31;
@@ -751,7 +790,7 @@ export default function InteractiveSkyEngine() {
         const sDec = Math.max(-90, Math.min(90, dec + Math.sin(angle) * dist));
 
         const p = pseudoRandom(sSeed + 2);
-        const mag = 11.5 + Math.pow(p, 0.55) * 6.5;
+        const mag = 10.5 + Math.pow(p, 0.5) * 7.5;
         const isGalaxy = pseudoRandom(sSeed + 3) > 0.88;
         const typeIdx = Math.floor(pseudoRandom(sSeed + 4) * spectralTypes.length);
 
@@ -1090,6 +1129,12 @@ export default function InteractiveSkyEngine() {
 
           // HIGH-MAGNIFICATION TELESCOPIC RESOLVED DISK RENDERING (FOV < 1.8°)
           if (fov < 1.8) {
+            if (lowerName.includes('mercury')) {
+              const mercR = Math.max(8, Math.min(65, 14 / fov));
+              drawMercury(ctx, x, y, mercR, fov, theme);
+              drawTargetBadge(ctx, x, y, mercR, target, theme, isBlinking, blinkEpoch, activeEpoch);
+              return;
+            }
             if (lowerName.includes('jupiter')) {
               const jupR = Math.max(14, Math.min(110, 26 / fov));
               drawJupiter(ctx, x, y, jupR, fov, theme);
@@ -1150,10 +1195,58 @@ export default function InteractiveSkyEngine() {
               drawTargetBadge(ctx, x, y, pluR, target, theme, isBlinking, blinkEpoch, activeEpoch);
               return;
             }
+            if (lowerName.includes('ceres')) {
+              const ceresR = Math.max(7, Math.min(55, 12 / fov));
+              drawCeres(ctx, x, y, ceresR, fov, theme);
+              drawTargetBadge(ctx, x, y, ceresR, target, theme, isBlinking, blinkEpoch, activeEpoch);
+              return;
+            }
+            if (lowerName.includes('titan')) {
+              const titanR = Math.max(8, Math.min(65, 14 / fov));
+              drawTitan(ctx, x, y, titanR, fov, theme);
+              drawTargetBadge(ctx, x, y, titanR, target, theme, isBlinking, blinkEpoch, activeEpoch);
+              return;
+            }
+            if (lowerName.includes('europa')) {
+              const europaR = Math.max(7, Math.min(55, 12 / fov));
+              drawEuropa(ctx, x, y, europaR, fov, theme);
+              drawTargetBadge(ctx, x, y, europaR, target, theme, isBlinking, blinkEpoch, activeEpoch);
+              return;
+            }
+            if (lowerName.includes('ganymede')) {
+              const ganyR = Math.max(8, Math.min(65, 14 / fov));
+              drawGanymede(ctx, x, y, ganyR, fov, theme);
+              drawTargetBadge(ctx, x, y, ganyR, target, theme, isBlinking, blinkEpoch, activeEpoch);
+              return;
+            }
+            if (lowerName.includes('callisto')) {
+              const calliR = Math.max(8, Math.min(65, 14 / fov));
+              drawCallisto(ctx, x, y, calliR, fov, theme);
+              drawTargetBadge(ctx, x, y, calliR, target, theme, isBlinking, blinkEpoch, activeEpoch);
+              return;
+            }
+            if (lowerName.includes('enceladus')) {
+              const enceR = Math.max(6, Math.min(50, 10 / fov));
+              drawEnceladus(ctx, x, y, enceR, fov, theme);
+              drawTargetBadge(ctx, x, y, enceR, target, theme, isBlinking, blinkEpoch, activeEpoch);
+              return;
+            }
+            if (lowerName.includes('comet') || lowerName.includes('halley')) {
+              const cometR = Math.max(8, Math.min(60, 14 / fov));
+              drawComet(ctx, x, y, cometR, fov, theme);
+              drawTargetBadge(ctx, x, y, cometR, target, theme, isBlinking, blinkEpoch, activeEpoch);
+              return;
+            }
             if (lowerName.includes('planet nine') || lowerName.includes('planet 9') || lowerName.includes('planet x')) {
               const p9R = Math.max(8, Math.min(60, 13 / fov));
               drawPlanetNine(ctx, x, y, p9R, fov, theme);
               drawTargetBadge(ctx, x, y, p9R, target, theme, isBlinking, blinkEpoch, activeEpoch);
+              return;
+            }
+            if (target.isExoplanet || (target.category && target.category.includes('Exoplanet')) || (target.type && target.type.includes('Exoplanet'))) {
+              const exoR = Math.max(10, Math.min(75, 16 / fov));
+              drawExoplanetWorld(ctx, x, y, exoR, target, fov, theme);
+              drawTargetBadge(ctx, x, y, exoR, target, theme, isBlinking, blinkEpoch, activeEpoch);
               return;
             }
             if (lowerName.includes('andromeda') || lowerName.includes('m31')) {
@@ -1269,27 +1362,50 @@ export default function InteractiveSkyEngine() {
           name: closestTargetToCenter.target.name,
           radius: closestTargetToCenter.target.isPlanet ? 26 : 16,
           angularDia:
-            closestTargetToCenter.target.name.includes('Jupiter')
-              ? '46.8″ (Giant Oblate Disk)'
-              : closestTargetToCenter.target.name.includes('Saturn')
-                ? '18.4″ (Rings 42.1″)'
-                : closestTargetToCenter.target.name.includes('Mars')
-                  ? '14.2″ (Terrestrial Disk)'
-                  : closestTargetToCenter.target.name.includes('Venus')
-                    ? '24.5″ (Cloud Deck)'
-                    : closestTargetToCenter.target.name.includes('Sun')
-                      ? '32.1′ (Solar Disk)'
-                      : closestTargetToCenter.target.name.includes('Moon')
-                        ? '31.2′ (Lunar Surface)'
-                        : closestTargetToCenter.target.isPlanet
-                          ? 'Resolved Disc'
-                          : null,
+            closestTargetToCenter.target.name.includes('Mercury')
+              ? '11.2″ (Cratered Iron World)'
+              : closestTargetToCenter.target.name.includes('Jupiter')
+                ? '46.8″ (Giant Oblate Disk)'
+                : closestTargetToCenter.target.name.includes('Saturn')
+                  ? '18.4″ (Rings 42.1″)'
+                  : closestTargetToCenter.target.name.includes('Mars')
+                    ? '14.2″ (Terrestrial Disk)'
+                    : closestTargetToCenter.target.name.includes('Venus')
+                      ? '24.5″ (Cloud Deck)'
+                      : closestTargetToCenter.target.name.includes('Sun')
+                        ? '32.1′ (Solar Disk)'
+                        : closestTargetToCenter.target.name.includes('Moon')
+                          ? '31.2′ (Lunar Surface)'
+                          : closestTargetToCenter.target.name.includes('Titan')
+                            ? '0.8″ (Hazy Orange Atmosphere)'
+                            : closestTargetToCenter.target.name.includes('Ceres')
+                              ? '0.7″ (Occator Faculae)'
+                              : closestTargetToCenter.target.name.includes('Europa')
+                                ? '1.0″ (Ice Shell & Lineae)'
+                                : closestTargetToCenter.target.isPlanet
+                                  ? 'Resolved Disc'
+                                  : null,
         }
         : targetName && !targetName.startsWith('Target (')
           ? {
             name: targetName,
             radius: 20,
-            angularDia: null,
+            angularDia:
+              targetName.includes('Mercury')
+                ? '11.2″ (Cratered Iron World)'
+                : targetName.includes('Jupiter')
+                  ? '46.8″ (Giant Oblate Disk)'
+                  : targetName.includes('Saturn')
+                    ? '18.4″ (Rings 42.1″)'
+                    : targetName.includes('Mars')
+                      ? '14.2″ (Terrestrial Disk)'
+                      : targetName.includes('Venus')
+                        ? '24.5″ (Cloud Deck)'
+                        : targetName.includes('Sun')
+                          ? '32.1′ (Solar Disk)'
+                          : targetName.includes('Moon')
+                            ? '31.2′ (Lunar Surface)'
+                            : null,
           }
           : null;
 

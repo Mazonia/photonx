@@ -999,7 +999,7 @@ export const MASTER_CELESTIAL_TARGETS = [
   // Deep-Sky Benchmark Objects & Galaxies
   {
     name: 'Messier 31 (Andromeda Galaxy)',
-    aliases: ['M31', 'Andromeda Galaxy', 'NGC 224'],
+    aliases: ['M31', 'Andromeda Galaxy', 'M31 (Andromeda)', 'NGC 224'],
     ra: 10.6847,
     dec: 41.2687,
     mag: 3.44,
@@ -1009,7 +1009,7 @@ export const MASTER_CELESTIAL_TARGETS = [
   },
   {
     name: 'Messier 42 (Orion Nebula)',
-    aliases: ['M42', 'Orion Nebula', 'NGC 1976'],
+    aliases: ['M42', 'Orion Nebula', 'M42 (Orion Nebula)', 'NGC 1976'],
     ra: 83.8221,
     dec: -5.3911,
     mag: 4.0,
@@ -1099,7 +1099,7 @@ export const MASTER_CELESTIAL_TARGETS = [
   },
   {
     name: 'COSMOS Deep Survey Field',
-    aliases: ['COSMOS', 'COSMOS Field'],
+    aliases: ['COSMOS', 'COSMOS Field', 'COSMOS Deep Field'],
     ra: 150.1192,
     dec: 2.2058,
     mag: 20.0,

@@ -27,7 +27,6 @@ export default function Header() {
     toggleTheme,
     openTour,
     openTutorial,
-    openNavigator,
   } = useStore();
 
   const [isShortcutsOpen, setIsShortcutsOpen] = useState(false);
@@ -99,18 +98,6 @@ export default function Header() {
 
         {/* Right: Primary Navigation, Presentation & Grouped Utilities */}
         <div className="flex items-center gap-2 shrink-0">
-          {/* Cosmic World Navigator Button (Planets & Systems Orrery) */}
-          <Tooltip position="bottom" content="Explore Solar System planets, 2D Keplerian Orrery, habitable exoworlds, and Planet X candidates" tag="WORLDS & ORRERY">
-            <button
-              onClick={openNavigator}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-amber-500/50 bg-amber-500/15 hover:bg-amber-500/25 text-xs font-mono font-bold text-amber-800 dark:text-amber-300 transition-all shadow-sm active:scale-95"
-              aria-label="Open Cosmic World Navigator"
-            >
-              <Orbit className="w-4 h-4 text-amber-500 animate-spin-slow" />
-              <span className="hidden sm:inline">Planets & Orrery</span>
-            </button>
-          </Tooltip>
-
           {/* Navigation Mode Pill */}
           <div data-tour="mode-selector" className="flex items-center p-0.5 rounded-xl bg-sand-200/70 dark:bg-space-900/90 border border-sand-300 dark:border-white/10 shadow-inner">
             <Tooltip position="bottom" content="All-sky browser with multi-spectral NIR maps and curated catalog targets." tag="VIEW">

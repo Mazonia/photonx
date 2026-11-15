@@ -442,6 +442,88 @@ export function drawVenus(ctx, x, y, r, fov, theme) {
 }
 
 /**
+ * Mercury: Innermost world — cratered metallic-slate sphere with Caloris Basin impact structure and lobate scarps
+ */
+export function drawMercury(ctx, x, y, r, fov, theme) {
+  ctx.save();
+
+  // 1. Base 3D Metallic-Slate Sphere (silicate crust over massive iron core)
+  drawShadedSphere(ctx, x, y, r, '#64748B', '#E2E8F0', '#0F172A');
+
+  if (r > 6) {
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.clip();
+
+    // 2. Caloris Basin (Giant multi-ring impact basin, ~1550 km across)
+    const basinX = x - r * 0.22;
+    const basinY = y - r * 0.15;
+    const basinR = r * 0.38;
+
+    // Dark volcanic smooth plains filling the basin floor
+    ctx.fillStyle = 'rgba(15, 23, 42, 0.65)';
+    ctx.beginPath();
+    ctx.arc(basinX, basinY, basinR, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Concentric mountain ring ridges around Caloris
+    ctx.strokeStyle = 'rgba(226, 232, 240, 0.45)';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([2, 3]);
+    ctx.beginPath();
+    ctx.arc(basinX, basinY, basinR * 0.7, 0, Math.PI * 2);
+    ctx.arc(basinX, basinY, basinR * 1.15, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // 3. Prominent Impact Craters with Bright Ejecta Rays (Degas, Kuiper)
+    const degasX = x + r * 0.35;
+    const degasY = y + r * 0.25;
+    ctx.strokeStyle = 'rgba(241, 245, 249, 0.55)';
+    ctx.lineWidth = 0.8;
+    for (let angle = 0; angle < Math.PI * 2; angle += Math.PI / 4) {
+      ctx.beginPath();
+      ctx.moveTo(degasX, degasY);
+      ctx.lineTo(degasX + Math.cos(angle) * r * 0.45, degasY + Math.sin(angle) * r * 0.45);
+      ctx.stroke();
+    }
+    // Crater rim
+    ctx.fillStyle = '#FFFFFF';
+    ctx.beginPath();
+    ctx.arc(degasX, degasY, Math.max(1.5, r * 0.08), 0, Math.PI * 2);
+    ctx.fill();
+
+    // Kuiper Crater
+    ctx.fillStyle = 'rgba(203, 213, 225, 0.75)';
+    ctx.beginPath();
+    ctx.arc(x - r * 0.3, y + r * 0.38, Math.max(1.2, r * 0.06), 0, Math.PI * 2);
+    ctx.fill();
+
+    // 4. Discovery Rupes (Compressional thrust fault scarp across southern hemisphere)
+    ctx.strokeStyle = 'rgba(2, 6, 23, 0.75)';
+    ctx.lineWidth = 1.2;
+    ctx.beginPath();
+    ctx.moveTo(x - r * 0.4, y + r * 0.1);
+    ctx.quadraticCurveTo(x - r * 0.05, y + r * 0.45, x + r * 0.25, y + r * 0.6);
+    ctx.stroke();
+
+    ctx.restore();
+  }
+
+  // Airless limb sharpness with subtle metallic sheen
+  ctx.save();
+  ctx.strokeStyle = 'rgba(203, 213, 225, 0.4)';
+  ctx.lineWidth = Math.max(1, r * 0.05);
+  ctx.beginPath();
+  ctx.arc(x, y, r + 0.5, 0, Math.PI * 2);
+  ctx.stroke();
+  ctx.restore();
+
+  ctx.restore();
+}
+
+/**
  * The Sun (Sol): Dazzling golden core with limb darkening, pulsing corona flares, and dark sunspot umbrae
  */
 export function drawSun(ctx, x, y, r, fov, theme) {
@@ -766,6 +848,393 @@ export function drawPlanetNine(ctx, x, y, r, fov, theme) {
 
   // Dark mysterious icy super-Earth globe
   drawShadedSphere(ctx, x, y, r, '#3B0764', '#C084FC', '#030712');
+
+  ctx.restore();
+}
+
+/**
+ * Ceres: Asteroid belt dwarf planet with Occator Crater bright sodium carbonate salt faculae
+ */
+export function drawCeres(ctx, x, y, r, fov, theme) {
+  ctx.save();
+  drawShadedSphere(ctx, x, y, r, '#475569', '#CBD5E1', '#0F172A');
+
+  if (r > 6) {
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.clip();
+
+    // Occator Crater central bright sodium carbonate faculae (Cerealia Facula)
+    const occX = x - r * 0.12;
+    const occY = y - r * 0.18;
+    const occR = r * 0.22;
+
+    // Dark crater basin
+    ctx.fillStyle = 'rgba(15, 23, 42, 0.7)';
+    ctx.beginPath();
+    ctx.arc(occX, occY, occR, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Dazzling bright salt facula dome
+    const saltGrad = ctx.createRadialGradient(occX, occY, 1, occX, occY, occR * 0.6);
+    saltGrad.addColorStop(0, '#FFFFFF');
+    saltGrad.addColorStop(0.4, '#E0F2FE');
+    saltGrad.addColorStop(1, 'rgba(56, 189, 248, 0)');
+    ctx.fillStyle = saltGrad;
+    ctx.beginPath();
+    ctx.arc(occX, occY, occR * 0.6, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Secondary Vinalia Faculae bright spots
+    ctx.fillStyle = '#FFFFFF';
+    ctx.beginPath();
+    ctx.arc(occX + occR * 0.45, occY + occR * 0.25, Math.max(1, r * 0.04), 0, Math.PI * 2);
+    ctx.arc(occX - occR * 0.35, occY + occR * 0.35, Math.max(1, r * 0.03), 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.restore();
+  }
+
+  ctx.restore();
+}
+
+/**
+ * Europa: Jovian ice moon with global subsurface ocean and reddish-brown linear fractures (lineae)
+ */
+export function drawEuropa(ctx, x, y, r, fov, theme) {
+  ctx.save();
+  // Brilliant porcelain ice crust
+  drawShadedSphere(ctx, x, y, r, '#E0F2FE', '#FFFFFF', '#0369A1');
+
+  if (r > 6) {
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.clip();
+
+    // Reddish-brown hydrated salt fracture lineae crisscrossing the ice
+    ctx.strokeStyle = 'rgba(180, 83, 9, 0.65)';
+    ctx.lineWidth = Math.max(0.8, r * 0.04);
+    ctx.beginPath();
+    ctx.moveTo(x - r * 0.8, y - r * 0.3);
+    ctx.bezierCurveTo(x - r * 0.1, y - r * 0.1, x + r * 0.3, y + r * 0.4, x + r * 0.7, y + r * 0.6);
+    ctx.moveTo(x - r * 0.5, y + r * 0.6);
+    ctx.bezierCurveTo(x - r * 0.1, y + r * 0.2, x + r * 0.2, y - r * 0.4, x + r * 0.6, y - r * 0.7);
+    ctx.moveTo(x - r * 0.7, y + r * 0.1);
+    ctx.lineTo(x + r * 0.8, y - r * 0.1);
+    ctx.stroke();
+
+    // Conamara Chaos reddish terrain mottling
+    ctx.fillStyle = 'rgba(194, 65, 12, 0.4)';
+    ctx.beginPath();
+    ctx.arc(x + r * 0.25, y - r * 0.2, r * 0.18, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.restore();
+  }
+
+  // Smooth icy limb glow
+  ctx.strokeStyle = 'rgba(186, 230, 253, 0.5)';
+  ctx.lineWidth = Math.max(1, r * 0.06);
+  ctx.beginPath();
+  ctx.arc(x, y, r + 0.5, 0, Math.PI * 2);
+  ctx.stroke();
+
+  ctx.restore();
+}
+
+/**
+ * Ganymede: Largest solar system moon with grooved tectonic bands and ancient cratered polygonal blocks
+ */
+export function drawGanymede(ctx, x, y, r, fov, theme) {
+  ctx.save();
+  drawShadedSphere(ctx, x, y, r, '#64748B', '#E2E8F0', '#1E293B');
+
+  if (r > 6) {
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.clip();
+
+    // Dark ancient Galileo Regio polygon
+    ctx.fillStyle = 'rgba(15, 23, 42, 0.65)';
+    ctx.beginPath();
+    ctx.ellipse(x - r * 0.2, y - r * 0.2, r * 0.45, r * 0.38, 0.3, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Light grooved bands (sulci)
+    ctx.strokeStyle = 'rgba(241, 245, 249, 0.5)';
+    ctx.lineWidth = 1.2;
+    ctx.beginPath();
+    ctx.moveTo(x - r * 0.8, y + r * 0.2);
+    ctx.lineTo(x + r * 0.8, y - r * 0.3);
+    ctx.moveTo(x - r * 0.6, y + r * 0.5);
+    ctx.lineTo(x + r * 0.7, y + r * 0.1);
+    ctx.stroke();
+
+    ctx.restore();
+  }
+
+  ctx.restore();
+}
+
+/**
+ * Callisto: Saturated ancient cratered ice sphere with multi-ring Valhalla impact basin
+ */
+export function drawCallisto(ctx, x, y, r, fov, theme) {
+  ctx.save();
+  drawShadedSphere(ctx, x, y, r, '#334155', '#94A3B8', '#020617');
+
+  if (r > 6) {
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.clip();
+
+    // Valhalla Multi-ring basin
+    const vx = x + r * 0.15;
+    const vy = y - r * 0.15;
+    ctx.strokeStyle = 'rgba(203, 213, 225, 0.4)';
+    ctx.lineWidth = 0.8;
+    for (let rad = r * 0.15; rad <= r * 0.6; rad += r * 0.12) {
+      ctx.beginPath();
+      ctx.arc(vx, vy, rad, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+
+    ctx.restore();
+  }
+
+  ctx.restore();
+}
+
+/**
+ * Titan: Giant Saturnian moon with dense golden photochemical smog & methane lakes
+ */
+export function drawTitan(ctx, x, y, r, fov, theme) {
+  ctx.save();
+  // Golden-orange dense smog globe
+  drawShadedSphere(ctx, x, y, r, '#EA580C', '#FEF08A', '#78350F');
+
+  // Upper atmospheric blue detachment haze layer
+  ctx.strokeStyle = 'rgba(56, 189, 248, 0.45)';
+  ctx.lineWidth = Math.max(1.5, r * 0.1);
+  ctx.beginPath();
+  ctx.arc(x, y, r + r * 0.05, 0, Math.PI * 2);
+  ctx.stroke();
+
+  // Dark polar methane lake region (Kraken Mare) at north limb
+  if (r > 8) {
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.clip();
+    ctx.fillStyle = 'rgba(67, 20, 7, 0.65)';
+    ctx.beginPath();
+    ctx.ellipse(x, y - r * 0.78, r * 0.35, r * 0.15, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  ctx.restore();
+}
+
+/**
+ * Enceladus: Ocean world of Saturn with pure white ice and south polar cryovolcanic plumes
+ */
+export function drawEnceladus(ctx, x, y, r, fov, theme) {
+  ctx.save();
+  // Ultra-reflective white ice globe (>99% albedo)
+  drawShadedSphere(ctx, x, y, r, '#F0F9FF', '#FFFFFF', '#0284C7');
+
+  if (r > 6) {
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.clip();
+
+    // South polar blue tiger stripe fissures
+    ctx.strokeStyle = 'rgba(14, 165, 233, 0.75)';
+    ctx.lineWidth = 1;
+    for (let offset = -r * 0.18; offset <= r * 0.18; offset += r * 0.1) {
+      ctx.beginPath();
+      ctx.moveTo(x + offset, y + r * 0.65);
+      ctx.lineTo(x + offset, y + r * 0.9);
+      ctx.stroke();
+    }
+
+    ctx.restore();
+
+    // Cryovolcanic plumes shooting into space from South Pole
+    const plumeGrad = ctx.createLinearGradient(x, y + r * 0.9, x, y + r * 1.8);
+    plumeGrad.addColorStop(0, 'rgba(56, 189, 248, 0.6)');
+    plumeGrad.addColorStop(1, 'rgba(56, 189, 248, 0)');
+    ctx.fillStyle = plumeGrad;
+    ctx.beginPath();
+    ctx.moveTo(x - r * 0.25, y + r * 0.95);
+    ctx.lineTo(x - r * 0.55, y + r * 1.8);
+    ctx.lineTo(x + r * 0.55, y + r * 1.8);
+    ctx.lineTo(x + r * 0.25, y + r * 0.95);
+    ctx.closePath();
+    ctx.fill();
+  }
+
+  ctx.restore();
+}
+
+/**
+ * Halley's Comet / Solar System Comets: Cyan fluorescent coma with sweeping dual ion & dust tails
+ */
+export function drawComet(ctx, x, y, r, fov, theme, name) {
+  ctx.save();
+
+  // Dual tails extending anti-sunward
+  // 1. Broad curved golden-white dust tail
+  const tailLength = Math.max(45, r * 4.5);
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.rotate(0.35);
+
+  const dustGrad = ctx.createLinearGradient(0, 0, tailLength * 1.2, -tailLength * 0.3);
+  dustGrad.addColorStop(0, 'rgba(254, 240, 138, 0.65)');
+  dustGrad.addColorStop(0.5, 'rgba(253, 224, 71, 0.25)');
+  dustGrad.addColorStop(1, 'rgba(253, 224, 71, 0)');
+  ctx.fillStyle = dustGrad;
+  ctx.beginPath();
+  ctx.moveTo(0, 0);
+  ctx.quadraticCurveTo(tailLength * 0.6, -tailLength * 0.1, tailLength * 1.2, -tailLength * 0.45);
+  ctx.lineTo(tailLength * 1.1, tailLength * 0.15);
+  ctx.closePath();
+  ctx.fill();
+
+  // 2. Straight, narrow, electric-blue ion tail (CO+ molecular fluorescence)
+  const ionGrad = ctx.createLinearGradient(0, 0, tailLength * 1.6, 0);
+  ionGrad.addColorStop(0, 'rgba(56, 189, 248, 0.85)');
+  ionGrad.addColorStop(0.6, 'rgba(14, 165, 233, 0.35)');
+  ionGrad.addColorStop(1, 'rgba(14, 165, 233, 0)');
+  ctx.fillStyle = ionGrad;
+  ctx.beginPath();
+  ctx.moveTo(0, -r * 0.3);
+  ctx.lineTo(tailLength * 1.6, -r * 0.8);
+  ctx.lineTo(tailLength * 1.6, r * 0.8);
+  ctx.lineTo(0, r * 0.3);
+  ctx.closePath();
+  ctx.fill();
+  ctx.restore();
+
+  // Glowing cyan gas coma
+  const comaGrad = ctx.createRadialGradient(x, y, r * 0.2, x, y, r * 1.8);
+  comaGrad.addColorStop(0, '#FFFFFF');
+  comaGrad.addColorStop(0.3, 'rgba(45, 212, 191, 0.85)');
+  comaGrad.addColorStop(0.7, 'rgba(13, 148, 136, 0.35)');
+  comaGrad.addColorStop(1, 'rgba(13, 148, 136, 0)');
+  ctx.fillStyle = comaGrad;
+  ctx.beginPath();
+  ctx.arc(x, y, r * 1.8, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Dense white icy nucleus
+  ctx.fillStyle = '#FFFFFF';
+  ctx.beginPath();
+  ctx.arc(x, y, Math.max(2, r * 0.35), 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.restore();
+}
+
+/**
+ * Exoplanet World: Procedural telescopic resolved disk for any exoplanetary system
+ * (TRAPPIST-1, Proxima b, Kepler-452b, K2-18 b, 55 Cancri e, etc.)
+ */
+export function drawExoplanetWorld(ctx, x, y, r, target, fov, theme) {
+  ctx.save();
+  const lower = (target.name || '').toLowerCase();
+  const desc = (target.desc || target.description || '').toLowerCase();
+
+  // 1. Water World / Hycean Planet (e.g. K2-18 b)
+  if (lower.includes('k2-18') || desc.includes('hycean') || desc.includes('water world')) {
+    drawShadedSphere(ctx, x, y, r, '#0284C7', '#38BDF8', '#082F49');
+    ctx.strokeStyle = 'rgba(56, 189, 248, 0.55)';
+    ctx.lineWidth = Math.max(1, r * 0.08);
+    ctx.beginPath();
+    ctx.arc(x, y, r + 0.5, 0, Math.PI * 2);
+    ctx.stroke();
+  }
+  // 2. Lava Super-Earth (e.g. 55 Cancri e)
+  else if (lower.includes('55 can') || desc.includes('lava') || desc.includes('magma') || desc.includes('carbon')) {
+    drawShadedSphere(ctx, x, y, r, '#1F2937', '#F59E0B', '#030712');
+    if (r > 6) {
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(x, y, r, 0, Math.PI * 2);
+      ctx.clip();
+      // Glowing magma rivers and fissures
+      ctx.strokeStyle = '#EF4444';
+      ctx.lineWidth = 1.2;
+      ctx.beginPath();
+      ctx.moveTo(x - r * 0.7, y - r * 0.2);
+      ctx.lineTo(x + r * 0.2, y + r * 0.4);
+      ctx.moveTo(x - r * 0.1, y - r * 0.5);
+      ctx.lineTo(x + r * 0.6, y - r * 0.1);
+      ctx.stroke();
+      ctx.restore();
+    }
+    ctx.strokeStyle = 'rgba(239, 68, 68, 0.45)';
+    ctx.lineWidth = Math.max(1, r * 0.08);
+    ctx.beginPath();
+    ctx.arc(x, y, r + 0.5, 0, Math.PI * 2);
+    ctx.stroke();
+  }
+  // 3. Hot Jupiter / Gas Giant (e.g. 51 Pegasi b)
+  else if (lower.includes('51 peg') || desc.includes('hot jupiter') || desc.includes('gas giant')) {
+    drawShadedSphere(ctx, x, y, r, '#D97706', '#FEF08A', '#451A03');
+    if (r > 8) {
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(x, y, r, 0, Math.PI * 2);
+      ctx.clip();
+      ctx.fillStyle = 'rgba(180, 83, 9, 0.5)';
+      ctx.fillRect(x - r, y - r * 0.3, r * 2, r * 0.25);
+      ctx.fillRect(x - r, y + r * 0.1, r * 2, r * 0.2);
+      ctx.restore();
+    }
+  }
+  // 4. Habitable Zone Earth-Cousin / Red Dwarf World (Proxima b, Kepler-452b, TRAPPIST-1)
+  else {
+    const isRedDwarfHost = lower.includes('proxima') || lower.includes('trappist');
+    const baseColor = isRedDwarfHost ? '#9A3412' : '#047857';
+    const highlightColor = isRedDwarfHost ? '#FDBA74' : '#6EE7B7';
+    drawShadedSphere(ctx, x, y, r, baseColor, highlightColor, '#022C22');
+
+    if (r > 6) {
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(x, y, r, 0, Math.PI * 2);
+      ctx.clip();
+
+      // Continents & oceans
+      ctx.fillStyle = isRedDwarfHost ? 'rgba(67, 20, 7, 0.6)' : 'rgba(3, 105, 161, 0.7)';
+      ctx.beginPath();
+      ctx.ellipse(x - r * 0.15, y, r * 0.45, r * 0.5, 0.2, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Atmospheric cloud bands
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.55)';
+      ctx.lineWidth = Math.max(1, r * 0.08);
+      ctx.beginPath();
+      ctx.arc(x - r * 0.2, y - r * 0.2, r * 0.6, 0.2, Math.PI * 0.8);
+      ctx.stroke();
+
+      ctx.restore();
+    }
+
+    ctx.strokeStyle = isRedDwarfHost ? 'rgba(251, 146, 60, 0.45)' : 'rgba(56, 189, 248, 0.45)';
+    ctx.lineWidth = Math.max(1, r * 0.08);
+    ctx.beginPath();
+    ctx.arc(x, y, r + 0.5, 0, Math.PI * 2);
+    ctx.stroke();
+  }
 
   ctx.restore();
 }

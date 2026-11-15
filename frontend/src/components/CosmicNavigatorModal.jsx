@@ -37,18 +37,20 @@ export default function CosmicNavigatorModal({ isOpen, onClose }) {
     return group ? group.items : [];
   }, [activeTab]);
 
-  // Enrich items with detailed metadata from MASTER_CELESTIAL_TARGETS
+  // Enrich items with detailed metadata from MASTER_CELESTIAL_TARGETS and ALL_CONSTELLATIONS
   const enrichedItems = useMemo(() => {
     return currentCategoryData.map((item) => {
       const match = MASTER_CELESTIAL_TARGETS.find(
         (t) => t.name.toLowerCase() === item.name.toLowerCase() || (t.aliases && t.aliases.some((a) => a.toLowerCase() === item.name.toLowerCase()))
       );
+      const constellationMatch = !match ? ALL_CONSTELLATIONS.find((c) => c.name.toLowerCase() === item.name.toLowerCase()) : null;
+
       return {
         ...item,
-        type: match?.type || 'Celestial Body',
+        type: match?.type || (constellationMatch ? 'Constellation Asterism' : 'Celestial Body'),
         orbit: match?.orbit || null,
-        funFact: match?.funFact || null,
-        category: match?.category || item.tag,
+        funFact: match?.funFact || (constellationMatch ? `Ancient celestial constellation with ${constellationMatch.stars?.length || 8}+ primary navigating anchor stars.` : null),
+        category: match?.category || (constellationMatch ? 'Constellation' : item.tag),
         diameter_km: match?.diameter_km || null,
         surface_temp_c: match?.surface_temp_c || null,
         gravity_g: match?.gravity_g || null,
@@ -74,34 +76,48 @@ export default function CosmicNavigatorModal({ isOpen, onClose }) {
   if (!isOpen) return null;
 
   const handleSelect = (item) => {
-    setPosition(item.ra, item.dec, item.name);
-    setSelectedObject({
-      name: item.name,
-      ra: item.ra,
-      dec: item.dec,
-      object_type: item.type || item.category || 'Celestial Object',
-      description: item.desc,
-      orbit: item.orbit,
-      funFact: item.funFact,
-      diameter_km: item.diameter_km,
-      surface_temp_c: item.surface_temp_c,
-      gravity_g: item.gravity_g,
-      atmosphere: item.atmosphere,
-      spherex_diag: item.spherex_diag,
-    });
-
-    // Set high-magnification telescopic FOV for planets
-    if (activeTab === 'Solar System Worlds') {
-      if (item.name === 'Jupiter' || item.name === 'Saturn') {
-        setFov(0.25);
-      } else if (item.name === 'Mars' || item.name === 'Venus' || item.name === 'Earth' || item.name === 'The Moon (Luna)') {
-        setFov(0.18);
-      } else {
-        setFov(0.5);
-      }
-    }
-
     onClose();
+    setTimeout(() => {
+      setPosition(item.ra, item.dec, item.name);
+      setSelectedObject({
+        name: item.name,
+        ra: item.ra,
+        dec: item.dec,
+        object_type: item.type || item.category || 'Celestial Object',
+        description: item.desc,
+        orbit: item.orbit,
+        funFact: item.funFact,
+        diameter_km: item.diameter_km,
+        surface_temp_c: item.surface_temp_c,
+        gravity_g: item.gravity_g,
+        atmosphere: item.atmosphere,
+        spherex_diag: item.spherex_diag,
+      });
+
+      // Set appropriate telescopic FOV based on celestial object class
+      if (activeTab === 'Solar System Worlds') {
+        if (item.name === 'Jupiter' || item.name === 'Saturn') {
+          setFov(0.25);
+        } else if (item.name === 'Mars' || item.name === 'Venus' || item.name === 'Mercury' || item.name === 'Earth' || item.name === 'The Moon (Luna)') {
+          setFov(0.18);
+        } else if (item.name === 'The Sun (Sol)') {
+          setFov(0.4);
+        } else {
+          setFov(0.35);
+        }
+      } else if (activeTab === 'Exoplanetary Systems') {
+        setFov(0.35);
+      } else if (activeTab === 'Stellar Anchors & Constellations') {
+        const lower = item.name.toLowerCase();
+        if (lower.includes('orion') || lower.includes('ursa') || lower.includes('centaurus')) {
+          setFov(28.0);
+        } else {
+          setFov(0.8);
+        }
+      } else if (activeTab === 'Deep Cosmos & Planet X Analogs') {
+        setFov(1.2);
+      }
+    }, 20);
   };
 
   return (
@@ -172,7 +188,7 @@ export default function CosmicNavigatorModal({ isOpen, onClose }) {
           </div>
         ) : (
           /* View Mode 2: Celestial Target Grid with Tabs & Filter */
-          <>
+          <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
             {/* Navigation Tabs & Search Filter */}
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 px-6 py-3 border-b border-sand-200 dark:border-ocean-900/40 bg-sand-50/90 dark:bg-space-900/90">
               {/* Tabs */}
@@ -312,7 +328,7 @@ export default function CosmicNavigatorModal({ isOpen, onClose }) {
                 Close
               </button>
             </div>
-          </>
+          </div>
         )}
       </div>
     </div>

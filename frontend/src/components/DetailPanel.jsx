@@ -197,20 +197,23 @@ export default function DetailPanel() {
                     <span className="text-[8px] text-ocean-600 dark:text-ocean-400">Click to Slew</span>
                   </div>
                   <div className="flex flex-wrap gap-1.5">
-                    {celestialInfo.moons.map((moon) => (
-                      <button
-                        key={moon}
-                        onClick={() => {
-                          const mInfo = resolveCelestialTarget(moon);
-                          if (mInfo) {
-                            setPosition(mInfo.ra, mInfo.dec, mInfo.name);
-                          }
-                        }}
-                        className="px-2 py-0.5 rounded-lg bg-white dark:bg-space-800 border border-sand-300 dark:border-ocean-800 text-[10px] font-mono text-ocean-800 dark:text-ocean-300 hover:bg-ocean-500 hover:text-white transition-all shadow-xs"
-                      >
-                        {moon}
-                      </button>
-                    ))}
+                    {celestialInfo.moons.map((moon) => {
+                      const moonName = typeof moon === 'string' ? moon : (moon?.name || String(moon));
+                      return (
+                        <button
+                          key={moonName}
+                          onClick={() => {
+                            const mInfo = resolveCelestialTarget(moonName);
+                            if (mInfo) {
+                              setPosition(mInfo.ra, mInfo.dec, mInfo.name);
+                            }
+                          }}
+                          className="px-2 py-0.5 rounded-lg bg-white dark:bg-space-800 border border-sand-300 dark:border-ocean-800 text-[10px] font-mono text-ocean-800 dark:text-ocean-300 hover:bg-ocean-500 hover:text-white transition-all shadow-xs"
+                        >
+                          {moonName}
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
               )}
