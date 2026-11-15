@@ -494,38 +494,127 @@
         <span class="badge">ASTRONOMICAL CHALLENGE</span>
       </div>
       <h2>The Problem: Why Is Planet X Still Missing?</h2>
-      <p class="lead">
+      <p class="lead" style="margin-bottom: 12px;">
         Extreme optical darkness meets the challenge of massive multi-spectral datasets.
       </p>
 
-      <div class="grid-3" style="margin-top: 12px;">
-        <div class="card" style="padding: 20px;">
-          <h3>1. Optical Faintness (1/r⁴)</h3>
-          <p><strong>The Physics:</strong> Reflected solar flux drops off as inverse fourth power: <code>Flux &prop; 1/r⁴</code>.</p>
-          <div class="layman-box" style="margin-top: 10px;">
-            <strong>In Plain English:</strong> Sunlight must travel out to the planet and bounce all the way back to Earth. Double the distance, and the object gets 16 times fainter. At 400 AU, sunlight is <strong>25 billion times dimmer</strong> than on Earth. In optical telescopes like Hubble, Planet X is pitch black (mag V &gt; 23.5).
+      <!-- 3 Primary Problem Pillars -->
+      <div class="grid-3" style="margin-top: 4px;">
+        <div class="card" style="padding: 14px 16px;">
+          <h3 style="font-size: 13.5px; margin-bottom: 2px;">1. Optical Faintness (1/r⁴)</h3>
+          <p style="font-size: 12px; line-height: 1.45; margin: 0;"><strong>The Physics:</strong> Reflected solar flux drops off as inverse fourth power: <code>Flux &prop; 1/r⁴</code>.</p>
+          <div class="layman-box" style="margin-top: 8px; padding: 8px 12px; font-size: 11.5px;">
+            <strong>In Plain English:</strong> Sunlight travels to the planet and bounces all the way back to Earth. Double the distance, and the object gets 16 times fainter. At 400 AU, sunlight is <strong>25 billion times dimmer</strong> than on Earth. In optical telescopes like Hubble, Planet X is pitch black (mag V &gt; 23.5).
           </div>
         </div>
 
-        <div class="card card-guac" style="padding: 20px;">
-          <h3>2. Thermal Infrared Emission (35 K)</h3>
-          <p><strong>The Physics:</strong> Cold giant planets retain internal primordial heat, glowing in the near-infrared (1 to 5 µm).</p>
-          <div class="layman-box" style="background: #F4F8F0; border-color: #C8DAB8; color: #2D4C24; margin-top: 10px;">
+        <div class="card card-guac" style="padding: 14px 16px;">
+          <h3 style="font-size: 13.5px; margin-bottom: 2px;">2. Thermal Infrared Emission (35 K)</h3>
+          <p style="font-size: 12px; line-height: 1.45; margin: 0;"><strong>The Physics:</strong> Cold giant planets retain internal primordial heat, glowing in the near-infrared (1 to 5 µm).</p>
+          <div class="layman-box" style="background: #F4F8F0; border-color: #C8DAB8; color: #2D4C24; margin-top: 8px; padding: 8px 12px; font-size: 11.5px;">
             <strong>In Plain English:</strong> Even in the freezing vacuum of deep space, giant planets radiate their own heat like warm embers in the dark. NASA's SPHEREx mission was built specifically to capture this exact thermal glow across 102 infrared bands.
           </div>
         </div>
 
-        <div class="card" style="padding: 20px;">
-          <h3>3. Large-Scale Time-Domain Archive</h3>
-          <p><strong>The Challenge:</strong> SPHEREx scans the whole cosmos every 6 months across 102 distinct spectral channels.</p>
-          <div class="layman-box" style="margin-top: 10px;">
+        <div class="card" style="padding: 14px 16px;">
+          <h3 style="font-size: 13.5px; margin-bottom: 2px;">3. Large-Scale Time-Domain Archive</h3>
+          <p style="font-size: 12px; line-height: 1.45; margin: 0;"><strong>The Challenge:</strong> SPHEREx scans the whole cosmos every 6 months across 102 distinct spectral channels.</p>
+          <div class="layman-box" style="margin-top: 8px; padding: 8px 12px; font-size: 11.5px;">
             <strong>In Plain English:</strong> Having petabytes of data is not enough if researchers cannot spot the movement. Without an automated tool to compare survey images taken months apart, slow-moving outer worlds remain buried in raw technical archives.
           </div>
         </div>
       </div>
 
-      <div class="card card-guac" style="margin-top: 20px; text-align: center; padding: 14px;">
-        <p style="font-size: 13.5px; font-weight: 600; color: var(--text-dark);">
+      <!-- Outer Solar System Distance & Solar Flux Falloff Scale (1/r⁴ Drop-Off) -->
+      <div style="margin-top: 14px;">
+        <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px;">
+          <h4 style="font-family: 'Space Grotesk', sans-serif; font-size: 13px; font-weight: 700; color: var(--avocado); text-transform: uppercase; letter-spacing: 0.8px;">
+            Solar System Distance &amp; Reflected Flux Scale (1/r⁴ Optical Falloff)
+          </h4>
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-muted);">
+            Reference Solar Constant: 1,361 W/m² at 1 AU
+          </span>
+        </div>
+        <div class="grid-4-cols" style="margin-top: 0; gap: 10px;">
+          <div class="card" style="padding: 10px 12px; gap: 2px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px;">
+              <strong style="font-size: 12.5px; color: var(--text-dark);">Earth (1 AU)</strong>
+              <span class="badge" style="font-size: 8.5px; padding: 1px 5px;">Baseline</span>
+            </div>
+            <p style="font-size: 11px; margin: 0; line-height: 1.4;">
+              <strong>Solar Flux:</strong> 1.0x (1,361 W/m²)<br>
+              <strong>Light Travel:</strong> 8.3 min (one-way)<br>
+              <strong>Optical Mag:</strong> V = -26.7 (Direct Sun)<br>
+              <strong>Regime:</strong> 100% visible reflection
+            </p>
+          </div>
+
+          <div class="card" style="padding: 10px 12px; gap: 2px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px;">
+              <strong style="font-size: 12.5px; color: var(--text-dark);">Neptune (30 AU)</strong>
+              <span class="badge" style="font-size: 8.5px; padding: 1px 5px;">Ice Giant</span>
+            </div>
+            <p style="font-size: 11px; margin: 0; line-height: 1.4;">
+              <strong>Solar Flux:</strong> 1.2 &times; 10⁻⁶x<br>
+              <strong>Light Travel:</strong> 4.1 hours (one-way)<br>
+              <strong>Optical Mag:</strong> V &approx; 7.8 (Binoculars)<br>
+              <strong>Regime:</strong> Classical optical limit
+            </p>
+          </div>
+
+          <div class="card" style="padding: 10px 12px; gap: 2px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px;">
+              <strong style="font-size: 12.5px; color: var(--text-dark);">Sedna (85 AU)</strong>
+              <span class="badge" style="font-size: 8.5px; padding: 1px 5px;">Detached TNO</span>
+            </div>
+            <p style="font-size: 11px; margin: 0; line-height: 1.4;">
+              <strong>Solar Flux:</strong> 1.9 &times; 10⁻⁸x<br>
+              <strong>Light Travel:</strong> 11.8 hours (one-way)<br>
+              <strong>Optical Mag:</strong> V &approx; 21.1 (8m Telescopes)<br>
+              <strong>Regime:</strong> Extreme dwarf planet
+            </p>
+          </div>
+
+          <div class="card card-guac" style="padding: 10px 12px; gap: 2px; border-color: var(--avocado);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px;">
+              <strong style="font-size: 12.5px; color: var(--avocado);">Planet X (400 AU)</strong>
+              <span class="badge badge-seed" style="font-size: 8.5px; padding: 1px 5px;">Target</span>
+            </div>
+            <p style="font-size: 11px; margin: 0; line-height: 1.4; color: var(--text-dark);">
+              <strong>Solar Flux:</strong> 3.9 &times; 10⁻¹¹x (25B&times; dimmer)<br>
+              <strong>Light Travel:</strong> 55.4 hours (one-way)<br>
+              <strong>Optical Mag:</strong> V &gt; 23.5 (Pitch Black)<br>
+              <strong>Regime:</strong> 35 K thermal NIR emission
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Two Analytical Insight Cards -->
+      <div class="grid-2" style="margin-top: 12px; gap: 14px;">
+        <div class="card" style="padding: 12px 16px;">
+          <h3 style="font-size: 13px; margin-bottom: 2px;">The Proper Motion Dilemma (&lt; 0.2&quot;/yr)</h3>
+          <p style="font-size: 11.5px; line-height: 1.45; margin: 0;">
+            <strong>The Physics:</strong> By Kepler's Third Law (v &prop; 1/&radic;r), orbital speed at 400 AU drops to &approx; 1.5 km/s. Over an entire year, apparent motion is less than 0.2 arcseconds against millions of stationary Milky Way stars.
+          </p>
+          <div class="layman-box" style="margin-top: 6px; padding: 6px 10px; font-size: 11px;">
+            <strong>In Plain English:</strong> Outer planets crawl at a snail's pace. In any single photograph, Planet X looks identical to a stationary background star. Only rapid multi-month image comparisons make the motion stand out.
+          </div>
+        </div>
+
+        <div class="card card-guac" style="padding: 12px 16px;">
+          <h3 style="font-size: 13px; margin-bottom: 2px;">102-Band Chemical Ice Discrimination</h3>
+          <p style="font-size: 11.5px; line-height: 1.45; margin: 0;">
+            <strong>The Physics:</strong> Decoupling thermal blackbody emission (30 to 45 K) from reflected stellar light. SPHEREx's 102 continuous bands (0.75 to 5.00 µm) isolate diagnostic methane (1.66, 2.30 µm) and water ice absorption features.
+          </p>
+          <div class="layman-box" style="background: #F4F8F0; border-color: #C8DAB8; color: #2D4C24; margin-top: 6px; padding: 6px 10px; font-size: 11px;">
+            <strong>In Plain English:</strong> A single moving dot could be a passing asteroid or sensor glitch. By reading the chemical ice fingerprint across 102 colors of infrared light, PhotonX confirms whether a candidate is an actual planet.
+          </div>
+        </div>
+      </div>
+
+      <div class="card card-guac" style="margin-top: 12px; text-align: center; padding: 10px;">
+        <p style="font-size: 13px; font-weight: 600; color: var(--text-dark); margin: 0;">
           <strong>Core Objective:</strong> Build an intuitive, visual bridge between raw NASA infrared telemetry and human perception to bring Planet X into view.
         </p>
       </div>
@@ -544,7 +633,7 @@
 
       <div class="split-layout" style="margin-top: 8px;">
         <div class="screenshot-frame">
-          <img src="docs/screenshots/photonx.png" alt="PhotonX Celestial Viewport" />
+          <img src="docs/screenshots/constellations_orion.png" alt="PhotonX Celestial Viewport" />
           <div class="screenshot-caption">
             Figure 1: PhotonX Live UI: Real-Time Sky Viewport, 102-Band Spectrum Plot, and Clyde Tombaugh Blink Engine
           </div>

@@ -25,13 +25,20 @@
 
 ---
 
-## SLIDE 2: The Problem: The Hidden Giants of the Outer Solar System
+## SLIDE 2: The Problem: Why Is Planet X Still Missing?
 
-- **Optical Darkness ($1/r^4$ Law):** Solar flux drops off as the inverse fourth power for reflected light: $\text{Flux} \propto 1/r^4$. At 400 AU, reflected sunlight is 25 billion times dimmer than on Earth. In optical telescopes like Hubble, Planet X is pitch black (mag $V > 23.5$).
-- **Thermal Infrared Solution (35 K):** Distant cold bodies retain primordial heat, radiating in the near-infrared spectrum (1 to 5 µm). NASA SPHEREx captures this exact thermal emission across 102 distinct spectral channels.
-- **The Data Flood Bottleneck:** SPHEREx maps the whole sky every 6 months across 102 infrared bands, producing massive data archives.
-- **The Need:** Without an accessible visual comparison tool, slow-moving outer solar system bodies remain buried in raw technical archives.
-- **Objective:** Create an intuitive bridge between raw NASA infrared data and human visual perception to bring Planet X candidates to light.
+- **Optical Faintness ($1/r^4$ Law):** Reflected solar flux drops off as the inverse fourth power: $\text{Flux} \propto 1/r^4$. At 400 AU, sunlight is 25 billion times dimmer than on Earth ($V > 23.5$).
+- **Thermal Infrared Solution (35 K):** Cold giant planets retain primordial internal heat, glowing in the near-infrared ($1\text{ to }5\ \mu\text{m}$). NASA SPHEREx captures this emission across 102 continuous bands.
+- **Time-Domain Data Scale:** SPHEREx scans the whole cosmos every 6 months across 102 channels. Without an automated comparator, slow-moving outer worlds remain buried in raw archives.
+- **Solar System Distance and Reflected Flux Scale:**
+  - **Earth (1 AU):** $1.0\times$ Flux ($1,361\ \text{W/m}^2$), 8.3 min light travel, $V = -26.7$ (Direct Sun), 100% visible reflection baseline.
+  - **Neptune (30 AU):** $1.2 \times 10^{-6}\times$ Flux, 4.1 hours light travel, $V \approx 7.8$ (Binoculars), boundary of classical optical observability.
+  - **Sedna (85 AU):** $1.9 \times 10^{-8}\times$ Flux, 11.8 hours light travel, $V \approx 21.1$ (8m Telescopes), extreme detached dwarf planet.
+  - **Planet X (400 AU):** $3.9 \times 10^{-11}\times$ Flux (25 billion times dimmer), 55.4 hours light travel, $V > 23.5$ (Pitch Black), detectable only via $35\ \text{K}$ thermal NIR emission.
+- **Observational Constraints:**
+  - **Proper Motion Dilemma ($< 0.2''/\text{yr}$):** At 400 AU, orbital speed slows to $\approx 1.5\ \text{km/s}$. Single-epoch surveys cannot distinguish candidates from stationary Milky Way stars without 6-month baseline subtraction.
+  - **102-Band Chemical Ice Discrimination:** Decouples thermal emission from reflected starlight, isolating diagnostic methane ($1.66, 2.30\ \mu\text{m}$) and water ice absorption features.
+- **Core Objective:** Build an intuitive, visual bridge between raw NASA infrared telemetry and human perception to bring Planet X into view.
 
 ---
 
