@@ -24,15 +24,22 @@ export default function DetailPanel() {
     targetName,
     activeEpoch,
     compareEpoch,
+    setActiveEpoch,
+    setCompareEpoch,
+    setPosition,
     mode,
     showObservability,
     activeChannel,
+    setActiveChannel,
     isBlinking,
     setIsBlinking,
     flagCandidate,
+    epochs,
   } = useStore();
 
   const [activeTab, setActiveTab] = useState('spectrum'); // 'spectrum' | 'diff' | 'crossref' | 'nasa'
+  const [diffThreshold, setDiffThreshold] = useState(3.0);
+  const [diffChannel, setDiffChannel] = useState(activeChannel || 42);
 
   // Queries
   const spectrumQuery = useQuery({
@@ -54,8 +61,8 @@ export default function DetailPanel() {
   });
 
   const diffQuery = useQuery({
-    queryKey: ['diff', ra, dec, activeEpoch, compareEpoch],
-    queryFn: () => api.diff(ra, dec, activeEpoch, compareEpoch, activeChannel),
+    queryKey: ['diff', ra, dec, activeEpoch, compareEpoch, diffChannel, diffThreshold],
+    queryFn: () => api.diff(ra, dec, activeEpoch, compareEpoch, diffChannel, diffThreshold),
     enabled: !!ra && !!dec,
   });
 
@@ -187,83 +194,225 @@ export default function DetailPanel() {
 
           {/* Tab Content 2: Epoch Diff & Movers */}
           {activeTab === 'diff' && (
-            <div className="p-3.5 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-white/10 shadow-sm dark:shadow-xl backdrop-blur-md">
-              <div className="flex items-center justify-between mb-2">
-                <div className="flex items-center gap-2">
-                  <span className="font-mono text-xs font-bold text-amber-600 dark:text-amber-400 uppercase tracking-wider">
+            <div className="p-3.5 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-white/10 shadow-sm dark:shadow-xl backdrop-blur-md space-y-3">
+              {/* Header & Controls */}
+              <div className="flex items-center justify-between">
+                <div>
+                  <span className="font-mono text-xs font-bold text-amber-600 dark:text-amber-400 uppercase tracking-wider block">
                     Pixel Differencing Engine
+                  </span>
+                  <span className="text-[10px] text-slate-500 dark:text-slate-400">
+                    Matrix subtraction: ΔI = I_B - I_A (Cancels fixed stars)
                   </span>
                 </div>
                 <Tooltip content="Blink back and forth between Epochs" tag="BLINK">
                   <button
                     onClick={() => setIsBlinking(!isBlinking)}
-                    className="px-2 py-0.5 text-[10px] font-mono rounded bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 hover:bg-amber-500/20"
+                    className={`px-2.5 py-1 text-[10px] font-mono font-bold rounded-lg border transition-all ${
+                      isBlinking
+                        ? 'bg-amber-500 text-slate-950 border-amber-500 shadow-sm animate-pulse'
+                        : 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/30 hover:bg-amber-500/20'
+                    }`}
                   >
                     {isBlinking ? 'Pause Blink' : 'Auto Blink'}
                   </button>
                 </Tooltip>
               </div>
 
+              {/* Interactive Epoch Comparators */}
+              <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-white/5 space-y-2">
+                <div className="flex items-center justify-between text-[11px] font-mono">
+                  <span className="text-slate-500 dark:text-slate-400 font-semibold">EPOCH A (Base):</span>
+                  <div className="flex items-center gap-1">
+                    {(epochs || ['2025-W18', '2025-W44', '2026-W18', '2026-W44']).map((ep) => (
+                      <button
+                        key={`a-${ep}`}
+                        onClick={() => setActiveEpoch(ep)}
+                        className={`px-1.5 py-0.5 rounded text-[10px] font-mono transition-colors ${
+                          activeEpoch === ep
+                            ? 'bg-amber-500 text-slate-950 font-bold'
+                            : 'bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-400 hover:border-amber-400/40'
+                        }`}
+                      >
+                        {ep.replace('202', "'2")}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between text-[11px] font-mono">
+                  <span className="text-slate-500 dark:text-slate-400 font-semibold">EPOCH B (Compare):</span>
+                  <div className="flex items-center gap-1">
+                    {(epochs || ['2025-W18', '2025-W44', '2026-W18', '2026-W44']).map((ep) => (
+                      <button
+                        key={`b-${ep}`}
+                        onClick={() => setCompareEpoch(ep)}
+                        className={`px-1.5 py-0.5 rounded text-[10px] font-mono transition-colors ${
+                          compareEpoch === ep
+                            ? 'bg-cyan-500 text-slate-950 font-bold'
+                            : 'bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-400 hover:border-cyan-400/40'
+                        }`}
+                      >
+                        {ep.replace('202', "'2")}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Same Epoch Alert Warning */}
+                {activeEpoch === compareEpoch && (
+                  <div className="p-2 rounded-lg bg-amber-500/15 border border-amber-500/40 text-[11px] text-amber-800 dark:text-amber-200">
+                    <strong>Zero Baseline Notice:</strong> Comparing identical epochs produces a flat zero residual. Select different epochs (e.g. 2025-W18 vs 2025-W44) to reveal shifting objects!
+                  </div>
+                )}
+              </div>
+
+              {/* Differencing Channel & Sensitivity Controls */}
+              <div className="grid grid-cols-2 gap-2 text-xs">
+                {/* Channel Selector */}
+                <div className="p-2 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-white/5">
+                  <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400 block mb-1">
+                    SPECTRAL BAND:
+                  </span>
+                  <div className="flex items-center gap-1">
+                    {[
+                      { ch: 0, label: '0.75µm' },
+                      { ch: 42, label: '2.3µm CH4' },
+                      { ch: 60, label: '3.0µm H2O' },
+                      { ch: 70, label: '4.3µm CO2' },
+                    ].map((b) => (
+                      <button
+                        key={b.ch}
+                        onClick={() => setDiffChannel(b.ch)}
+                        className={`flex-1 py-1 rounded text-[10px] font-mono font-semibold transition-colors ${
+                          diffChannel === b.ch
+                            ? 'bg-ocean-500 text-white'
+                            : 'bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-400'
+                        }`}
+                      >
+                        {b.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Sensitivity Slider */}
+                <div className="p-2 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-white/5">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400">
+                      SENSITIVITY:
+                    </span>
+                    <span className="text-[10px] font-mono font-bold text-amber-600 dark:text-amber-400">
+                      {diffThreshold.toFixed(1)}σ
+                    </span>
+                  </div>
+                  <input
+                    type="range"
+                    min="1.5"
+                    max="6.0"
+                    step="0.5"
+                    value={diffThreshold}
+                    onChange={(e) => setDiffThreshold(parseFloat(e.target.value))}
+                    className="w-full accent-amber-500 cursor-pointer h-1.5"
+                  />
+                  <div className="flex justify-between text-[9px] font-mono text-slate-400">
+                    <span>1.5σ (Sensitive)</span>
+                    <span>6.0σ (Strict)</span>
+                  </div>
+                </div>
+              </div>
+
               {diffQuery.isLoading ? (
-                <LoadingPulse label="Computing Difference Residuals..." />
+                <LoadingPulse label="Computing Physical Difference Residuals..." />
               ) : diffQuery.data ? (
                 <>
-                  <div className="relative rounded-xl overflow-hidden border border-slate-200 dark:border-white/10 mb-3">
+                  {/* Difference Image Canvas Display */}
+                  <div className="relative rounded-xl overflow-hidden border border-slate-200 dark:border-white/10 shadow-inner bg-black">
                     <img
                       src={`data:image/png;base64,${diffQuery.data.diff_image_base64}`}
                       alt="Diff residuals between epochs"
-                      className="w-full aspect-[4/3] object-cover"
+                      className="w-full aspect-square object-contain mx-auto"
                     />
-                    <div className="absolute top-2 left-2 px-2 py-1 rounded bg-slate-950/80 backdrop-blur-md font-mono text-[10px] text-amber-300">
-                      Residuals: {activeEpoch} vs {compareEpoch}
+                    <div className="absolute top-2 left-2 px-2 py-1 rounded bg-slate-950/85 backdrop-blur-md font-mono text-[10px] text-amber-300 border border-white/10">
+                      Residuals: {activeEpoch} vs {compareEpoch} ({diffQuery.data.baseline_months || 0} mo)
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="font-mono text-xs font-semibold text-slate-800 dark:text-slate-300">
+                  {/* Candidate List Header */}
+                  <div className="flex items-center justify-between pt-1">
+                    <span className="font-mono text-xs font-semibold text-slate-800 dark:text-slate-200">
                       Detected Mover Candidates ({diffQuery.data.candidates?.length || 0})
                     </span>
                     <span className="text-[10px] font-mono text-cyan-600 dark:text-cyan-400">
-                      Filtered & Ranked by Signal
+                      Ranked by Signal Significance
                     </span>
                   </div>
 
-                  <div className="space-y-2 max-h-52 overflow-y-auto pr-1">
-                    {diffQuery.data.candidates?.slice(0, 6).map((c, i) => (
-                      <div
-                        key={i}
-                        className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-white/5 hover:border-amber-400/40 transition-colors flex items-center justify-between gap-2"
-                      >
-                        <div className="flex flex-col">
-                          <span className="font-mono text-xs font-bold text-amber-600 dark:text-amber-400">
-                            Candidate #{i + 1}
-                          </span>
-                          <span className="font-mono text-[10px] text-slate-500 dark:text-slate-400">
-                            RA {c.ra}° · DEC {c.dec}° · Δ {c.shift_arcsec}"
-                          </span>
-                        </div>
-                        <Tooltip content="Flag this candidate into Citizen Science Discovery Log" tag="FLAG">
-                          <button
-                            onClick={() =>
-                              flagCandidate({
-                                name: `Candidate #${i + 1} at RA ${c.ra}°`,
-                                ra: c.ra,
-                                dec: c.dec,
-                                epochA: activeEpoch,
-                                epochB: compareEpoch,
-                                shiftArcsec: c.shift_arcsec,
-                                tag: 'Automated Mover Detection',
-                                notes: `Detected via pixel difference residual with significance peak of ${c.peak_flux}.`,
-                                confidence: 'High',
-                              })
-                            }
-                            className="px-2 py-1 rounded-lg text-[10px] font-mono font-bold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/30 hover:bg-amber-500/20"
-                          >
-                            + Flag
-                          </button>
-                        </Tooltip>
+                  {/* Candidate Cards */}
+                  <div className="space-y-2 max-h-56 overflow-y-auto pr-1">
+                    {(!diffQuery.data.candidates || diffQuery.data.candidates.length === 0) ? (
+                      <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-950/40 border border-dashed border-slate-300 dark:border-white/10 text-center text-xs text-slate-500">
+                        No movers detected above {diffThreshold.toFixed(1)}σ threshold. Try lowering the sensitivity slider or changing survey epochs!
                       </div>
-                    ))}
+                    ) : (
+                      diffQuery.data.candidates.map((c, i) => (
+                        <div
+                          key={c.id || i}
+                          className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-white/5 hover:border-amber-400/40 transition-colors flex items-center justify-between gap-2"
+                        >
+                          <div className="flex flex-col min-w-0">
+                            <div className="flex items-center gap-1.5">
+                              <span className="font-mono text-xs font-bold text-amber-600 dark:text-amber-400 truncate">
+                                {c.name || `Candidate #${i + 1}`}
+                              </span>
+                              <span className="px-1.5 py-0.2 rounded bg-amber-500/10 text-amber-600 dark:text-amber-400 font-mono text-[9px] font-bold">
+                                {c.sigma ? `${c.sigma}σ` : 'Peak'}
+                              </span>
+                            </div>
+                            <span className="font-mono text-[10px] text-slate-500 dark:text-slate-400">
+                              RA {c.ra}° · DEC {c.dec}° · Δ {c.shift_arcsec}" ({c.shift_angle_deg || 0}°)
+                            </span>
+                            {c.classification && (
+                              <span className="text-[9.5px] text-slate-600 dark:text-slate-300 italic truncate">
+                                {c.classification}
+                              </span>
+                            )}
+                          </div>
+
+                          <div className="flex items-center gap-1.5 shrink-0">
+                            <Tooltip content="Center sky engine on candidate's exact coordinates" tag="NAVIGATE">
+                              <button
+                                onClick={() => setPosition(c.ra, c.dec, c.name)}
+                                className="px-2 py-1 rounded-lg text-[10px] font-mono font-bold bg-ocean-500/10 text-ocean-700 dark:text-ocean-300 border border-ocean-500/30 hover:bg-ocean-500/20"
+                              >
+                                Center
+                              </button>
+                            </Tooltip>
+
+                            <Tooltip content="Flag candidate into Citizen Science Discovery Log" tag="FLAG">
+                              <button
+                                onClick={() =>
+                                  flagCandidate({
+                                    name: c.name || `Candidate #${i + 1} at RA ${c.ra}°`,
+                                    ra: c.ra,
+                                    dec: c.dec,
+                                    epochA: activeEpoch,
+                                    epochB: compareEpoch,
+                                    shiftArcsec: c.shift_arcsec,
+                                    tag: c.classification || 'Automated Mover Detection',
+                                    notes: `Detected in CH ${diffChannel} with significance of ${c.sigma || 'High'}σ across ${diffQuery.data.baseline_months} months.`,
+                                    confidence: c.sigma > 6 ? 'High' : 'Medium',
+                                  })
+                                }
+                                className="px-2 py-1 rounded-lg text-[10px] font-mono font-bold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/30 hover:bg-amber-500/20"
+                              >
+                                + Flag
+                              </button>
+                            </Tooltip>
+                          </div>
+                        </div>
+                      ))
+                    )}
                   </div>
                 </>
               ) : null}

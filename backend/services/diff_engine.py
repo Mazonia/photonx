@@ -39,20 +39,41 @@ async def compute_diff(
     Returns:
         Dictionary with diff image (base64 PNG) and candidate movers
     """
-    # Generate epoch A and B images (seeded differently per epoch)
+    # Handle identical epoch comparison (null difference baseline)
+    if epoch_a == epoch_b:
+        rng = np.random.default_rng(seed=int(abs(ra * 1000 + dec * 100 + channel)))
+        diff = rng.normal(0, 0.04, size=(128, 128))
+        diff_b64 = _diff_to_png(diff, channel)
+        return {
+            "position": {"ra": ra, "dec": dec},
+            "epoch_a": epoch_a,
+            "epoch_b": epoch_b,
+            "channel": channel,
+            "baseline_months": 0,
+            "diff_image_base64": diff_b64,
+            "candidates": [],
+            "status": "Identical epochs selected (Δt = 0 months). Subtraction produces flat null baseline with zero movers.",
+        }
+
+    # Generate epoch A and B images (seeded per epoch and channel)
+    epoch_order = {"2025-W18": 1, "2025-W44": 2, "2026-W18": 3, "2026-W44": 4}
+    delta_epochs = epoch_order.get(epoch_b, 2) - epoch_order.get(epoch_a, 1)
+    baseline_months = abs(delta_epochs) * 6
+
     img_a = _generate_synthetic_image(ra, dec, channel, size=128)
 
-    # Epoch B: shift some sources to simulate motion
-    rng_b = np.random.default_rng(seed=int(abs(ra * 1000 + dec * 100 + channel + hash(epoch_b) % 100)))
-    img_b = _generate_synthetic_image(ra + 0.001, dec + 0.0005, channel, size=128)
+    # Epoch B: shift sources based on physical baseline
+    shift_scale = abs(delta_epochs)
+    rng_b = np.random.default_rng(seed=int(abs(ra * 1000 + dec * 100 + channel * 17 + hash(epoch_b) % 1000)))
+    img_b = _generate_synthetic_image(ra + 0.0008 * shift_scale, dec + 0.0004 * shift_scale, channel, size=128)
 
-    # Add a deliberate mover — an object that shifts between epochs
-    _add_mover(img_a, img_b, ra, dec, rng_b)
+    # Add deliberate mover(s) scaled by time baseline
+    _add_mover(img_a, img_b, ra, dec, rng_b, baseline_mult=shift_scale)
 
-    # Compute difference
+    # Compute difference: Delta = Epoch B - Epoch A
     diff = img_b.astype(np.float64) - img_a.astype(np.float64)
 
-    # Detect candidates
+    # Detect candidates based on threshold
     candidates = _detect_movers(diff, ra, dec, threshold)
 
     # Generate false-color diff image
@@ -63,22 +84,24 @@ async def compute_diff(
         "epoch_a": epoch_a,
         "epoch_b": epoch_b,
         "channel": channel,
+        "baseline_months": baseline_months,
         "diff_image_base64": diff_b64,
         "candidates": candidates,
+        "status": f"Computed difference across {baseline_months}-month baseline at threshold {threshold}σ.",
     }
 
 
-def _add_mover(img_a: np.ndarray, img_b: np.ndarray, ra: float, dec: float, rng) -> None:
+def _add_mover(img_a: np.ndarray, img_b: np.ndarray, ra: float, dec: float, rng, baseline_mult: int = 1) -> None:
     """Add a synthetic moving object to demonstrate the diff feature."""
     size = img_a.shape[0]
     # Position in epoch A
     x_a = int(size * 0.4 + rng.uniform(-10, 10))
     y_a = int(size * 0.5 + rng.uniform(-10, 10))
-    # Shifted position in epoch B (moved ~5 pixels = ~30 arcsec)
-    shift_x = rng.integers(3, 7)
-    shift_y = rng.integers(-3, 3)
-    x_b = x_a + shift_x
-    y_b = y_a + shift_y
+    # Shifted position in epoch B (scaled by time baseline)
+    shift_x = int(rng.integers(3, 7) * max(1, baseline_mult))
+    shift_y = int(rng.integers(-3, 3) * max(1, baseline_mult))
+    x_b = max(4, min(size - 5, x_a + shift_x))
+    y_b = max(4, min(size - 5, y_a + shift_y))
 
     flux = rng.uniform(0.8, 2.0)
     sigma = 1.8

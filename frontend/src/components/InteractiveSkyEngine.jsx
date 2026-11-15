@@ -18,37 +18,239 @@ import {
   Camera,
 } from 'lucide-react';
 
-// Curated bright anchor stars & famous benchmarks
+// Curated bright anchor stars & famous benchmarks with astrophysics metadata
 const CATALOG_STARS = [
   // High proper motion / SPHEREx discovery benchmarks
-  { name: "Barnard's Star", ra: 269.4521, dec: 4.6933, mag: 9.54, type: 'M', mover: true, shiftRa: 0.0075, shiftDec: 0.0148, notes: 'Fastest proper motion (10.3"/yr)' },
-  { name: "WISE 0855-0714", ra: 133.7933, dec: -7.2451, mag: 14.2, type: 'Y', mover: true, shiftRa: -0.0118, shiftDec: -0.0052, notes: 'Coldest known brown dwarf (250K)' },
-  { name: "Proxima Centauri", ra: 217.4289, dec: -62.6795, mag: 11.13, type: 'M', mover: true, shiftRa: 0.0062, shiftDec: -0.0089, notes: 'Closest known stellar neighbor' },
-  { name: "TRAPPIST-1", ra: 346.6223, dec: -5.0413, mag: 18.8, type: 'M', mover: false, notes: '7 Earth-sized exoplanets' },
-  
-  // Bright optical anchors (diffraction spike benchmarks)
-  { name: "Sirius", ra: 101.287, dec: -16.716, mag: -1.46, type: 'A' },
-  { name: "Canopus", ra: 95.988, dec: -52.696, mag: -0.74, type: 'F' },
-  { name: "Arcturus", ra: 213.915, dec: 19.182, mag: -0.05, type: 'K' },
-  { name: "Vega", ra: 279.234, dec: 38.784, mag: 0.03, type: 'A' },
-  { name: "Capella", ra: 79.172, dec: 45.998, mag: 0.08, type: 'G' },
-  { name: "Rigel", ra: 78.634, dec: -8.202, mag: 0.13, type: 'B' },
-  { name: "Procyon", ra: 114.825, dec: 5.225, mag: 0.38, type: 'F' },
-  { name: "Betelgeuse", ra: 88.793, dec: 7.407, mag: 0.50, type: 'M' },
-  { name: "Altair", ra: 297.696, dec: 8.868, mag: 0.77, type: 'A' },
-  { name: "Aldebaran", ra: 68.980, dec: 16.509, mag: 0.85, type: 'K' },
-  { name: "Spica", ra: 201.298, dec: -11.161, mag: 0.98, type: 'B' },
-  { name: "Antares", ra: 247.352, dec: -26.432, mag: 1.06, type: 'M' },
-  { name: "Pollux", ra: 116.329, dec: 28.026, mag: 1.14, type: 'K' },
-  { name: "Fomalhaut", ra: 344.413, dec: -29.622, mag: 1.16, type: 'A' },
-  { name: "Deneb", ra: 310.358, dec: 45.280, mag: 1.25, type: 'A' },
-  { name: "Polaris", ra: 37.954, dec: 89.264, mag: 1.98, type: 'F' },
+  {
+    name: "Barnard's Star",
+    bayer: "V2500 Oph",
+    ra: 269.4521,
+    dec: 4.6933,
+    mag: 9.54,
+    type: 'M',
+    mover: true,
+    shiftRa: 0.0075,
+    shiftDec: 0.0148,
+    notes: 'Fastest-moving star in Earth sky (10.3"/yr). Red dwarf benchmark.',
+  },
+  {
+    name: "WISE 0855-0714",
+    bayer: "Cold Brown Dwarf",
+    ra: 133.7933,
+    dec: -7.2451,
+    mag: 14.2,
+    type: 'Y',
+    mover: true,
+    shiftRa: -0.0118,
+    shiftDec: -0.0052,
+    notes: 'Coldest known sub-stellar brown dwarf (~250 K). Planet X analog.',
+  },
+  {
+    name: "Proxima Centauri",
+    bayer: "α Cen C",
+    ra: 217.4289,
+    dec: -62.6795,
+    mag: 11.13,
+    type: 'M',
+    mover: true,
+    shiftRa: 0.0062,
+    shiftDec: -0.0089,
+    notes: 'Closest known stellar neighbor (4.24 ly). Flare star.',
+  },
+  {
+    name: "TRAPPIST-1",
+    bayer: "2MASS J23062928-0502285",
+    ra: 346.6223,
+    dec: -5.0413,
+    mag: 18.8,
+    type: 'M',
+    mover: false,
+    notes: 'Ultra-cool red dwarf with 7 temperate Earth-sized exoplanets.',
+  },
+
+  // Primary Navigational Anchor Stars (Diffraction Spike Standards)
+  {
+    name: "Sirius (Dog Star)",
+    bayer: "α CMa",
+    ra: 101.287,
+    dec: -16.716,
+    mag: -1.46,
+    type: 'A',
+    notes: 'Brightest star in night sky. Binary system with white dwarf companion.',
+  },
+  {
+    name: "Canopus",
+    bayer: "α Car",
+    ra: 95.988,
+    dec: -52.696,
+    mag: -0.74,
+    type: 'F',
+    notes: 'Second-brightest star in sky. Bright F-type supergiant.',
+  },
+  {
+    name: "Arcturus",
+    bayer: "α Boo",
+    ra: 213.915,
+    dec: 19.182,
+    mag: -0.05,
+    type: 'K',
+    notes: 'Orange giant star. Fastest-moving bright optical star.',
+  },
+  {
+    name: "Vega",
+    bayer: "α Lyr",
+    ra: 279.234,
+    dec: 38.784,
+    mag: 0.03,
+    type: 'A',
+    notes: 'Photometric calibration standard (0.00 mag baseline). Pure white anchor.',
+  },
+  {
+    name: "Capella",
+    bayer: "α Aur",
+    ra: 79.172,
+    dec: 45.998,
+    mag: 0.08,
+    type: 'G',
+    notes: 'Quadruple star system composed of two bright giant binary pairs.',
+  },
+  {
+    name: "Rigel",
+    bayer: "β Ori",
+    ra: 78.634,
+    dec: -8.202,
+    mag: 0.13,
+    type: 'B',
+    notes: 'Luminous blue supergiant in Orion. 40,000x solar luminosity.',
+  },
+  {
+    name: "Procyon",
+    bayer: "α CMi",
+    ra: 114.825,
+    dec: 5.225,
+    mag: 0.38,
+    type: 'F',
+    notes: 'Bright yellow-white subgiant star at 11.5 light-years.',
+  },
+  {
+    name: "Betelgeuse",
+    bayer: "α Ori",
+    ra: 88.793,
+    dec: 7.407,
+    mag: 0.50,
+    type: 'M',
+    notes: 'Pulsating red supergiant. Near end-of-life supernova candidate.',
+  },
+  {
+    name: "Altair",
+    bayer: "α Aql",
+    ra: 297.696,
+    dec: 8.868,
+    mag: 0.77,
+    type: 'A',
+    notes: 'Rapidly rotating white star flattened at poles by centrifugal force.',
+  },
+  {
+    name: "Aldebaran",
+    bayer: "α Tau",
+    ra: 68.980,
+    dec: 16.509,
+    mag: 0.85,
+    type: 'K',
+    notes: 'Orange giant star, the fiery eye of Taurus the Bull.',
+  },
+  {
+    name: "Spica",
+    bayer: "α Vir",
+    ra: 201.298,
+    dec: -11.161,
+    mag: 0.98,
+    type: 'B',
+    notes: 'Close spectroscopic binary star and rotating ellipsoidal variable.',
+  },
+  {
+    name: "Antares",
+    bayer: "α Sco",
+    ra: 247.352,
+    dec: -26.432,
+    mag: 1.06,
+    type: 'M',
+    notes: 'Heart of the Scorpion. Huge red supergiant (700x solar radius).',
+  },
+  {
+    name: "Pollux",
+    bayer: "β Gem",
+    ra: 116.329,
+    dec: 28.026,
+    mag: 1.14,
+    type: 'K',
+    notes: 'Evolved orange giant star in Gemini with confirmed exoplanet.',
+  },
+  {
+    name: "Fomalhaut",
+    bayer: "α PsA",
+    ra: 344.413,
+    dec: -29.622,
+    mag: 1.16,
+    type: 'A',
+    notes: 'Young star with prominent circumstellar debris / dust ring.',
+  },
+  {
+    name: "Deneb",
+    bayer: "α Cyg",
+    ra: 310.358,
+    dec: 45.280,
+    mag: 1.25,
+    type: 'A',
+    notes: 'Luminous blue-white supergiant at head of the Northern Cross.',
+  },
+  {
+    name: "Polaris (North Star)",
+    bayer: "α UMi",
+    ra: 37.954,
+    dec: 89.264,
+    mag: 1.98,
+    type: 'F',
+    notes: 'Northern celestial pole anchor. Classical Cepheid variable star.',
+  },
 
   // Deep Sky benchmark targets
-  { name: "Messier 31 (Andromeda)", ra: 10.6847, dec: 41.2687, mag: 3.44, type: 'Galaxy' },
-  { name: "Orion Nebula (M42)", ra: 83.8221, dec: -5.3911, mag: 4.0, type: 'Nebula' },
-  { name: "Pleiades (M45)", ra: 56.6011, dec: 24.1141, mag: 1.6, type: 'Cluster' },
-  { name: "Sagittarius A* (MW Core)", ra: 266.4168, dec: -29.0078, mag: 12.0, type: 'BlackHole' },
+  {
+    name: "Messier 31 (Andromeda)",
+    bayer: "NGC 224",
+    ra: 10.6847,
+    dec: 41.2687,
+    mag: 3.44,
+    type: 'Galaxy',
+    notes: 'Nearest large spiral galaxy at 2.5 Mly. Pierced by SPHEREx infrared.',
+  },
+  {
+    name: "Orion Nebula (M42)",
+    bayer: "NGC 1976",
+    ra: 83.8221,
+    dec: -5.3911,
+    mag: 4.0,
+    type: 'Nebula',
+    notes: 'Massive stellar nursery glowing in polycyclic aromatic hydrocarbons (PAH).',
+  },
+  {
+    name: "Pleiades (M45)",
+    bayer: "Seven Sisters",
+    ra: 56.6011,
+    dec: 24.1141,
+    mag: 1.6,
+    type: 'Cluster',
+    notes: 'Open star cluster enveloped in reflective interstellar dust.',
+  },
+  {
+    name: "Sagittarius A* (MW Core)",
+    bayer: "Galactic Center",
+    ra: 266.4168,
+    dec: -29.0078,
+    mag: 12.0,
+    type: 'BlackHole',
+    notes: 'Supermassive black hole at Milky Way core (4.3 million solar masses).',
+  },
 ];
 
 // Spectral type colors for authentic astrophysics
@@ -123,15 +325,18 @@ export default function InteractiveSkyEngine() {
     theme,
     showMoversOverlay,
     toggleMoversOverlay,
+    setSelectedObject,
   } = useStore();
 
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0, ra: 0, dec: 0 });
   const [blinkEpoch, setBlinkEpoch] = useState('A');
   const [cursorCoords, setCursorCoords] = useState({ ra: 0, dec: 0 });
+  const [hoveredStar, setHoveredStar] = useState(null);
   const [showRealImagery, setShowRealImagery] = useState(false);
   const [nasaImage, setNasaImage] = useState(null);
   const [isImageryLoading, setIsImageryLoading] = useState(false);
+  const dragInfoRef = useRef({ startX: 0, startY: 0, startTime: 0 });
 
   useEffect(() => {
     if (!isBlinking) return;
@@ -225,15 +430,17 @@ export default function InteractiveSkyEngine() {
     return Math.min(18.0, 6.2 + Math.log2(35.0 / Math.max(0.05, fov)) * 1.9);
   }, [fov]);
 
+  // Hierarchical Multi-Resolution Starfield (Regional Stars + Deep-Field Infrared Sources)
   const backgroundStars = useMemo(() => {
     const stars = [];
+    const spectralTypes = ['O', 'B', 'A', 'F', 'G', 'K', 'M'];
+
+    // 1. Regional Stars
     const patchRadius = Math.max(1.5, fov * 1.4);
     const minRa = Math.floor(ra - patchRadius);
     const maxRa = Math.ceil(ra + patchRadius);
     const minDec = Math.max(-90, Math.floor(dec - patchRadius));
     const maxDec = Math.min(90, Math.ceil(dec + patchRadius));
-
-    const spectralTypes = ['O', 'B', 'A', 'F', 'G', 'K', 'M'];
 
     for (let r = minRa; r <= maxRa; r++) {
       for (let d = minDec; d <= maxDec; d++) {
@@ -256,10 +463,46 @@ export default function InteractiveSkyEngine() {
             dec: sDec,
             mag,
             type,
+            id: `star-${r}-${d}-${i}`,
           });
         }
       }
     }
+
+    // 2. High-Density Deep-Field Sub-Arcminute Infrared Point Sources (when FOV < 3.0°)
+    // This solves "nothing really shows when you zoom in" by populating rich infrared cosmos
+    if (fov < 3.0) {
+      const deepCount = Math.floor(Math.min(130, 45 + (3.0 - fov) * 45));
+      const deepSeed = (Math.floor(ra * 10) * 31337 + Math.floor(dec * 10) * 1337) % 100000;
+      const fovRadius = fov * 0.92;
+      const cosDec = Math.cos((dec * Math.PI) / 180);
+
+      for (let j = 0; j < deepCount; j++) {
+        const sSeed = deepSeed + j * 97.31;
+        const angle = pseudoRandom(sSeed) * Math.PI * 2;
+        const dist = Math.sqrt(pseudoRandom(sSeed + 1)) * fovRadius;
+
+        const deltaRa = (Math.cos(angle) * dist) / Math.max(0.01, cosDec);
+        const sRa = (((ra + deltaRa) % 360) + 360) % 360;
+        const sDec = Math.max(-90, Math.min(90, dec + Math.sin(angle) * dist));
+
+        const p = pseudoRandom(sSeed + 2);
+        // Faint infrared sources: magnitudes 11.5 to 18.0
+        const mag = 11.5 + Math.pow(p, 0.55) * 6.5;
+        const isGalaxy = pseudoRandom(sSeed + 3) > 0.88;
+        const typeIdx = Math.floor(pseudoRandom(sSeed + 4) * spectralTypes.length);
+
+        stars.push({
+          ra: sRa,
+          dec: sDec,
+          mag,
+          type: isGalaxy ? 'Galaxy' : spectralTypes[typeIdx],
+          isDeepField: true,
+          id: `deep-${j}`,
+        });
+      }
+    }
+
     return stars;
   }, [ra, dec, fov]);
 
@@ -393,9 +636,12 @@ export default function InteractiveSkyEngine() {
       }
 
       // 3.5. Constellations & Asterisms (Ursa Major, Orion, Cassiopeia, Ophiuchus)
-      if (showConstellations) {
+      // Only render constellation figures when FOV >= 5.0° (when zoomed in, hide to avoid single random lines cutting across deep fields)
+      if (showConstellations && fov >= 5.0) {
+        const constAlpha = Math.min(1.0, (fov - 5.0) / 2.5);
         ctx.save();
-        ctx.strokeStyle = theme === 'dark' ? 'rgba(56, 189, 248, 0.45)' : 'rgba(2, 132, 199, 0.45)';
+        ctx.globalAlpha = constAlpha * (theme === 'dark' ? 0.65 : 0.45);
+        ctx.strokeStyle = theme === 'dark' ? '#38BDF8' : '#0284C7';
         ctx.lineWidth = 1.4;
         ctx.setLineDash([5, 4]);
 
@@ -428,12 +674,18 @@ export default function InteractiveSkyEngine() {
               ctx.lineTo(x2, y2);
               ctx.stroke();
 
-              // Anchor nodes
+              // Anchor nodes with star names
               ctx.beginPath();
               ctx.arc(x1, y1, 2.5, 0, Math.PI * 2);
               ctx.arc(x2, y2, 2.5, 0, Math.PI * 2);
               ctx.fillStyle = theme === 'dark' ? '#38BDF8' : '#0284C7';
               ctx.fill();
+
+              if (line.from.name && fov < 28) {
+                ctx.fillStyle = theme === 'dark' ? 'rgba(224, 242, 254, 0.75)' : 'rgba(3, 105, 161, 0.75)';
+                ctx.font = '8.5px "IBM Plex Sans", sans-serif';
+                ctx.fillText(line.from.name, x1 + 4, y1 - 4);
+              }
 
               sumX += (x1 + x2) / 2;
               sumY += (y1 + y2) / 2;
@@ -447,7 +699,7 @@ export default function InteractiveSkyEngine() {
             const labelY = sumY / visibleLineCount;
             if (labelX >= 30 && labelX <= w - 30 && labelY >= 30 && labelY <= h - 30) {
               ctx.save();
-              ctx.fillStyle = theme === 'dark' ? 'rgba(125, 211, 252, 0.9)' : 'rgba(3, 105, 161, 0.9)';
+              ctx.fillStyle = theme === 'dark' ? 'rgba(125, 211, 252, 0.95)' : 'rgba(3, 105, 161, 0.95)';
               ctx.font = 'bold 11px "IBM Plex Sans", sans-serif';
               ctx.textAlign = 'center';
               ctx.shadowColor = theme === 'dark' ? '#020617' : '#FFFFFF';
@@ -457,6 +709,35 @@ export default function InteractiveSkyEngine() {
             }
           }
         });
+        ctx.restore();
+      }
+
+      // 3.8. SPHEREx Infrared Detector Pixel Grid (When FOV < 0.4°)
+      if (fov < 0.4) {
+        ctx.save();
+        ctx.strokeStyle = theme === 'dark' ? 'rgba(56, 189, 248, 0.12)' : 'rgba(15, 23, 42, 0.08)';
+        ctx.lineWidth = 0.8;
+        const pixelPitchDeg = 6.2 / 3600; // 6.2 arcsec per pixel
+        const pixelPx = pixelPitchDeg * pixelsPerDegree;
+        if (pixelPx > 8) {
+          const startX = (centerX % pixelPx);
+          const startY = (centerY % pixelPx);
+          for (let px = startX; px < w; px += pixelPx) {
+            ctx.beginPath();
+            ctx.moveTo(px, 0);
+            ctx.lineTo(px, h);
+            ctx.stroke();
+          }
+          for (let py = startY; py < h; py += pixelPx) {
+            ctx.beginPath();
+            ctx.moveTo(0, py);
+            ctx.lineTo(w, py);
+            ctx.stroke();
+          }
+          ctx.fillStyle = theme === 'dark' ? 'rgba(56, 189, 248, 0.5)' : 'rgba(15, 23, 42, 0.45)';
+          ctx.font = '9px monospace';
+          ctx.fillText(`SPHEREx FPA Detector Grid: 6.2″/px (${pixelPx.toFixed(0)}px/detector)`, 14, h - 32);
+        }
         ctx.restore();
       }
 
@@ -532,8 +813,8 @@ export default function InteractiveSkyEngine() {
           ctx.fillStyle = targetColor;
           ctx.fill();
 
-          if (star.mag < 3.0) {
-            const spikeLen = Math.max(12, (4.0 - star.mag) * 16);
+          if (star.mag < 3.5) {
+            const spikeLen = Math.max(12, (4.5 - star.mag) * 16);
             drawDiffractionSpikes(ctx, x, y, spikeLen, targetColor, 0.85);
           }
 
@@ -572,11 +853,19 @@ export default function InteractiveSkyEngine() {
             ctx.restore();
           }
 
+          // Star name and magnitude badge (clears up "what are they?")
+          ctx.save();
           ctx.fillStyle = star.mover
             ? theme === 'dark' ? '#F59E0B' : '#D97706'
             : theme === 'dark' ? '#F8FAFC' : '#0F172A';
-          ctx.font = '11px "IBM Plex Sans", sans-serif';
-          ctx.fillText(star.name, x + baseSize + 6, y + 4);
+          ctx.font = 'bold 11px "IBM Plex Sans", sans-serif';
+          ctx.fillText(star.name, x + baseSize + 6, y + 2);
+
+          // Star magnitude badge
+          ctx.fillStyle = theme === 'dark' ? '#94A3B8' : '#64748B';
+          ctx.font = '9.5px "IBM Plex Mono", monospace';
+          const magText = `Mag ${star.mag.toFixed(1)}${star.bayer ? ` · ${star.bayer}` : ''}`;
+          ctx.fillText(magText, x + baseSize + 6, y + 14);
 
           if (star.mover) {
             ctx.fillStyle = theme === 'dark' ? '#38BDF8' : '#0284C7';
@@ -585,9 +874,10 @@ export default function InteractiveSkyEngine() {
             ctx.fillText(
               `Δ ${arcsecShift}" · ${isBlinking ? `Epoch ${blinkEpoch}` : activeEpoch}`,
               x + baseSize + 6,
-              y + 16
+              y + 26
             );
           }
+          ctx.restore();
         }
       });
 
@@ -632,6 +922,31 @@ export default function InteractiveSkyEngine() {
       ctx.stroke();
 
       ctx.restore();
+
+      // 7. Physical Field Scale Bar (Bottom Left)
+      ctx.save();
+      const scaleArcsec = Math.max(1, fov * 3600 * 0.15); // 15% of viewport
+      const scaleBarWidthPx = (scaleArcsec / 3600) * pixelsPerDegree;
+      const barX = 14;
+      const barY = h - 16;
+      ctx.strokeStyle = theme === 'dark' ? '#38BDF8' : '#0284C7';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(barX, barY);
+      ctx.lineTo(barX + scaleBarWidthPx, barY);
+      ctx.moveTo(barX, barY - 4);
+      ctx.lineTo(barX, barY + 4);
+      ctx.moveTo(barX + scaleBarWidthPx, barY - 4);
+      ctx.lineTo(barX + scaleBarWidthPx, barY + 4);
+      ctx.stroke();
+
+      ctx.fillStyle = theme === 'dark' ? '#E2E8F0' : '#1E293B';
+      ctx.font = 'bold 9.5px monospace';
+      ctx.textAlign = 'left';
+      const scaleLabel = scaleArcsec >= 60 ? `${(scaleArcsec / 60).toFixed(1)}′ (${scaleArcsec.toFixed(0)}″)` : `${scaleArcsec.toFixed(1)}″ arcsec`;
+      ctx.fillText(`Scale: ${scaleLabel}`, barX, barY - 7);
+      ctx.restore();
+
       ctx.restore();
 
       animId = requestAnimationFrame(render);
@@ -660,6 +975,7 @@ export default function InteractiveSkyEngine() {
   const handleMouseDown = (e) => {
     if (e.button !== 0) return;
     setIsDragging(true);
+    dragInfoRef.current = { startX: e.clientX, startY: e.clientY, startTime: Date.now() };
     setDragStart({
       x: e.clientX,
       y: e.clientY,
@@ -678,25 +994,102 @@ export default function InteractiveSkyEngine() {
     const w = rect.width;
     const h = rect.height;
     const pixelsPerDegree = Math.min(w, h) / fov;
+    const cosDec = Math.cos((dec * Math.PI) / 180);
 
     const hoverDec = dec - (y - h / 2) / pixelsPerDegree;
-    const hoverRa = (ra - (x - w / 2) / (pixelsPerDegree * Math.cos((dec * Math.PI) / 180)) + 360) % 360;
+    const hoverRa = (ra - (x - w / 2) / (pixelsPerDegree * cosDec) + 360) % 360;
 
     setCursorCoords({ ra: hoverRa, dec: hoverDec });
 
-    if (!isDragging) return;
+    if (isDragging) {
+      const dx = e.clientX - dragStart.x;
+      const dy = e.clientY - dragStart.y;
 
-    const dx = e.clientX - dragStart.x;
-    const dy = e.clientY - dragStart.y;
+      const newDec = Math.max(-90, Math.min(90, dragStart.dec + dy / pixelsPerDegree));
+      const newRa = (dragStart.ra + (dx / pixelsPerDegree) / cosDec + 360) % 360;
 
-    const newDec = Math.max(-90, Math.min(90, dragStart.dec + dy / pixelsPerDegree));
-    const newRa = (dragStart.ra + (dx / pixelsPerDegree) / Math.cos((dragStart.dec * Math.PI) / 180) + 360) % 360;
+      setPosition(newRa, newDec, null);
+      setHoveredStar(null);
+      return;
+    }
 
-    setPosition(newRa, newDec, null);
+    // Hit-testing for star hover tooltip
+    let found = null;
+    const hitRadius = 18;
+
+    // 1. Check Catalog Stars
+    for (const star of CATALOG_STARS) {
+      let deltaRa = star.ra - ra;
+      while (deltaRa > 180) deltaRa -= 360;
+      while (deltaRa < -180) deltaRa += 360;
+      const sx = w / 2 - deltaRa * pixelsPerDegree * cosDec;
+      const sy = h / 2 - (star.dec - dec) * pixelsPerDegree;
+      if (Math.hypot(x - sx, y - sy) < hitRadius) {
+        found = {
+          ...star,
+          screenX: x,
+          screenY: y,
+          isBrightAnchor: (star.mag < 4.5),
+        };
+        break;
+      }
+    }
+
+    // 2. Check Background / Deep-Field Stars
+    if (!found) {
+      for (const star of backgroundStars) {
+        if (star.mag > limitingMag + 0.5) continue;
+        let deltaRa = star.ra - ra;
+        while (deltaRa > 180) deltaRa -= 360;
+        while (deltaRa < -180) deltaRa += 360;
+        const sx = w / 2 - deltaRa * pixelsPerDegree * cosDec;
+        const sy = h / 2 - (star.dec - dec) * pixelsPerDegree;
+        if (Math.hypot(x - sx, y - sy) < 14) {
+          found = {
+            name: star.isDeepField ? `Infrared Source #J${star.ra.toFixed(2)}${star.dec >= 0 ? '+' : ''}${star.dec.toFixed(2)}` : `Star at (${star.ra.toFixed(2)}°, ${star.dec.toFixed(2)}°)`,
+            ra: star.ra,
+            dec: star.dec,
+            mag: star.mag,
+            type: star.type,
+            notes: star.isDeepField ? 'SPHEREx deep-field near-infrared point source (0.75-5.0µm)' : 'General catalog stellar source',
+            screenX: x,
+            screenY: y,
+            isBrightAnchor: (star.mag < 4.5),
+          };
+          break;
+        }
+      }
+    }
+
+    setHoveredStar(found);
   };
 
-  const handleMouseUp = () => {
+  const handleMouseUp = (e) => {
     setIsDragging(false);
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const dragDist = Math.hypot(e.clientX - dragInfoRef.current.startX, e.clientY - dragInfoRef.current.startY);
+    const elapsed = Date.now() - dragInfoRef.current.startTime;
+
+    // Detect Click (not drag)
+    if (dragDist < 6 && elapsed < 350) {
+      if (hoveredStar) {
+        setPosition(hoveredStar.ra, hoveredStar.dec, hoveredStar.name);
+        setSelectedObject(hoveredStar);
+      } else {
+        const rect = canvas.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const w = rect.width;
+        const h = rect.height;
+        const pixelsPerDegree = Math.min(w, h) / fov;
+        const cosDec = Math.cos((dec * Math.PI) / 180);
+        const clickDec = dec - (y - h / 2) / pixelsPerDegree;
+        const clickRa = (ra - (x - w / 2) / (pixelsPerDegree * cosDec) + 360) % 360;
+        setPosition(clickRa, clickDec, `Target (${clickRa.toFixed(4)}°, ${clickDec >= 0 ? '+' : ''}${clickDec.toFixed(4)}°)`);
+      }
+    }
   };
 
   return (
@@ -713,6 +1106,45 @@ export default function InteractiveSkyEngine() {
         ref={canvasRef}
         className="block w-full h-full cursor-crosshair touch-none"
       />
+
+      {/* Interactive Star Hover HUD Card */}
+      {hoveredStar && !isDragging && (
+        <div
+          style={{
+            left: `${Math.min(window.innerWidth - 330, Math.max(10, hoveredStar.screenX + 16))}px`,
+            top: `${Math.min(window.innerHeight - 200, Math.max(20, hoveredStar.screenY - 20))}px`,
+          }}
+          className="absolute pointer-events-none z-30 p-3 rounded-2xl bg-sand-50/98 dark:bg-space-900/98 border border-ocean-500/40 shadow-2xl backdrop-blur-xl max-w-xs text-xs select-none animate-in fade-in zoom-in-95"
+        >
+          <div className="flex items-center justify-between gap-2 mb-1.5">
+            <span className="font-bold text-slate-900 dark:text-white font-mono flex items-center gap-1.5 truncate">
+              ⭐ {hoveredStar.name}
+            </span>
+            <span className="px-1.5 py-0.5 rounded bg-ocean-500/10 text-ocean-700 dark:text-ocean-300 font-mono text-[9px] font-bold shrink-0">
+              Class {hoveredStar.type || 'A'}
+            </span>
+          </div>
+          <div className="space-y-1 font-mono text-[10px] text-slate-600 dark:text-sand-200">
+            <div>Coordinates: RA {hoveredStar.ra.toFixed(4)}° · Dec {hoveredStar.dec.toFixed(4)}°</div>
+            <div>
+              Brightness: Mag {hoveredStar.mag ? hoveredStar.mag.toFixed(2) : '—'} {hoveredStar.mag < 3 ? '(Naked-Eye Optical Anchor)' : '(Infrared Source)'}
+            </div>
+            {hoveredStar.notes && (
+              <div className="text-amber-700 dark:text-amber-300 pt-0.5 border-t border-sand-200 dark:border-white/10">
+                {hoveredStar.notes}
+              </div>
+            )}
+            {hoveredStar.isBrightAnchor && (
+              <div className="text-[9.5px] text-ocean-800 dark:text-ocean-200 bg-ocean-500/15 border border-ocean-500/30 p-1.5 rounded-lg mt-1 font-sans leading-tight">
+                ✨ <strong>Why big spikes?</strong> These are optical diffraction spikes from light bending around the telescope's secondary mirror spider vanes.
+              </div>
+            )}
+          </div>
+          <div className="mt-2 text-[9.5px] font-sans text-ocean-600 dark:text-ocean-400 font-semibold flex items-center gap-1">
+            <span>👉 Click star to inspect in Detail Panel</span>
+          </div>
+        </div>
+      )}
 
       {/* Top Left: Mission HUD & Survey Switcher */}
       <div className="absolute top-3 left-3 flex flex-col gap-2 z-10 pointer-events-auto">
@@ -752,6 +1184,14 @@ export default function InteractiveSkyEngine() {
           <span className="text-cyan-600 dark:text-cyan-300">LIMIT: {limitingMag.toFixed(1)}mᵥ</span>
           <span className="text-slate-400 dark:text-slate-500">|</span>
           <span className="text-amber-600 dark:text-amber-400">CH {activeChannel} (2.3µm)</span>
+          {showConstellations && fov < 5.0 && (
+            <>
+              <span className="text-slate-400 dark:text-slate-500">|</span>
+              <span className="text-slate-500 dark:text-slate-400 text-[10px]">
+                Constellations: Zoom Out (&gt;5°)
+              </span>
+            </>
+          )}
         </div>
       </div>
 
