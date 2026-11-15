@@ -8,6 +8,13 @@
  * zero-error interactive observatory!
  */
 
+import {
+  resolveCelestialTarget,
+  ALL_CONSTELLATIONS,
+  MASTER_CELESTIAL_TARGETS,
+  getSearchSuggestions,
+} from '../data/celestialCatalog';
+
 const API_BASE = '/api';
 
 // SPHEREx 102 near-infrared channel central wavelengths (microns)
@@ -26,6 +33,14 @@ const SPHEREX_WAVELENGTHS = [
 ];
 
 const CURATED_TARGETS = [
+  {
+    name: "Proxima Centauri",
+    ra: 217.4289,
+    dec: -62.6795,
+    description: "Nearest star to Earth (4.246 light-years). Host to habitable-zone exoplanet Proxima b, monitored by SPHEREx for stellar flare spectra.",
+    category: "Nearest Star",
+    why_interesting: "Closest stellar neighbor with high proper motion (3.85\"/yr) and prominent infrared flare emissions.",
+  },
   {
     name: "Barnard's Star",
     ra: 269.4521,
@@ -155,9 +170,27 @@ function getClientFallback(endpoint, params) {
       };
 
     case '/resolve': {
-      const name = (params.name || '').toLowerCase().trim();
+      const rawName = (params.name || '').trim();
+      if (!rawName) {
+        throw new Error('Please enter an object name or sky coordinates.');
+      }
+
+      // 1. High-precision catalog resolution (All 88 Constellations, 80+ Major Stars, Messier Deep Sky)
+      const celestialMatch = resolveCelestialTarget(rawName);
+      if (celestialMatch) {
+        return {
+          name: celestialMatch.name,
+          ra: celestialMatch.ra,
+          dec: celestialMatch.dec,
+          object_type: celestialMatch.category || celestialMatch.type || 'Celestial Object',
+          description: celestialMatch.desc || `Target located at RA ${celestialMatch.ra.toFixed(4)}°, Dec ${celestialMatch.dec >= 0 ? '+' : ''}${celestialMatch.dec.toFixed(4)}°`,
+        };
+      }
+
+      // 2. Curated featured targets
+      const lower = rawName.toLowerCase();
       for (const t of CURATED_TARGETS) {
-        if (t.name.toLowerCase().includes(name) || name.includes(t.name.toLowerCase())) {
+        if (t.name.toLowerCase().includes(lower) || lower.includes(t.name.toLowerCase())) {
           return {
             name: t.name,
             ra: t.ra,
@@ -167,24 +200,24 @@ function getClientFallback(endpoint, params) {
           };
         }
       }
-      // Coordinate parse fallback
-      const match = name.match(/^([+-]?\d+\.?\d*)[,\s]+([+-]?\d+\.?\d*)$/);
-      if (match) {
-        return {
-          name: `Coords (${match[1]}, ${match[2]})`,
-          ra: parseFloat(match[1]),
-          dec: parseFloat(match[2]),
-          object_type: 'Coordinates',
-          description: `Custom sky coordinates RA ${match[1]}° Dec ${match[2]}°`,
-        };
+
+      // 3. Coordinate parse fallback (e.g. "217.4289, -62.6795" or "150.78 +3.35")
+      const coordMatch = rawName.match(/^([+-]?\d+\.?\d*)[,\s]+([+-]?\d+\.?\d*)$/);
+      if (coordMatch) {
+        const cRa = parseFloat(coordMatch[1]);
+        const cDec = parseFloat(coordMatch[2]);
+        if (!isNaN(cRa) && !isNaN(cDec) && cRa >= 0 && cRa <= 360 && cDec >= -90 && cDec <= 90) {
+          return {
+            name: `Coords (${cRa.toFixed(4)}°, ${cDec >= 0 ? '+' : ''}${cDec.toFixed(4)}°)`,
+            ra: cRa,
+            dec: cDec,
+            object_type: 'Coordinates',
+            description: `Custom celestial coordinates RA ${cRa.toFixed(4)}° Dec ${cDec >= 0 ? '+' : ''}${cDec.toFixed(4)}°`,
+          };
+        }
       }
-      return {
-        name: params.name || 'Sky Target',
-        ra: 269.4521,
-        dec: 4.6933,
-        object_type: 'Stellar Source',
-        description: `Target located at RA ${ra.toFixed(4)}°, Dec ${dec >= 0 ? '+' : ''}${dec.toFixed(4)}°`,
-      };
+
+      throw new Error(`Target '${rawName}' not found. Try searching a star (e.g. Proxima Centauri, Sirius), constellation (e.g. Orion, Ursa Major), or coordinates (e.g. 217.43, -62.68).`);
     }
 
     case '/sky':
@@ -868,4 +901,11 @@ export const api = {
   spaceWeather: () => request('/space-weather'),
   epic: (date = null) =>
     request('/epic', { ...(date ? { date } : {}) }),
+};
+
+export {
+  resolveCelestialTarget,
+  ALL_CONSTELLATIONS,
+  MASTER_CELESTIAL_TARGETS,
+  getSearchSuggestions,
 };

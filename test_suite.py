@@ -35,12 +35,31 @@ def run_tests():
     assert len(targets) >= 5, "Expected at least 5 featured targets"
     print(f" [PASS] /api/featured -> Loaded {len(targets)} curated sky targets")
 
-    # 3. Object resolution (Barnard's Star & M31)
+    # 3. Object resolution (Barnard's Star, Proxima Centauri, Orion, & M31)
     res = client.get("/api/resolve?name=Barnard's Star")
     assert res.status_code == 200
     b_star = res.json()
     assert abs(b_star["ra"] - 269.4521) < 0.1
     print(f" [PASS] /api/resolve (Barnard's Star) -> RA {b_star['ra']}°, Dec {b_star['dec']}°")
+
+    res = client.get("/api/resolve?name=Proxima Centauri")
+    assert res.status_code == 200
+    prox = res.json()
+    assert abs(prox["ra"] - 217.4289) < 0.1
+    assert abs(prox["dec"] - (-62.6795)) < 0.1
+    print(f" [PASS] /api/resolve (Proxima Centauri) -> RA {prox['ra']}°, Dec {prox['dec']}° ({prox['object_type']})")
+
+    res = client.get("/api/resolve?name=Orion")
+    assert res.status_code == 200
+    orion = res.json()
+    assert abs(orion["ra"] - 84.0) < 1.0
+    print(f" [PASS] /api/resolve (Orion Constellation) -> RA {orion['ra']}°, Dec {orion['dec']}° ({orion['object_type']})")
+
+    res = client.get("/api/resolve?name=Sirius")
+    assert res.status_code == 200
+    sirius = res.json()
+    assert abs(sirius["ra"] - 101.2872) < 0.1
+    print(f" [PASS] /api/resolve (Sirius Star) -> RA {sirius['ra']}°, Dec {sirius['dec']}°")
 
     res = client.get("/api/resolve?name=M31")
     assert res.status_code == 200
