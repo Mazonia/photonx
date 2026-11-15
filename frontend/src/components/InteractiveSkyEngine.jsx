@@ -460,29 +460,34 @@ function getPlanetarySymbol(name) {
 
 function drawTargetBadge(ctx, x, y, radius, target, theme, isBlinking, blinkEpoch, activeEpoch) {
   ctx.save();
+  const tx = Math.round(x + radius + 6);
+  const ty1 = Math.round(y + 2);
+  const ty2 = Math.round(y + 14);
+  const ty3 = Math.round(y + 26);
+
   ctx.fillStyle = target.mover
     ? theme === 'dark' ? '#F59E0B' : '#D97706'
     : target.isPlanet
-    ? theme === 'dark' ? '#38BDF8' : '#0284C7'
-    : theme === 'dark' ? '#F8FAFC' : '#0F172A';
-  ctx.font = 'bold 11px "IBM Plex Sans", sans-serif';
-  ctx.fillText(target.name, x + radius + 6, y + 2);
+      ? theme === 'dark' ? '#38BDF8' : '#0284C7'
+      : theme === 'dark' ? '#F8FAFC' : '#0F172A';
+  ctx.font = '700 11.5px "Plus Jakarta Sans", system-ui, sans-serif';
+  ctx.fillText(target.name, tx, ty1);
 
   ctx.fillStyle = theme === 'dark' ? '#94A3B8' : '#64748B';
-  ctx.font = '9.5px "IBM Plex Mono", monospace';
+  ctx.font = '500 10px "JetBrains Mono", monospace';
   const magText = target.mag !== undefined
     ? `Mag ${target.mag.toFixed(1)}${target.bayer ? ` · ${target.bayer}` : target.orbit ? ` · ${target.orbit}` : ''}`
     : target.type || 'Celestial Object';
-  ctx.fillText(magText, x + radius + 6, y + 14);
+  ctx.fillText(magText, tx, ty2);
 
   if (target.mover) {
     ctx.fillStyle = theme === 'dark' ? '#38BDF8' : '#0284C7';
-    ctx.font = '9px "IBM Plex Mono", monospace';
+    ctx.font = '600 9.5px "JetBrains Mono", monospace';
     const arcsecShift = (Math.hypot(target.shiftRa || 0, target.shiftDec || 0) * 3600).toFixed(1);
     ctx.fillText(
       `Δ ${arcsecShift}" · ${isBlinking ? `Epoch ${blinkEpoch}` : activeEpoch}`,
-      x + radius + 6,
-      y + 26
+      tx,
+      ty3
     );
   }
   ctx.restore();
@@ -732,15 +737,24 @@ export default function InteractiveSkyEngine() {
       const height = canvas.height;
       const dpr = window.devicePixelRatio || 1;
 
+      // Cleanly clear full pixel buffer before scaling to prevent ghosting and accumulated antialiasing blur
+      ctx.clearRect(0, 0, width, height);
+
       ctx.save();
       ctx.scale(dpr, dpr);
       const w = width / dpr;
       const h = height / dpr;
-      const centerX = w / 2;
-      const centerY = h / 2;
+      const centerX = Math.round(w / 2);
+      const centerY = Math.round(h / 2);
       const pixelsPerDegree = Math.min(w, h) / fov;
       const decRad = (dec * Math.PI) / 180;
       const cosDec = Math.cos(decRad);
+
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = 'high';
+      if ('textRendering' in ctx) {
+        ctx.textRendering = 'geometricPrecision';
+      }
 
       // 1. Background Void Fill
       if (theme === 'dark') {
@@ -822,15 +836,15 @@ export default function InteractiveSkyEngine() {
           ctx.lineTo(w, y);
           ctx.stroke();
 
-          ctx.fillStyle = theme === 'dark' ? 'rgba(6, 182, 212, 0.55)' : 'rgba(15, 23, 42, 0.5)';
-          ctx.font = '10px "IBM Plex Mono", monospace';
-          ctx.fillText(`${d >= 0 ? '+' : ''}${d.toFixed(d < 1 && d > -1 ? 2 : 1)}°`, 8, y - 4);
+          ctx.fillStyle = theme === 'dark' ? 'rgba(6, 182, 212, 0.75)' : 'rgba(15, 23, 42, 0.65)';
+          ctx.font = '600 10.5px "JetBrains Mono", monospace';
+          ctx.fillText(`${d >= 0 ? '+' : ''}${d.toFixed(d < 1 && d > -1 ? 2 : 1)}°`, 8, Math.round(y - 4));
         }
 
         for (let r = 0; r < 360; r += raStep) {
           let deltaRa = r - ra;
           while (deltaRa > 180) deltaRa -= 360;
-          while (deltaRa < -180) deltaRa += 360;
+          while (deltaRa < -180) deltaRa -= 360;
 
           const x = centerX - deltaRa * pixelsPerDegree * cosDec;
           if (x >= 0 && x <= w) {
@@ -839,10 +853,10 @@ export default function InteractiveSkyEngine() {
             ctx.lineTo(x, h);
             ctx.stroke();
 
-            ctx.fillStyle = theme === 'dark' ? 'rgba(6, 182, 212, 0.55)' : 'rgba(15, 23, 42, 0.5)';
-            ctx.font = '10px "IBM Plex Mono", monospace';
+            ctx.fillStyle = theme === 'dark' ? 'rgba(6, 182, 212, 0.75)' : 'rgba(15, 23, 42, 0.65)';
+            ctx.font = '600 10.5px "JetBrains Mono", monospace';
             const hours = (r / 15).toFixed(1);
-            ctx.fillText(`${hours}h`, x + 4, h - 8);
+            ctx.fillText(`${hours}h`, Math.round(x + 4), Math.round(h - 8));
           }
         }
         ctx.restore();
@@ -895,9 +909,9 @@ export default function InteractiveSkyEngine() {
               ctx.fill();
 
               if (line.from.name && fov < 28) {
-                ctx.fillStyle = theme === 'dark' ? 'rgba(224, 242, 254, 0.75)' : 'rgba(3, 105, 161, 0.75)';
-                ctx.font = '8.5px "IBM Plex Sans", sans-serif';
-                ctx.fillText(line.from.name, x1 + 4, y1 - 4);
+                ctx.fillStyle = theme === 'dark' ? 'rgba(224, 242, 254, 0.85)' : 'rgba(3, 105, 161, 0.85)';
+                ctx.font = '600 9.5px "Plus Jakarta Sans", sans-serif';
+                ctx.fillText(line.from.name, Math.round(x1 + 4), Math.round(y1 - 4));
               }
 
               sumX += (x1 + x2) / 2;
@@ -913,11 +927,11 @@ export default function InteractiveSkyEngine() {
             if (labelX >= 30 && labelX <= w - 30 && labelY >= 30 && labelY <= h - 30) {
               ctx.save();
               ctx.fillStyle = theme === 'dark' ? 'rgba(125, 211, 252, 0.95)' : 'rgba(3, 105, 161, 0.95)';
-              ctx.font = 'bold 11px "IBM Plex Sans", sans-serif';
+              ctx.font = '700 11.5px "Plus Jakarta Sans", sans-serif';
               ctx.textAlign = 'center';
               ctx.shadowColor = theme === 'dark' ? '#020617' : '#FFFFFF';
               ctx.shadowBlur = 6;
-              ctx.fillText(c.name.toUpperCase(), labelX, labelY - 10);
+              ctx.fillText(c.name.toUpperCase(), Math.round(labelX), Math.round(labelY - 10));
               ctx.restore();
             }
           }
@@ -947,9 +961,9 @@ export default function InteractiveSkyEngine() {
             ctx.lineTo(w, py);
             ctx.stroke();
           }
-          ctx.fillStyle = theme === 'dark' ? 'rgba(56, 189, 248, 0.5)' : 'rgba(15, 23, 42, 0.45)';
-          ctx.font = '9px monospace';
-          ctx.fillText(`SPHEREx FPA Detector Grid: 6.2″/px (${pixelPx.toFixed(0)}px/detector)`, 14, h - 32);
+          ctx.fillStyle = theme === 'dark' ? 'rgba(56, 189, 248, 0.65)' : 'rgba(15, 23, 42, 0.6)';
+          ctx.font = '500 10px "JetBrains Mono", monospace';
+          ctx.fillText(`SPHEREx FPA Detector Grid: 6.2″/px (${pixelPx.toFixed(0)}px/detector)`, 14, Math.round(h - 32));
         }
         ctx.restore();
       }
@@ -1124,8 +1138,8 @@ export default function InteractiveSkyEngine() {
           const targetColor = target.mover
             ? theme === 'dark' ? '#F59E0B' : '#D97706'
             : isSolar
-            ? theme === 'dark' ? '#38BDF8' : '#0284C7'
-            : theme === 'dark' ? colorDef.dark : colorDef.light;
+              ? theme === 'dark' ? '#38BDF8' : '#0284C7'
+              : theme === 'dark' ? colorDef.dark : colorDef.light;
 
           const baseSize = isSolar
             ? Math.max(4.5, Math.min(9.0, 7.5 - (target.mag || 5) * 0.2))
@@ -1150,9 +1164,9 @@ export default function InteractiveSkyEngine() {
             // Draw planetary symbol
             const sym = getPlanetarySymbol(target.name);
             ctx.fillStyle = targetColor;
-            ctx.font = 'bold 9px monospace';
+            ctx.font = '700 10.5px "Plus Jakarta Sans", sans-serif';
             ctx.textAlign = 'center';
-            ctx.fillText(sym, x, y - baseSize - 5);
+            ctx.fillText(sym, Math.round(x), Math.round(y - baseSize - 5));
             ctx.restore();
           } else if (target.mag < 3.5) {
             // Bright optical stars get diffraction spikes
@@ -1203,32 +1217,32 @@ export default function InteractiveSkyEngine() {
       // 6. High-Precision Reticle with Celestial Compass & Target Lock
       const targetLockInfo = closestTargetToCenter
         ? {
-            name: closestTargetToCenter.target.name,
-            radius: closestTargetToCenter.target.isPlanet ? 26 : 16,
-            angularDia:
-              closestTargetToCenter.target.name.includes('Jupiter')
-                ? '46.8″ (Giant Oblate Disk)'
-                : closestTargetToCenter.target.name.includes('Saturn')
+          name: closestTargetToCenter.target.name,
+          radius: closestTargetToCenter.target.isPlanet ? 26 : 16,
+          angularDia:
+            closestTargetToCenter.target.name.includes('Jupiter')
+              ? '46.8″ (Giant Oblate Disk)'
+              : closestTargetToCenter.target.name.includes('Saturn')
                 ? '18.4″ (Rings 42.1″)'
                 : closestTargetToCenter.target.name.includes('Mars')
-                ? '14.2″ (Terrestrial Disk)'
-                : closestTargetToCenter.target.name.includes('Venus')
-                ? '24.5″ (Cloud Deck)'
-                : closestTargetToCenter.target.name.includes('Sun')
-                ? '32.1′ (Solar Disk)'
-                : closestTargetToCenter.target.name.includes('Moon')
-                ? '31.2′ (Lunar Surface)'
-                : closestTargetToCenter.target.isPlanet
-                ? 'Resolved Disc'
-                : null,
-          }
+                  ? '14.2″ (Terrestrial Disk)'
+                  : closestTargetToCenter.target.name.includes('Venus')
+                    ? '24.5″ (Cloud Deck)'
+                    : closestTargetToCenter.target.name.includes('Sun')
+                      ? '32.1′ (Solar Disk)'
+                      : closestTargetToCenter.target.name.includes('Moon')
+                        ? '31.2′ (Lunar Surface)'
+                        : closestTargetToCenter.target.isPlanet
+                          ? 'Resolved Disc'
+                          : null,
+        }
         : targetName && !targetName.startsWith('Target (')
-        ? {
+          ? {
             name: targetName,
             radius: 20,
             angularDia: null,
           }
-        : null;
+          : null;
 
       drawPrecisionReticle(ctx, centerX, centerY, w, h, fov, theme, targetLockInfo);
 
@@ -1256,10 +1270,10 @@ export default function InteractiveSkyEngine() {
       ctx.stroke();
 
       ctx.fillStyle = theme === 'dark' ? '#E2E8F0' : '#1E293B';
-      ctx.font = 'bold 9.5px monospace';
+      ctx.font = '600 10.5px "JetBrains Mono", monospace';
       ctx.textAlign = 'left';
       const scaleLabel = scaleArcsec >= 60 ? `${(scaleArcsec / 60).toFixed(1)}′ (${scaleArcsec.toFixed(0)}″)` : `${scaleArcsec.toFixed(1)}″ arcsec`;
-      ctx.fillText(`Scale: ${scaleLabel}`, barX, barY - 7);
+      ctx.fillText(`Scale: ${scaleLabel}`, barX, Math.round(barY - 7));
       ctx.restore();
 
       ctx.restore();
@@ -1512,11 +1526,10 @@ export default function InteractiveSkyEngine() {
             <Tooltip key={s.id} content={s.desc} tag={s.label} position="bottom">
               <button
                 onClick={() => setSurveyLayer(s.id)}
-                className={`px-2.5 py-1 text-xs font-mono rounded-lg transition-all duration-200 ${
-                  surveyLayer === s.id
+                className={`px-2.5 py-1 text-xs font-mono rounded-lg transition-all duration-200 ${surveyLayer === s.id
                     ? 'bg-cyan-500 text-slate-950 font-bold shadow-hud-glow'
                     : 'text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5'
-                }`}
+                  }`}
               >
                 {s.label}
               </button>
@@ -1564,11 +1577,10 @@ export default function InteractiveSkyEngine() {
         >
           <button
             onClick={() => setShowRealImagery(!showRealImagery)}
-            className={`flex items-center gap-1 px-2.5 py-1.5 text-xs font-mono font-semibold rounded-lg transition-all duration-200 ${
-              showRealImagery
+            className={`flex items-center gap-1 px-2.5 py-1.5 text-xs font-mono font-semibold rounded-lg transition-all duration-200 ${showRealImagery
                 ? 'bg-cyan-500 text-slate-950 font-bold shadow-hud-glow'
                 : 'text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5'
-            }`}
+              }`}
           >
             <Camera className="w-3.5 h-3.5" />
             <span>{isImageryLoading ? 'LOADING...' : 'REAL SKY'}</span>
@@ -1585,11 +1597,10 @@ export default function InteractiveSkyEngine() {
         >
           <button
             onClick={() => setIsBlinking(!isBlinking)}
-            className={`flex items-center gap-1 px-3 py-1.5 text-xs font-mono font-semibold rounded-lg transition-all duration-200 ${
-              isBlinking
+            className={`flex items-center gap-1 px-3 py-1.5 text-xs font-mono font-semibold rounded-lg transition-all duration-200 ${isBlinking
                 ? 'bg-amber-500 text-slate-950 shadow-amber-glow animate-pulse'
                 : 'text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5'
-            }`}
+              }`}
           >
             {isBlinking ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
             <span>BLINK ({blinkEpoch})</span>
@@ -1601,11 +1612,10 @@ export default function InteractiveSkyEngine() {
         <Tooltip content="Toggle candidate mover identification rings and proper-motion displacement vectors (arcsec shift between epochs)." tag="MOVERS" shortcut="M" position="bottom-left">
           <button
             onClick={toggleMoversOverlay}
-            className={`p-1.5 rounded-lg transition-colors ${
-              showMoversOverlay
+            className={`p-1.5 rounded-lg transition-colors ${showMoversOverlay
                 ? 'text-amber-600 dark:text-amber-400 bg-amber-500/10'
                 : 'text-slate-500 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5'
-            }`}
+              }`}
           >
             <Scan className="w-4 h-4" />
           </button>
@@ -1614,11 +1624,10 @@ export default function InteractiveSkyEngine() {
         <Tooltip content="Toggle J2000 Equatorial coordinate gridlines with RA (hours/deg) and Declination (°)." tag="GRID" shortcut="G" position="bottom-left">
           <button
             onClick={toggleGrid}
-            className={`p-1.5 rounded-lg transition-colors ${
-              showGrid
+            className={`p-1.5 rounded-lg transition-colors ${showGrid
                 ? 'text-cyan-600 dark:text-cyan-400 bg-cyan-500/10'
                 : 'text-slate-500 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5'
-            }`}
+              }`}
           >
             <Grid className="w-4 h-4" />
           </button>
@@ -1627,11 +1636,10 @@ export default function InteractiveSkyEngine() {
         <Tooltip content="Toggle IAU constellation boundaries, asterism vectors, and celestial navigational lore (Orion, Ursa Major, Cassiopeia, Ophiuchus)." tag="CONSTELLATIONS" shortcut="C" position="bottom-left">
           <button
             onClick={toggleConstellations}
-            className={`p-1.5 rounded-lg transition-colors ${
-              showConstellations
+            className={`p-1.5 rounded-lg transition-colors ${showConstellations
                 ? 'text-cyan-600 dark:text-cyan-400 bg-cyan-500/10'
                 : 'text-slate-500 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5'
-            }`}
+              }`}
           >
             <Sparkles className="w-4 h-4" />
           </button>
@@ -1669,11 +1677,10 @@ export default function InteractiveSkyEngine() {
         <Tooltip content="Toggle realistic circular telescope eyepiece barrel mask & vignette frame." tag="EYEPIECE" position="bottom-left">
           <button
             onClick={() => setShowEyepieceFrame(!showEyepieceFrame)}
-            className={`p-1.5 rounded-lg transition-colors ${
-              showEyepieceFrame
+            className={`p-1.5 rounded-lg transition-colors ${showEyepieceFrame
                 ? 'text-cyan-600 dark:text-cyan-400 bg-cyan-500/10'
                 : 'text-slate-500 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5'
-            }`}
+              }`}
           >
             <Eye className="w-4 h-4" />
           </button>
@@ -1697,11 +1704,10 @@ export default function InteractiveSkyEngine() {
             <Tooltip key={p.label} content={p.tip} position="top">
               <button
                 onClick={() => setFov(p.fovVal)}
-                className={`px-2 py-1 text-[10px] font-mono rounded-lg transition-all duration-200 whitespace-nowrap ${
-                  isActive
+                className={`px-2 py-1 text-[10px] font-mono rounded-lg transition-all duration-200 whitespace-nowrap ${isActive
                     ? 'bg-cyan-500 text-slate-950 font-bold shadow-hud-glow'
                     : 'text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5'
-                }`}
+                  }`}
               >
                 {p.label}
               </button>

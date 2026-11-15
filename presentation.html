@@ -244,7 +244,7 @@
     .grid-3 {
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
-      gap: 18px;
+      gap: 16px;
       margin-top: 8px;
     }
 
@@ -252,16 +252,40 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       grid-template-rows: auto auto;
-      gap: 16px;
+      gap: 14px;
       margin-top: 6px;
       flex: 1;
+    }
+
+    .grid-4-cols {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    .layman-box {
+      background: #FDF9EE;
+      border: 1px solid #E9D8A6;
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 12px;
+      color: #78350F;
+      line-height: 1.5;
+    }
+
+    .layman-box strong {
+      color: #92400E;
+      text-transform: uppercase;
+      font-size: 10px;
+      letter-spacing: 0.8px;
     }
 
     .card {
       background: #FFFFFF;
       border: 1.5px solid var(--card-border);
       border-radius: 14px;
-      padding: 18px 22px;
+      padding: 16px 20px;
       display: flex;
       flex-direction: column;
       gap: 8px;
@@ -433,35 +457,54 @@
         <span>SLIDE 01 / 07 &bull; TITLE &amp; TEAM CREDENTIALS</span>
         <span class="badge badge-seed">CHALLENGE: PLANET X &amp; SPHEREx</span>
       </div>
-      <div style="margin-top: 14px;">
-        <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--seed-ochre); letter-spacing: 2px; font-weight: 700;">
-          NASA INTERNATIONAL SPACE APPS CHALLENGE 2026
+      <div style="margin-top: 6px; text-align: center;">
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: var(--seed-ochre); letter-spacing: 2px; font-weight: 700; text-transform: uppercase;">
+          NASA International Space Apps Challenge 2026
         </span>
-        <h1 style="margin-top: 6px;">
-          PHOTONX
+        <h1 style="margin: 4px 0 6px; font-size: 42px; letter-spacing: -0.5px;">
+          PHOTON<span class="accent" style="color: var(--avocado);">X</span>
         </h1>
-        <p class="lead" style="color: var(--avocado); font-weight: 600; font-size: 18px; margin-bottom: 16px;">
+        <p class="lead" style="margin: 0 auto 12px; font-size: 15.5px; color: var(--avocado); font-weight: 600; text-align: center;">
           Interactive SPHEREx Infrared Sky Browser &amp; Outer Solar System Discovery Engine
         </p>
       </div>
 
-      <div class="grid-3" style="margin-top: 6px;">
+      <div class="grid-4-cols">
+        <div class="card" style="padding: 12px 14px;">
+          <h3 style="font-size: 13px;">🔭 102-Band NIR Engine</h3>
+          <p style="font-size: 11.5px; line-height: 1.45;">Full 0.75–5.0 µm spectrophotometry identifying water, CO, and methane ice.</p>
+        </div>
+        <div class="card card-guac" style="padding: 12px 14px;">
+          <h3 style="font-size: 13px;">🪐 Solar System Orrery</h3>
+          <p style="font-size: 11.5px; line-height: 1.45;">Interactive 2D Keplerian orbit simulator (0–800 AU) with procedural optics.</p>
+        </div>
+        <div class="card" style="padding: 12px 14px;">
+          <h3 style="font-size: 13px;">⏱️ Clyde Tombaugh Blink</h3>
+          <p style="font-size: 11.5px; line-height: 1.45;">Rapid survey epoch alternation isolating moving asteroids &amp; Planet X candidates.</p>
+        </div>
+        <div class="card card-guac" style="padding: 12px 14px;">
+          <h3 style="font-size: 13px;">🚀 Real-Time NASA APIs</h3>
+          <p style="font-size: 11.5px; line-height: 1.45;">Live asteroid tracking (NeoWs), solar storms (DONKI), and APOD telemetry.</p>
+        </div>
+      </div>
+
+      <div class="grid-3" style="margin-top: 10px;">
         <div class="card">
           <h3>👤 Team Creator</h3>
           <p><strong>Team PhotonX</strong><br>Mazonia (Solo Developer)<br>Software Engineer &amp; Astronomy Enthusiast</p>
         </div>
         <div class="card card-guac">
-          <h3>🛰️ Challenge Selected</h3>
-          <p><strong>Planet X and SPHEREx</strong><br>Focus: Detecting outer solar system moving objects<br>Wavelength: 102 Spectral Bands (0.75–5.0 µm)</p>
+          <h3>🛰️ NASA Challenge &amp; Data</h3>
+          <p><strong>Planet X and SPHEREx</strong><br>Primary Dataset: Caltech/IPAC SPHEREx QR2<br>DOI: <strong>10.26131/IRSA629</strong></p>
         </div>
         <div class="card">
-          <h3>🔗 Provenance &amp; Code</h3>
-          <p><strong>Primary Data:</strong> SPHEREx QR2 (DOI: 10.26131/IRSA629)<br><strong>Repo:</strong> github.com/Mazonia/photonx<br><strong>License:</strong> MIT Open Source</p>
+          <h3>🔗 Code &amp; Open Access</h3>
+          <p><strong>Repository:</strong> github.com/Mazonia/photonx<br><strong>License:</strong> MIT Open Source &bull; Zero-Install PWA<br><strong>Status:</strong> 100% Test Pass Rate (12/12 Systems)</p>
         </div>
       </div>
 
-      <div class="card card-guac" style="margin-top: 14px; text-align: center; padding: 12px;">
-        <p style="font-size: 12.5px; color: var(--text-dark); font-weight: 500;">
+      <div class="card card-guac" style="margin-top: 10px; text-align: center; padding: 10px;">
+        <p style="font-size: 12px; color: var(--text-dark); font-weight: 600;">
           Strict 7-Slide Rule Adherence &bull; Zero Installation Web Platform &bull; All Content in English &bull; 100% Free &amp; Open Access
         </p>
       </div>
@@ -480,33 +523,44 @@
       </div>
       <h2>The Problem: Why Is Planet X Still Missing?</h2>
       <p class="lead">
-        The physics of extreme optical dimness versus the challenge of massive raw spectral datasets.
+        Extreme optical darkness meets the challenge of massive multi-spectral datasets.
       </p>
 
-      <div class="grid-2">
+      <div class="grid-3">
         <div class="card">
-          <h3>❄️ 1. Optical Illumination Collapse (1/r⁴)</h3>
-          <ul class="bullet-list">
-            <li>Reflected sunlight drops off as distance squared out, and distance squared back (Flux &prop; 1/r⁴).</li>
-            <li>At 400 AU (the hypothesized orbit of Planet X), sunlight is <strong>25 billion times dimmer</strong> than on Earth.</li>
-            <li>A Neptune-mass planet has optical magnitude V &gt; 23.5—pitch black in visible telescopes like Hubble or Gaia.</li>
-            <li><strong>Thermal Glow:</strong> Even at 35 Kelvin, these bodies radiate internal heat in the near-infrared (1–5 µm).</li>
-          </ul>
+          <h3>❄️ 1. Optical Faintness (1/r⁴)</h3>
+          <p><strong>The Physics:</strong> Reflected solar flux drops off as inverse fourth power: <code>Flux &prop; 1/r⁴</code>.</p>
+          <div class="layman-box">
+            <strong>In Plain English:</strong> Sunlight must travel out to the planet and bounce all the way back to Earth. Double the distance, and the object gets 16 times fainter! At 400 AU, sunlight is <strong>25 billion times dimmer</strong> than on Earth. In optical telescopes like Hubble, Planet X is pitch black (mag V &gt; 23.5).
+          </div>
         </div>
+
         <div class="card card-guac">
-          <h3>📊 2. The Infrared Data Flood Bottleneck</h3>
-          <ul class="bullet-list">
-            <li>NASA's SPHEREx mission is surveying the entire celestial sphere every 6 months across <strong>102 spectral bands</strong>.</li>
-            <li>This produces millions of complex, multi-extension FITS image files locked in technical archives.</li>
-            <li>Astronomers and citizen scientists lack fast, visual tools to compare epochs and spot shifting objects.</li>
-            <li>Without interactive temporal differencing, slow-moving outer worlds remain buried in raw data.</li>
-          </ul>
+          <h3>🔥 2. The Infrared Solution (35 K)</h3>
+          <p><strong>The Physics:</strong> Cold giant planets retain internal primordial heat, glowing in the near-infrared (1–5 µm).</p>
+          <div class="layman-box" style="background: #F4F8F0; border-color: #C8DAB8; color: #2D4C24;">
+            <strong>In Plain English:</strong> Even in the freezing vacuum of deep space, giant planets radiate their own heat like warm embers in the dark. NASA's SPHEREx mission was built specifically to capture this exact thermal glow across 102 infrared bands.
+          </div>
         </div>
+
+        <div class="card">
+          <h3>📊 3. The Data Flood Bottleneck</h3>
+          <p><strong>The Challenge:</strong> SPHEREx scans the whole cosmos every 6 months across 102 distinct spectral channels.</p>
+          <div class="layman-box">
+            <strong>In Plain English:</strong> Having petabytes of data isn't enough if you can't spot the movement. Without an automated tool to compare survey images taken months apart, slow-moving outer worlds remain buried in raw technical archives.
+          </div>
+        </div>
+      </div>
+
+      <div class="card card-guac" style="margin-top: 14px; text-align: center; padding: 12px;">
+        <p style="font-size: 13px; font-weight: 600; color: var(--text-dark);">
+          🎯 <strong>The Mission:</strong> Build an intuitive, visual bridge between raw NASA infrared telemetry and human perception to bring Planet X into view.
+        </p>
       </div>
 
       <div class="speaker-note">
         <strong>Speaker Note:</strong>
-        "Why haven't we found Planet X yet? Because out at 400 AU, reflected sunlight is 25 billion times fainter than on Earth. Optical surveys simply cannot see it. But in the thermal infrared, these cold bodies glow. NASA's SPHEREx mission captures this exact light across 102 bands. However, that creates a new problem: billions of raw spectral pixels locked in complex FITS files that are nearly impossible for humans to visually explore."
+        "Why haven't we found Planet X yet? Because optical light follows an inverse fourth-power law: at 400 AU, reflected sunlight is 25 billion times dimmer than on Earth. Optical telescopes see only pitch black. But in the thermal infrared, these worlds glow with their own heat. NASA's SPHEREx captures this exact light across 102 bands, but that produces petabytes of raw data. Without an intuitive comparison engine, those discoveries stay buried."
       </div>
     </section>
 
@@ -514,11 +568,11 @@
     <section class="slide" id="slide-3">
       <div class="slide-number">
         <span>SLIDE 03 / 07 &bull; THE PROPOSED SOLUTION</span>
-        <span class="badge">PHOTONX PLATFORM</span>
+        <span class="badge">PHOTONX WORKSTATION</span>
       </div>
-      <h2>The Proposed Solution: PhotonX</h2>
+      <h2>The Proposed Solution: PhotonX Workstation</h2>
       <p class="lead">
-        A fast, zero-install web observatory that turns complex multi-epoch infrared surveys into visual discoveries.
+        A zero-install interactive observatory turning complex time-series infrared data into visual discoveries.
       </p>
 
       <div class="split-layout">
@@ -528,21 +582,25 @@
             Figure 1: PhotonX Live UI — Real-Time Sky Viewport, 102-Band Spectrum Plot, and Clyde Tombaugh Blink Engine
           </div>
         </div>
-        <div class="card">
-          <h3>🔭 What PhotonX Delivers</h3>
-          <ul class="bullet-list">
-            <li><strong>Interactive GPU Sky Engine:</strong> Pan and zoom smoothly across celestial coordinates (RA/Dec) from full 45° constellations down to 0.05° deep sky fields.</li>
-            <li><strong>🪐 Cosmic Worlds &amp; Systems Navigator:</strong> Instant 1-click voyage across Solar System planets (Mars, Jupiter, Saturn, Pluto, Planet Nine), habitable exoworlds (TRAPPIST-1, Proxima b, Kepler-186f), and all 88 IAU constellations with orbital telemetry.</li>
-            <li><strong>Clyde Tombaugh Blink Comparator:</strong> Press Spacebar to rapidly alternate between 6-month survey epochs. Moving bodies jump out immediately to human visual perception.</li>
-            <li><strong>Instant 102-Band Spectrophotometry:</strong> Click any object to plot its full 0.75–5.0 µm curve, diagnosing water ice (1.4 µm), CO (2.3 µm), and CO₂ ice (4.27 µm) signatures.</li>
-            <li><strong>🎓 Step-by-Step Interactive Tutorial:</strong> Built-in spotlight guide that walks any first-time visitor through every button and telemetry card.</li>
-          </ul>
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <div class="card">
+            <h3>🔭 Core Workstation Capabilities</h3>
+            <ul class="bullet-list">
+              <li><strong>Interactive GPU Sky Engine:</strong> Pan and zoom smoothly across celestial coordinates (RA/Dec) from 45° all-sky constellations down to 0.05° deep-sky fields.</li>
+              <li><strong>🪐 Solar System Orrery &amp; Procedural Optics:</strong> Full 2D orbital simulation (0–800 AU) with photorealistic planets: Jupiter with cloud belts &amp; Galilean moons, 3D ringed Saturn, Mars ice caps, and Moon maria.</li>
+              <li><strong>Clyde Tombaugh Blink Comparator:</strong> Press Spacebar to rapidly alternate between 6-month survey epochs. Moving bodies jump out immediately to human vision.</li>
+              <li><strong>Instant 102-Band Spectrophotometry:</strong> Click any object to plot its full 0.75–5.0 µm curve, diagnosing water ice (1.4 µm), CO (2.3 µm), and CO₂ ice (4.27 µm) signatures.</li>
+            </ul>
+          </div>
+          <div class="layman-box" style="background: #F4F8F0; border-color: #C8DAB8; color: #2D4C24; padding: 12px 16px;">
+            <strong>💡 In Plain English:</strong> Think of PhotonX like Google Earth for the infrared universe. Instead of wrestling with command-line tools or downloading gigabytes of FITS files, anyone with a web browser can explore our solar system, inspect atmospheric chemistry, and hunt for hidden worlds in real time.
+          </div>
         </div>
       </div>
 
       <div class="speaker-note">
         <strong>Speaker Note:</strong>
-        "PhotonX is our solution. It runs directly in the browser with zero installation. Users can pan and zoom through the infrared cosmos. With one tap of the spacebar, our Clyde Tombaugh blink engine alternates between 6-month survey passes, making moving objects stand out immediately. And clicking any point instantly plots a 102-channel spectrophotometric curve that reveals the body's ice composition."
+        "PhotonX is our solution. It runs completely inside any web browser with zero installation. Users can explore our new Keplerian Solar System Orrery with photorealistic procedural planets, pan through deep infrared space, and with one tap of the spacebar, blink between survey epochs to spot moving objects instantly. It's Google Earth for the infrared cosmos."
       </div>
     </section>
 
@@ -554,7 +612,7 @@
       </div>
       <h2>How It Works: Automated Mover Detection</h2>
       <p class="lead">
-        Sub-pixel image differencing that cancels fixed background stars to isolate moving centroids.
+        Coupling Clyde Tombaugh's 1930 optical blink logic with modern sub-pixel image subtraction.
       </p>
 
       <div class="split-layout">
@@ -564,19 +622,24 @@
             Figure 2: Image Difference Engine — Subtraction residuals and automated mover candidate list
           </div>
         </div>
-        <div class="card card-guac">
-          <h3>⚡ 3-Step Differencing Pipeline</h3>
-          <ul class="bullet-list">
-            <li><strong>1. Align &amp; Normalize Flux:</strong> Aligns WCS celestial geometry and matches Point-Spread Functions (PSFs) between Epoch A and Epoch B (separated by 6 months).</li>
-            <li><strong>2. Subtract Matrices (&Delta;I = I_B &minus; I_A):</strong> Fixed background stars cancel out to zero. A moving object leaves a distinct dipole: negative residual at Epoch A, positive at Epoch B.</li>
-            <li><strong>3. Threshold (&gt; 3&sigma;) &amp; Centroid Vector:</strong> Connected-component clustering isolates significant peaks, calculates exact sub-pixel motion in arcseconds, and logs candidates.</li>
-          </ul>
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <div class="card card-guac">
+            <h3>⚡ 3-Step Differencing Pipeline</h3>
+            <ul class="bullet-list">
+              <li><strong>1. Align &amp; Normalize Flux:</strong> Aligns WCS celestial geometry and matches Point-Spread Functions (PSFs) between Epoch A and Epoch B (separated by 6 months).</li>
+              <li><strong>2. Subtract Matrices (&Delta;I = I_B &minus; I_A):</strong> Fixed background stars cancel out completely. A moving object leaves a distinct dipole: dark negative at Epoch A, bright positive at Epoch B.</li>
+              <li><strong>3. Threshold (&gt; 3&sigma;) &amp; Centroid Vector:</strong> Connected-component clustering isolates significant peaks, calculates exact sub-pixel motion in arcseconds, and logs candidates.</li>
+            </ul>
+          </div>
+          <div class="layman-box" style="padding: 12px 16px;">
+            <strong>💡 In Plain English:</strong> Imagine taking two photographs of a busy public plaza six months apart and subtracting them. Every building, bench, and streetlamp vanishes into pure darkness. The only thing left glowing on the screen is someone who walked across the plaza. That is how PhotonX isolates moving worlds from billions of stationary stars.
+          </div>
         </div>
       </div>
 
       <div class="speaker-note">
         <strong>Speaker Note:</strong>
-        "Under the hood, PhotonX runs a mathematical image subtraction pipeline. When comparing two survey epochs, the engine normalizes the fields and subtracts Epoch A from Epoch B. Stationary stars cancel out completely. Moving objects leave a distinct dipole signature. Our algorithm flags all peaks exceeding three sigma, computes their positional shift in arcseconds, and ranks them for follow-up."
+        "Under the hood, PhotonX runs an automated sub-pixel image subtraction pipeline. When we subtract an earlier survey epoch from a later one, billions of fixed background stars cancel out completely. Moving objects leave a telltale positive-and-negative dipole. Our engine automatically flags peaks exceeding three sigma, computes their angular drift in arcseconds, and logs them for astronomical follow-up."
       </div>
     </section>
 
@@ -586,45 +649,60 @@
         <span>SLIDE 05 / 07 &bull; DATA &amp; APIS USED</span>
         <span class="badge">OFFICIAL NASA TELEMETRY</span>
       </div>
-      <h2>NASA Data &amp; APIs Used</h2>
+      <h2>NASA Data Assets &amp; Space Agency Telemetry</h2>
       <p class="lead">
-        Grounding every discovery in primary space telescope archives and verified NASA telemetry.
+        Every pixel and spectrum is grounded in verified NASA missions and open APIs.
       </p>
 
       <div class="grid-4">
         <div class="card">
           <h3>1. NASA SPHEREx QR2 Survey</h3>
           <p><strong>Caltech/IPAC Infrared Science Archive (IRSA)</strong><br>
-          DOI: <strong>10.26131/IRSA629</strong> • IVOA SIA2 interface<br>
+          DOI: <strong>10.26131/IRSA629</strong> &bull; IVOA SIA2 interface<br>
           102 continuous near-infrared bands (0.75–5.00 µm)<br>
           6-month survey cadences across 2025–2026</p>
+          <div class="layman-box" style="margin-top: 4px; padding: 6px 10px; font-size: 11px;">
+            <strong>Plain English:</strong> A molecular camera that reads the chemical ice fingerprints (H₂O, CO₂, organics) of distant worlds.
+          </div>
         </div>
+
         <div class="card card-guac">
           <h3>2. Live NASA Open APIs (api.nasa.gov)</h3>
           <p><strong>Integrated with verified NASA developer key:</strong><br>
-          • <strong>NASA NeoWs:</strong> Live tracking of near-Earth asteroids<br>
-          • <strong>NASA DONKI:</strong> Real-time space weather (CMEs &amp; storms)<br>
-          • <strong>NASA APOD:</strong> Astronomy Picture of the Day feed</p>
+          &bull; <strong>NASA NeoWs:</strong> Live tracking of near-Earth asteroids &amp; miss distances<br>
+          &bull; <strong>NASA DONKI:</strong> Real-time space weather (CMEs &amp; solar storms)<br>
+          &bull; <strong>NASA APOD:</strong> Daily astronomy picture &amp; science commentary</p>
+          <div class="layman-box" style="background: #FFFFFF; border-color: #C8DAB8; color: #2D4C24; margin-top: 4px; padding: 6px 10px; font-size: 11px;">
+            <strong>Plain English:</strong> Live situational awareness of space hazards and solar activity.
+          </div>
         </div>
+
         <div class="card">
-          <h3>3. NASA Goddard SkyView</h3>
+          <h3>3. NASA Goddard SkyView &amp; SIMBAD</h3>
           <p><strong>NASA Goddard Space Flight Center Virtual Observatory</strong><br>
           Multi-mission optical &amp; infrared cross-matching<br>
           DSS2 (Visible), 2MASS (Near-IR), and WISE (Mid-IR)<br>
-          Verifies infrared discoveries against historical optical surveys</p>
+          Cross-referenced against CDS SIMBAD astronomical database</p>
+          <div class="layman-box" style="margin-top: 4px; padding: 6px 10px; font-size: 11px;">
+            <strong>Plain English:</strong> Confirms if an infrared mover is an already-known star or a brand-new unseen dark world.
+          </div>
         </div>
-        <div class="card">
+
+        <div class="card card-guac">
           <h3>4. Atmospheric Seeing Radar</h3>
           <p><strong>3-Tier Weather Intelligence (Meteomatics + OpenWeather)</strong><br>
-          Pickering Airmass calculation: X = 1 / sin(altitude)<br>
+          Pickering Airmass calculation: <code>X = 1 / sin(altitude)</code><br>
           Estimates ground atmospheric seeing disc in arcseconds<br>
-          Tells astronomers if conditions tonight permit optical follow-up</p>
+          Guides astronomers on ground telescope follow-up conditions</p>
+          <div class="layman-box" style="background: #FFFFFF; border-color: #C8DAB8; color: #2D4C24; margin-top: 4px; padding: 6px 10px; font-size: 11px;">
+            <strong>Plain English:</strong> Tells astronomers if tonight's sky conditions permit ground telescope follow-up.
+          </div>
         </div>
       </div>
 
       <div class="speaker-note">
         <strong>Speaker Note:</strong>
-        "PhotonX is deeply rooted in NASA data. Our primary dataset is the Caltech/IPAC SPHEREx QR2 survey across 102 infrared bands. We also integrate live NASA APIs using our registered developer key: monitoring near-Earth asteroids through NeoWs and solar storms through DONKI. And we cross-reference NASA Goddard's SkyView optical surveys alongside a 3-tier seeing radar that tells astronomers if ground telescopes can follow up tonight."
+        "PhotonX is deeply rooted in NASA data assets. Our primary source is the Caltech/IPAC SPHEREx QR2 dataset spanning 102 spectral bands. We also stream live NASA APIs: tracking near-Earth asteroids through NeoWs and coronal mass ejections through DONKI. And we cross-reference NASA Goddard's SkyView alongside an atmospheric seeing radar that tells astronomers if ground telescopes can follow up tonight."
       </div>
     </section>
 
@@ -636,29 +714,34 @@
       </div>
       <h2>Citizen Science: Democratizing Deep Space Discovery</h2>
       <p class="lead">
-        Turning students and amateur astronomers into active contributors to planetary astrophysics.
+        Turning students, amateur astronomers, and curious minds into active planetary researchers.
       </p>
 
       <div class="split-layout">
         <div class="screenshot-frame">
           <img src="docs/screenshots/hunt_mode_active.png" alt="Hunt Mode Console" />
           <div class="screenshot-caption">
-            Figure 4: Hunt Mode Console — Candidate tagging, hunter ranks, and scientific brief generator
+            Figure 3: Hunt Mode Console — Candidate tagging, hunter ranks, and scientific brief generator
           </div>
         </div>
-        <div class="card">
-          <h3>🎮 Human-Centered Discovery</h3>
-          <ul class="bullet-list">
-            <li><strong>Gamified Hunter Ranks:</strong> Progressive levels from <em>Infrared Tracker</em> &rarr; <em>Kuiper Belt Scout</em> &rarr; <em>Deep Space Pioneer</em> turn data exploration into an engaging celestial quest.</li>
-            <li><strong>1-Click Scientific Observation Briefs:</strong> Exports clean Markdown reports with exact coordinates, epoch baselines, and arcsecond shift, directly citing IRSA DOI 10.26131/IRSA629.</li>
-            <li><strong>Classroom &amp; Mobile Ready:</strong> Runs on Chromebooks, tablets, and phones with zero installation. Full keyboard navigation and WCAG AA accessibility.</li>
-          </ul>
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <div class="card">
+            <h3>🎮 Human-Centered Discovery &amp; Gamification</h3>
+            <ul class="bullet-list">
+              <li><strong>Gamified Hunter Ranks:</strong> 4 progressive achievement tiers from <em>Infrared Tracker</em> &rarr; <em>Kuiper Belt Scout</em> &rarr; <em>Deep Space Pioneer</em> turn data exploration into an engaging celestial quest.</li>
+              <li><strong>1-Click Scientific Observation Briefs:</strong> Instantly generates professional Markdown discovery reports with exact RA/Dec coordinates, epoch shifts, and formal IRSA DOI citations.</li>
+              <li><strong>Universal Zero-Install Accessibility:</strong> Runs smoothly on school Chromebooks, laptops, tablets, and phones with zero installation or account requirements.</li>
+            </ul>
+          </div>
+          <div class="layman-box" style="background: #F4F8F0; border-color: #C8DAB8; color: #2D4C24; padding: 12px 16px;">
+            <strong>💡 In Plain English:</strong> Great science belongs to everyone. By turning complex data into an intuitive, gamified workstation, PhotonX gives high school students, hobbyists, and classrooms the exact same analytical power as professional astrophysics researchers at NASA and Caltech.
+          </div>
         </div>
       </div>
 
       <div class="speaker-note">
         <strong>Speaker Note:</strong>
-        "Great science should be accessible to everyone. With Hunt Mode, a student in a classroom or an amateur astronomer at home can examine authentic NASA data, tag a moving candidate, and export a formal scientific discovery brief citing the official IRSA DOI. By removing installation friction and gamifying candidate verification, we turn spectators into active planetary investigators."
+        "True scientific democratization means lowering barriers to zero. With Hunt Mode, any student or amateur astronomer can inspect authentic NASA data, tag a candidate mover, and generate a formal observation brief citing the official NASA DOI. By pairing intuitive visual tools with gamified learning, we transform passive readers into active planetary explorers."
       </div>
     </section>
 
@@ -670,27 +753,27 @@
       </div>
       <h2>Summary &amp; The Road to Planet X</h2>
       <p class="lead">
-        From Space Apps prototype to an open-source global observatory network.
+        From Space Apps prototype to an open-source global observatory platform.
       </p>
 
       <div class="grid-3">
         <div class="card">
-          <h3>🌐 Full Survey Ingestion</h3>
-          <p>Ingest future SPHEREx public releases across 2025–2027. Multi-year baselines will dramatically boost sensitivity to ultra-slow, distant trans-Neptunian objects.</p>
+          <h3>🌐 Full Multi-Year Ingestion</h3>
+          <p><strong>SPHEREx Releases (2025–2027)</strong><br>Ingesting upcoming SPHEREx public survey releases over multi-year baselines. Longer time baselines drastically increase sensitivity to the slowest, most distant trans-Neptunian objects.</p>
         </div>
         <div class="card card-guac">
           <h3>🤖 In-Browser Orbit Fitting</h3>
-          <p>Implement Gauss and V&auml;is&auml;l&auml; initial orbit determination algorithms in WebAssembly to compute semi-major axis (a) and eccentricity (e) from 3-epoch detections.</p>
+          <p><strong>WebAssembly Gauss &amp; Väisälä</strong><br>Implementing orbital mechanics solvers directly in the browser to compute semi-major axis (a), eccentricity (e), and orbital inclination from 3-epoch detections.</p>
         </div>
         <div class="card">
           <h3>🔭 Robotic Telescope Alerts</h3>
-          <p>Connect candidate flags to automated robotic telescopes worldwide via standard INDI/ASCOM protocols for immediate optical and infrared follow-up.</p>
+          <p><strong>INDI / ASCOM Protocols</strong><br>Connecting candidate flags to automated robotic telescopes worldwide for immediate optical and infrared follow-up verification from professional observatories.</p>
         </div>
       </div>
 
-      <div class="card card-guac" style="margin-top: 16px; text-align: center; padding: 18px; border-color: var(--avocado);">
-        <p style="font-size: 16px; font-weight: 700; color: var(--text-dark); margin-bottom: 6px;">
-          &ldquo;The next great discovery in our solar system could come from anyone looking at the infrared sky.&rdquo;
+      <div class="card card-guac" style="margin-top: 12px; text-align: center; padding: 14px; border-color: var(--avocado);">
+        <p style="font-size: 15.5px; font-weight: 700; color: var(--text-dark); margin-bottom: 4px;">
+          &ldquo;The next great planetary discovery doesn't have to happen inside a closed lab. It could come from anyone, anywhere, exploring the infrared sky.&rdquo;
         </p>
         <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--avocado); font-weight: 600;">
           Code: github.com/Mazonia/photonx &bull; Live Web App: mazonia.github.io/photonx

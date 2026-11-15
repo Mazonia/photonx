@@ -163,9 +163,9 @@ export function drawJupiter(ctx, x, y, r, fov, theme) {
       // Moon name label
       if (fov < 0.6) {
         ctx.fillStyle = theme === 'dark' ? '#E2E8F0' : '#1E293B';
-        ctx.font = '9px "IBM Plex Sans", sans-serif';
+        ctx.font = '600 10px "Plus Jakarta Sans", sans-serif';
         ctx.textAlign = 'center';
-        ctx.fillText(m.name, mx, my - m.r - 3);
+        ctx.fillText(m.name, Math.round(mx), Math.round(my - m.r - 3));
       }
       ctx.restore();
     });
@@ -320,8 +320,8 @@ export function drawSaturn(ctx, x, y, r, fov, theme) {
 
     if (fov < 0.6) {
       ctx.fillStyle = theme === 'dark' ? '#E2E8F0' : '#1E293B';
-      ctx.font = '9px "IBM Plex Sans", sans-serif';
-      ctx.fillText('Titan', titanX + 6, titanY + 3);
+      ctx.font = '600 10px "Plus Jakarta Sans", sans-serif';
+      ctx.fillText('Titan', Math.round(titanX + 6), Math.round(titanY + 3));
     }
   }
 
@@ -391,9 +391,9 @@ export function drawMars(ctx, x, y, r, fov, theme) {
     ctx.fill();
 
     ctx.fillStyle = theme === 'dark' ? '#94A3B8' : '#64748B';
-    ctx.font = '8px monospace';
-    ctx.fillText('Phobos', x + r * 1.6 + 4, y - r * 0.4 + 3);
-    ctx.fillText('Deimos', x - r * 2.8 + 4, y + r * 0.7 + 3);
+    ctx.font = '600 9px "Plus Jakarta Sans", sans-serif';
+    ctx.fillText('Phobos', Math.round(x + r * 1.6 + 4), Math.round(y - r * 0.4 + 3));
+    ctx.fillText('Deimos', Math.round(x - r * 2.8 + 4), Math.round(y + r * 0.7 + 3));
   }
 
   ctx.restore();
@@ -740,8 +740,8 @@ export function drawPluto(ctx, x, y, r, fov, theme) {
 
     if (fov < 0.6) {
       ctx.fillStyle = theme === 'dark' ? '#CBD5E1' : '#475569';
-      ctx.font = '8px monospace';
-      ctx.fillText('Charon', charonX - 12, charonY - 6);
+      ctx.font = '600 9.5px "Plus Jakarta Sans", sans-serif';
+      ctx.fillText('Charon', Math.round(charonX - 12), Math.round(charonY - 6));
     }
   }
 
@@ -1066,9 +1066,9 @@ export function drawPrecisionReticle(ctx, cx, cy, w, h, fov, theme, targetLockIn
   ctx.closePath();
   ctx.fill();
 
-  ctx.font = 'bold 9px "IBM Plex Sans", sans-serif';
+  ctx.font = '700 9.5px "Plus Jakarta Sans", sans-serif';
   ctx.textAlign = 'center';
-  ctx.fillText('N', cx, cy - compassR - 4);
+  ctx.fillText('N', Math.round(cx), Math.round(cy - compassR - 4));
 
   // East arrow (to the left in astronomical standard view where East is left)
   ctx.beginPath();
@@ -1077,7 +1077,7 @@ export function drawPrecisionReticle(ctx, cx, cy, w, h, fov, theme, targetLockIn
   ctx.lineTo(cx - compassR + 8, cy + 4);
   ctx.closePath();
   ctx.fill();
-  ctx.fillText('E', cx - compassR - 7, cy + 3);
+  ctx.fillText('E', Math.round(cx - compassR - 7), Math.round(cy + 3));
 
   // 4. Target Lock-On HUD Bracket (if an object is centered or locked)
   if (targetLockInfo) {
@@ -1114,14 +1114,14 @@ export function drawPrecisionReticle(ctx, cx, cy, w, h, fov, theme, targetLockIn
 
     // Lock Tag
     ctx.fillStyle = '#F59E0B';
-    ctx.font = 'bold 9.5px "IBM Plex Mono", monospace';
+    ctx.font = '600 10.5px "JetBrains Mono", monospace';
     ctx.textAlign = 'center';
-    ctx.fillText(`[ TRACKING: ${targetLockInfo.name.toUpperCase()} ]`, cx, by - 8);
+    ctx.fillText(`[ TRACKING: ${targetLockInfo.name.toUpperCase()} ]`, Math.round(cx), Math.round(by - 8));
 
     if (targetLockInfo.angularDia) {
       ctx.fillStyle = theme === 'dark' ? '#94A3B8' : '#64748B';
-      ctx.font = '8.5px monospace';
-      ctx.fillText(`Apparent Ø: ${targetLockInfo.angularDia}`, cx, by + bh + 14);
+      ctx.font = '500 9.5px "JetBrains Mono", monospace';
+      ctx.fillText(`Apparent Ø: ${targetLockInfo.angularDia}`, Math.round(cx), Math.round(by + bh + 14));
     }
     ctx.restore();
   }
