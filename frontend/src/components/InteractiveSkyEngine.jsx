@@ -407,6 +407,10 @@ const SPECTRAL_COLORS = {
   Exoplanet: { dark: '#2DD4BF', light: '#0D9488', glow: 'rgba(45, 212, 191, 0.5)' },
 };
 
+function normalizeAngleDiff(delta) {
+  return ((((delta + 180) % 360) + 360) % 360) - 180;
+}
+
 function pseudoRandom(seed) {
   const x = Math.sin(seed) * 10000;
   return x - Math.floor(x);
@@ -856,9 +860,7 @@ export default function InteractiveSkyEngine() {
         }
 
         for (let r = 0; r < 360; r += raStep) {
-          let deltaRa = r - ra;
-          while (deltaRa > 180) deltaRa -= 360;
-          while (deltaRa < -180) deltaRa -= 360;
+          const deltaRa = normalizeAngleDiff(r - ra);
 
           const x = centerX - deltaRa * pixelsPerDegree * cosDec;
           if (x >= 0 && x <= w) {
@@ -892,13 +894,8 @@ export default function InteractiveSkyEngine() {
           let sumY = 0;
 
           c.lines.forEach((line) => {
-            let deltaRa1 = line.from.ra - ra;
-            while (deltaRa1 > 180) deltaRa1 -= 360;
-            while (deltaRa1 < -180) deltaRa1 += 360;
-
-            let deltaRa2 = line.to.ra - ra;
-            while (deltaRa2 > 180) deltaRa2 -= 360;
-            while (deltaRa2 < -180) deltaRa2 += 360;
+            const deltaRa1 = normalizeAngleDiff(line.from.ra - ra);
+            const deltaRa2 = normalizeAngleDiff(line.to.ra - ra);
 
             const x1 = centerX - deltaRa1 * pixelsPerDegree * cosDec;
             const y1 = centerY - (line.from.dec - dec) * pixelsPerDegree;
@@ -986,9 +983,7 @@ export default function InteractiveSkyEngine() {
       backgroundStars.forEach((star) => {
         if (star.mag > limitingMag + 0.5) return;
 
-        let deltaRa = star.ra - ra;
-        while (deltaRa > 180) deltaRa -= 360;
-        while (deltaRa < -180) deltaRa += 360;
+        const deltaRa = normalizeAngleDiff(star.ra - ra);
 
         const sx = centerX - deltaRa * pixelsPerDegree * cosDec;
         const sy = centerY - (star.dec - dec) * pixelsPerDegree;
@@ -1027,9 +1022,7 @@ export default function InteractiveSkyEngine() {
       let closestTargetToCenter = null;
 
       allCelestialTargets.forEach((target) => {
-        let deltaRa = target.ra - ra;
-        while (deltaRa > 180) deltaRa -= 360;
-        while (deltaRa < -180) deltaRa += 360;
+        const deltaRa = normalizeAngleDiff(target.ra - ra);
 
         let currentDeltaRa = deltaRa;
         let currentDec = target.dec;
@@ -1363,9 +1356,7 @@ export default function InteractiveSkyEngine() {
 
     // 1. Check Primary Celestial Targets (Planets, Moons, Anchors, Deep Sky)
     for (const target of allCelestialTargets) {
-      let deltaRa = target.ra - ra;
-      while (deltaRa > 180) deltaRa -= 360;
-      while (deltaRa < -180) deltaRa += 360;
+      const deltaRa = normalizeAngleDiff(target.ra - ra);
       const sx = w / 2 - deltaRa * pixelsPerDegree * cosDec;
       const sy = h / 2 - (target.dec - dec) * pixelsPerDegree;
       const hitRadius = target.isPlanet ? 26 : 18;
@@ -1384,9 +1375,7 @@ export default function InteractiveSkyEngine() {
     if (!found) {
       for (const star of backgroundStars) {
         if (star.mag > limitingMag + 0.5) continue;
-        let deltaRa = star.ra - ra;
-        while (deltaRa > 180) deltaRa -= 360;
-        while (deltaRa < -180) deltaRa += 360;
+        const deltaRa = normalizeAngleDiff(star.ra - ra);
         const sx = w / 2 - deltaRa * pixelsPerDegree * cosDec;
         const sy = h / 2 - (star.dec - dec) * pixelsPerDegree;
         if (Math.hypot(x - sx, y - sy) < 14) {
