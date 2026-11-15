@@ -530,12 +530,12 @@ export default function InteractiveSkyEngine() {
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0, ra: 0, dec: 0 });
   const [blinkEpoch, setBlinkEpoch] = useState('A');
-  const [cursorCoords, setCursorCoords] = useState({ ra: 0, dec: 0 });
   const [hoveredStar, setHoveredStar] = useState(null);
   const [showRealImagery, setShowRealImagery] = useState(false);
   const [nasaImage, setNasaImage] = useState(null);
   const [isImageryLoading, setIsImageryLoading] = useState(false);
   const [showEyepieceFrame, setShowEyepieceFrame] = useState(false);
+  const cursorDisplayRef = useRef(null);
   const dragInfoRef = useRef({ startX: 0, startY: 0, startTime: 0 });
 
   // Unified master celestial targets pool combining catalog anchors and solar system / deep space worlds
@@ -670,26 +670,52 @@ export default function InteractiveSkyEngine() {
   const backgroundStars = useMemo(() => {
     const stars = [];
     const spectralTypes = ['O', 'B', 'A', 'F', 'G', 'K', 'M'];
+    const maxVisibleMag = limitingMag + 0.5;
 
-    // 1. Regional Stars
-    const patchRadius = Math.max(1.5, fov * 1.4);
-    const minRa = Math.floor(ra - patchRadius);
-    const maxRa = Math.ceil(ra + patchRadius);
-    const minDec = Math.max(-90, Math.floor(dec - patchRadius));
-    const maxDec = Math.min(90, Math.ceil(dec + patchRadius));
+    // Scale grid step and density dynamically based on FOV to maintain silky 60+ FPS
+    let stepDeg = 1;
+    let starsPerCell = 18;
+    let patchRadius = Math.max(1.2, Math.min(18.0, fov * 0.85));
 
-    for (let r = minRa; r <= maxRa; r++) {
-      for (let d = minDec; d <= maxDec; d++) {
-        const cellSeed = ((((r % 360) + 360) % 360) * 1000 + (d + 90)) * 17;
-        const count = 35 + Math.floor(pseudoRandom(cellSeed) * 20);
+    if (fov > 25.0) {
+      stepDeg = 6;
+      starsPerCell = 8;
+    } else if (fov > 12.0) {
+      stepDeg = 4;
+      starsPerCell = 10;
+    } else if (fov > 5.0) {
+      stepDeg = 2;
+      starsPerCell = 14;
+    } else if (fov > 2.0) {
+      stepDeg = 1.5;
+      starsPerCell = 16;
+    }
+
+    const minRa = Math.floor((ra - patchRadius) / stepDeg) * stepDeg;
+    const maxRa = Math.ceil((ra + patchRadius) / stepDeg) * stepDeg;
+    const minDec = Math.max(-90, Math.floor((dec - patchRadius) / stepDeg) * stepDeg);
+    const maxDec = Math.min(90, Math.ceil((dec + patchRadius) / stepDeg) * stepDeg);
+
+    const MAX_REGIONAL_STARS = 1200;
+
+    outerLoop:
+    for (let r = minRa; r <= maxRa; r += stepDeg) {
+      for (let d = minDec; d <= maxDec; d += stepDeg) {
+        const normR = (((Math.round(r) % 360) + 360) % 360);
+        const normD = Math.round(d);
+        const cellSeed = (normR * 1000 + (normD + 90)) * 17;
+        const count = Math.max(4, Math.floor(starsPerCell * (0.8 + pseudoRandom(cellSeed) * 0.4)));
 
         for (let i = 0; i < count; i++) {
           const starSeed = cellSeed + i * 137.5;
-          const sRa = (((r + pseudoRandom(starSeed)) % 360) + 360) % 360;
-          const sDec = Math.max(-90, Math.min(90, d + pseudoRandom(starSeed + 1)));
-
           const p = pseudoRandom(starSeed + 2);
           const mag = 4.0 + Math.pow(p, 0.45) * 13.5;
+
+          // Prune stars too faint to be visible at current FOV before allocating memory
+          if (mag > maxVisibleMag) continue;
+
+          const sRa = (((normR + pseudoRandom(starSeed) * stepDeg) % 360) + 360) % 360;
+          const sDec = Math.max(-90, Math.min(90, normD + pseudoRandom(starSeed + 1) * stepDeg));
 
           const typeIdx = Math.floor(pseudoRandom(starSeed + 3) * spectralTypes.length);
           const type = spectralTypes[typeIdx];
@@ -699,31 +725,32 @@ export default function InteractiveSkyEngine() {
             dec: sDec,
             mag,
             type,
-            id: `star-${r}-${d}-${i}`,
+            id: `star-${normR}-${normD}-${i}`,
           });
+
+          if (stars.length >= MAX_REGIONAL_STARS) break outerLoop;
         }
       }
     }
 
     // 2. High-Density Deep-Field Sub-Arcminute Infrared Point Sources (when FOV < 3.0°)
-    // This solves "nothing really shows when you zoom in" by populating rich infrared cosmos
     if (fov < 3.0) {
-      const deepCount = Math.floor(Math.min(130, 45 + (3.0 - fov) * 45));
+      const deepCount = Math.floor(Math.min(70, 25 + (3.0 - fov) * 20));
       const deepSeed = (Math.floor(ra * 10) * 31337 + Math.floor(dec * 10) * 1337) % 100000;
       const fovRadius = fov * 0.92;
       const cosDec = Math.cos((dec * Math.PI) / 180);
+      const safeCosDec = Math.max(0.01, Math.abs(cosDec));
 
       for (let j = 0; j < deepCount; j++) {
         const sSeed = deepSeed + j * 97.31;
         const angle = pseudoRandom(sSeed) * Math.PI * 2;
         const dist = Math.sqrt(pseudoRandom(sSeed + 1)) * fovRadius;
 
-        const deltaRa = (Math.cos(angle) * dist) / Math.max(0.01, cosDec);
+        const deltaRa = (Math.cos(angle) * dist) / safeCosDec;
         const sRa = (((ra + deltaRa) % 360) + 360) % 360;
         const sDec = Math.max(-90, Math.min(90, dec + Math.sin(angle) * dist));
 
         const p = pseudoRandom(sSeed + 2);
-        // Faint infrared sources: magnitudes 11.5 to 18.0
         const mag = 11.5 + Math.pow(p, 0.55) * 6.5;
         const isGalaxy = pseudoRandom(sSeed + 3) > 0.88;
         const typeIdx = Math.floor(pseudoRandom(sSeed + 4) * spectralTypes.length);
@@ -740,7 +767,7 @@ export default function InteractiveSkyEngine() {
     }
 
     return stars;
-  }, [ra, dec, fov]);
+  }, [ra, dec, fov, limitingMag]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -845,22 +872,37 @@ export default function InteractiveSkyEngine() {
         const raStep = fov > 20 ? 15 : fov > 5 ? 2 : fov > 1 ? 0.5 : 0.1;
         const decStep = fov > 20 ? 10 : fov > 5 ? 2 : fov > 1 ? 0.5 : 0.1;
 
-        const minDec = Math.max(-90, dec - fov / 2);
-        const maxDec = Math.min(90, dec + fov / 2);
-        for (let d = Math.floor(minDec / decStep) * decStep; d <= maxDec; d += decStep) {
-          const y = centerY - (d - dec) * pixelsPerDegree;
-          ctx.beginPath();
-          ctx.moveTo(0, y);
-          ctx.lineTo(w, y);
-          ctx.stroke();
+        const safeCosDec = Math.max(0.01, Math.abs(cosDec));
+        const halfFovDec = fov * 0.65;
+        const minDec = Math.max(-90, dec - halfFovDec);
+        const maxDec = Math.min(90, dec + halfFovDec);
 
-          ctx.fillStyle = theme === 'dark' ? 'rgba(6, 182, 212, 0.75)' : 'rgba(15, 23, 42, 0.65)';
-          ctx.font = '600 11px "JetBrains Mono", monospace';
-          ctx.fillText(`${d >= 0 ? '+' : ''}${d.toFixed(d < 1 && d > -1 ? 2 : 1)}°`, 8, Math.round(y - 4));
+        const startDecStep = Math.floor(minDec / decStep);
+        const endDecStep = Math.ceil(maxDec / decStep);
+        for (let s = startDecStep; s <= endDecStep; s++) {
+          const d = s * decStep;
+          if (d < -90 || d > 90) continue;
+          const y = centerY - (d - dec) * pixelsPerDegree;
+          if (y >= 0 && y <= h) {
+            ctx.beginPath();
+            ctx.moveTo(0, y);
+            ctx.lineTo(w, y);
+            ctx.stroke();
+
+            ctx.fillStyle = theme === 'dark' ? 'rgba(6, 182, 212, 0.75)' : 'rgba(15, 23, 42, 0.65)';
+            ctx.font = '600 11px "JetBrains Mono", monospace';
+            ctx.fillText(`${d >= 0 ? '+' : ''}${d.toFixed(d < 1 && d > -1 ? 2 : 1)}°`, 8, Math.round(y - 4));
+          }
         }
 
-        for (let r = 0; r < 360; r += raStep) {
-          const deltaRa = normalizeAngleDiff(r - ra);
+        const halfFovRa = Math.min(180, (w / (pixelsPerDegree * safeCosDec)) * 0.65);
+        const startRaStep = Math.floor((ra - halfFovRa) / raStep);
+        const endRaStep = Math.ceil((ra + halfFovRa) / raStep);
+
+        for (let s = startRaStep; s <= endRaStep; s++) {
+          const r = s * raStep;
+          const normR = ((r % 360) + 360) % 360;
+          const deltaRa = normalizeAngleDiff(normR - ra);
 
           const x = centerX - deltaRa * pixelsPerDegree * cosDec;
           if (x >= 0 && x <= w) {
@@ -871,7 +913,7 @@ export default function InteractiveSkyEngine() {
 
             ctx.fillStyle = theme === 'dark' ? 'rgba(6, 182, 212, 0.75)' : 'rgba(15, 23, 42, 0.65)';
             ctx.font = '600 11px "JetBrains Mono", monospace';
-            const hours = (r / 15).toFixed(1);
+            const hours = (normR / 15).toFixed(1);
             ctx.fillText(`${hours}h`, Math.round(x + 4), Math.round(h - 8));
           }
         }
@@ -1333,21 +1375,25 @@ export default function InteractiveSkyEngine() {
     const h = rect.height;
     const pixelsPerDegree = Math.min(w, h) / fov;
     const cosDec = Math.cos((dec * Math.PI) / 180);
+    const safeCosDec = Math.max(0.01, Math.abs(cosDec));
 
-    const hoverDec = dec - (y - h / 2) / pixelsPerDegree;
-    const hoverRa = (ra - (x - w / 2) / (pixelsPerDegree * cosDec) + 360) % 360;
+    const hoverDec = Math.max(-90, Math.min(90, dec - (y - h / 2) / pixelsPerDegree));
+    const hoverRa = (ra - (x - w / 2) / (pixelsPerDegree * safeCosDec) + 360) % 360;
 
-    setCursorCoords({ ra: hoverRa, dec: hoverDec });
+    if (cursorDisplayRef.current) {
+      cursorDisplayRef.current.textContent = `CURSOR: RA ${hoverRa.toFixed(4)}° · DEC ${hoverDec >= 0 ? '+' : ''}${hoverDec.toFixed(4)}°`;
+    }
 
     if (isDragging) {
       const dx = e.clientX - dragStart.x;
       const dy = e.clientY - dragStart.y;
 
+      const dragCosDec = Math.max(0.01, Math.abs(Math.cos((dragStart.dec * Math.PI) / 180)));
       const newDec = Math.max(-90, Math.min(90, dragStart.dec + dy / pixelsPerDegree));
-      const newRa = (dragStart.ra + (dx / pixelsPerDegree) / cosDec + 360) % 360;
+      const newRa = (dragStart.ra + (dx / pixelsPerDegree) / dragCosDec + 360) % 360;
 
       setPosition(newRa, newDec, null);
-      setHoveredStar(null);
+      if (hoveredStar) setHoveredStar(null);
       return;
     }
 
@@ -1408,8 +1454,9 @@ export default function InteractiveSkyEngine() {
     const h = rect.height;
     const pixelsPerDegree = Math.min(w, h) / fov;
     const cosDec = Math.cos((dec * Math.PI) / 180);
-    const clickDec = dec - (y - h / 2) / pixelsPerDegree;
-    const clickRa = (ra - (x - w / 2) / (pixelsPerDegree * cosDec) + 360) % 360;
+    const safeCosDec = Math.max(0.01, Math.abs(cosDec));
+    const clickDec = Math.max(-90, Math.min(90, dec - (y - h / 2) / pixelsPerDegree));
+    const clickRa = (ra - (x - w / 2) / (pixelsPerDegree * safeCosDec) + 360) % 360;
 
     // Slew and zoom in to target
     setFov(Math.max(0.05, fov * 0.45));
@@ -1734,7 +1781,7 @@ export default function InteractiveSkyEngine() {
 
       {/* Bottom Right: Cursor Coordinates Readout */}
       <div className="absolute bottom-3 right-3 px-3 py-2 rounded-xl bg-white/90 dark:bg-slate-900/80 border border-slate-300 dark:border-white/10 shadow-xl backdrop-blur-md font-mono text-[11px] text-slate-500 dark:text-slate-400 z-10 pointer-events-none">
-        <span>CURSOR: RA {cursorCoords.ra.toFixed(4)}° · DEC {cursorCoords.dec >= 0 ? '+' : ''}{cursorCoords.dec.toFixed(4)}°</span>
+        <span ref={cursorDisplayRef}>CURSOR: RA {ra.toFixed(4)}° · DEC {dec >= 0 ? '+' : ''}{dec.toFixed(4)}°</span>
       </div>
     </div>
   );

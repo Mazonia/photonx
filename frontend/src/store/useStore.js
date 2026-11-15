@@ -102,16 +102,23 @@ const useStore = create((set, get) => ({
   setSurveyLayer: (layer) => set({ surveyLayer: layer }),
   setIsBlinking: (val) => set({ isBlinking: typeof val === 'boolean' ? val : !get().isBlinking }),
   setBlinkSpeedMs: (ms) => set({ blinkSpeedMs: ms }),
-  setFov: (fov) => set({ fov: Math.max(0.1, Math.min(60, fov)) }),
+  setFov: (fov) => {
+    const validFov = Number.isFinite(fov) ? Math.max(0.05, Math.min(45, fov)) : 1.2;
+    set({ fov: validFov });
+  },
   toggleGrid: () => set((s) => ({ showGrid: !s.showGrid })),
   toggleConstellations: () => set((s) => ({ showConstellations: !s.showConstellations })),
   toggleMoversOverlay: () => set((s) => ({ showMoversOverlay: !s.showMoversOverlay })),
 
-  setPosition: (ra, dec, name) => set({
-    ra: (ra + 360) % 360,
-    dec: Math.max(-90, Math.min(90, dec)),
-    targetName: name || `Target (${ra.toFixed(4)}°, ${dec >= 0 ? '+' : ''}${dec.toFixed(4)}°)`,
-  }),
+  setPosition: (ra, dec, name) => {
+    const validRa = Number.isFinite(ra) ? ((ra % 360) + 360) % 360 : 269.4521;
+    const validDec = Number.isFinite(dec) ? Math.max(-90, Math.min(90, dec)) : 4.6933;
+    set({
+      ra: validRa,
+      dec: validDec,
+      targetName: name || `Target (${validRa.toFixed(4)}°, ${validDec >= 0 ? '+' : ''}${validDec.toFixed(4)}°)`,
+    });
+  },
 
   setActiveEpoch: (epoch) => set({ activeEpoch: epoch }),
   setCompareEpoch: (epoch) => set({ compareEpoch: epoch }),
