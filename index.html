@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="PhotonX — NASA Space Apps Challenge 2026. Interactive SPHEREx infrared sky browser with 102-band spectral analysis and temporal blink comparator." />
+    <meta name="theme-color" content="#0B1E26" />
+
+    <!-- Security Headers & Anti-Caching for GitHub Pages -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <meta http-equiv="referrer" content="strict-origin-when-cross-origin" />
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+
+    <title>PhotonX · SPHEREx Infrared Sky Observatory</title>
+
+    <!-- Google Fonts: Plus Jakarta Sans (warm, human, clean) + Outfit (natural coastal display) + JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Modern Coastal Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='46' fill='%230B1E26' stroke='%234DAEA2' stroke-width='6'/><circle cx='50' cy='50' r='18' fill='%23D4A359'/><line x1='50' y1='10' x2='50' y2='90' stroke='%234DAEA2' stroke-width='3'/><line x1='10' y1='50' x2='90' y2='50' stroke='%234DAEA2' stroke-width='3'/></svg>" />
+
+    <!-- Resilient DOM Mutation Guard for React 18, StrictMode & Browser Extensions -->
+    <script>
+      (function() {
+        if (typeof Node !== 'undefined' && Node.prototype) {
+          var origRemoveChild = Node.prototype.removeChild;
+          Node.prototype.removeChild = function(child) {
+            try {
+              return origRemoveChild.apply(this, arguments);
+            } catch (err) {
+              if (err && err.name === 'NotFoundError') {
+                if (child && child.parentNode && child.parentNode !== this) {
+                  return child.parentNode.removeChild(child);
+                }
+                return child;
+              }
+              throw err;
+            }
+          };
+
+          var origInsertBefore = Node.prototype.insertBefore;
+          Node.prototype.insertBefore = function(newNode, referenceNode) {
+            try {
+              return origInsertBefore.apply(this, arguments);
+            } catch (err) {
+              if (err && err.name === 'NotFoundError') {
+                return this.appendChild(newNode);
+              }
+              throw err;
+            }
+          };
+        }
+      })();
+    </script>
+
+    <!-- Instant Dark Theme Initialization Script -->
+    <script>
+      (function() {
+        try {
+          var t = localStorage.getItem('photonx-theme') || 'dark';
+          if (t === 'dark') {
+            document.documentElement.classList.add('dark');
+          } else {
+            document.documentElement.classList.remove('dark');
+          }
+        } catch (e) {
+          document.documentElement.classList.add('dark');
+        }
+      })();
+    </script>
+    <script type="module" crossorigin src="./assets/index-D2pkp3dT.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-BupSeG7z.css">
+  </head>
+  <body class="bg-space-950 text-slate-100 antialiased selection:bg-ocean-500/30 selection:text-white">
+    <div id="root"></div>
+  </body>
+</html>
