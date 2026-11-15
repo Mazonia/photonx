@@ -42,10 +42,10 @@
 
 - **What Is PhotonX?** A zero-install, GPU-accelerated web platform that transforms raw SPHEREx time-series data into an intuitive, interactive celestial laboratory.
 - **Core Value Proposition:**
-  1. **Explore:** Freely navigate the near-infrared universe with 102-band spectral sensitivity.
+  1. **Explore:** Freely navigate the near-infrared universe with 102-band spectral sensitivity, featuring an interactive Cosmic Worlds Navigator (Solar System planets, habitable exoworlds, and all 88 constellations).
   2. **Compare:** Scrub through 6-month survey cadences to detect minute positional shifts.
   3. **Discover:** Flag moving anomalies, verify spectral signatures, and export scientific briefs.
-- **Dual Visual Modes:** Built with an infrared observatory dark theme and a cleanroom spec sheet mode.
+- **Dual Visual Modes:** Built with an organic Beach Sand & Ocean Water palette, eliminating harsh AI styling.
 
 > *Speaker Note (0:08 - 0:13):*
 > "PhotonX bridges this divide. It is a high-performance web platform that turns massive SPHEREx datasets into an intuitive discovery engine where anyone can spot anomalies and track moving bodies."

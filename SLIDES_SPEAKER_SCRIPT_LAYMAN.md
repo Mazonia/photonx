@@ -140,7 +140,9 @@ PhotonX is our free, interactive web app that takes this huge mountain of infrar
 >
 > *Second, we integrated the **Clyde Tombaugh Blink Comparator**. By tapping the Spacebar, you rapidly flip between two sky photos taken six months apart. Stationary stars stay locked in place, but any moving body—like an asteroid or Planet X—visibly jumps back and forth before your eyes.*
 >
-> *Third, clicking on any object instantly extracts its **102-channel infrared spectrum**, revealing chemical fingerprints like water frost, methane ice, or carbon dioxide ice in real time."*
+> *Third, clicking on any object instantly extracts its **102-channel infrared spectrum**, revealing chemical fingerprints like water frost, methane ice, or carbon dioxide ice in real time.*
+>
+> *And with our **Cosmic Worlds Navigator**, anyone can jump with one click to explore Solar System worlds like Mars, Jupiter, and Saturn, or travel to habitable exoplanets like TRAPPIST-1 and Proxima b."*
 
 ---
 

@@ -8,6 +8,7 @@ import StarField from './components/StarField';
 import InitializationScreen from './components/InitializationScreen';
 import CosmicExplorerTour from './components/CosmicExplorerTour';
 import AppTutorialModal from './components/AppTutorialModal';
+import CosmicNavigatorModal from './components/CosmicNavigatorModal';
 
 export default function App() {
   const {
@@ -16,6 +17,8 @@ export default function App() {
     isTutorialOpen,
     openTutorial,
     closeTutorial,
+    isNavigatorOpen,
+    closeNavigator,
     toggleTheme,
     setIsBlinking,
     isBlinking,
@@ -138,6 +141,9 @@ export default function App() {
 
       {/* Interactive Guided Cosmic Tour for Kids & Beginners */}
       <CosmicExplorerTour isOpen={isTourOpen} onClose={closeTour} />
+
+      {/* Cosmic World Navigator: Solar Systems, Planets, Exoworlds & Deep Space */}
+      <CosmicNavigatorModal isOpen={isNavigatorOpen} onClose={closeNavigator} />
     </div>
   );
 }

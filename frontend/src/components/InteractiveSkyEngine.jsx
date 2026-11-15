@@ -16,6 +16,7 @@ import {
   Scan,
   Eye,
   Camera,
+  Orbit,
 } from 'lucide-react';
 
 // Curated bright anchor stars & famous benchmarks with astrophysics metadata
@@ -56,6 +57,120 @@ const CATALOG_STARS = [
     shiftRa: 0.0062,
     shiftDec: -0.0089,
     notes: 'Closest known stellar neighbor (4.24 ly). Flare star.',
+  },
+  // Solar System Worlds
+  {
+    name: "Mars",
+    bayer: "Red Planet",
+    ra: 75.4,
+    dec: 24.1,
+    mag: -1.2,
+    type: 'Planet',
+    isPlanet: true,
+    notes: 'Terrestrial planet. Iron oxide regolith, Olympus Mons, seasonal polar frost.',
+  },
+  {
+    name: "Jupiter",
+    bayer: "Gas Giant",
+    ra: 52.8,
+    dec: 17.2,
+    mag: -2.7,
+    type: 'Planet',
+    isPlanet: true,
+    notes: 'Largest planet in Solar System. Great Red Spot & 95 known moons.',
+  },
+  {
+    name: "Saturn",
+    bayer: "Ringed World",
+    ra: 347.1,
+    dec: -8.4,
+    mag: 0.6,
+    type: 'Planet',
+    isPlanet: true,
+    notes: 'Jeweled gas giant with spectacular water-ice ring system & Titan.',
+  },
+  {
+    name: "Neptune",
+    bayer: "Ice Giant",
+    ra: 358.5,
+    dec: -2.3,
+    mag: 7.8,
+    type: 'Planet',
+    isPlanet: true,
+    notes: 'Outermost major planet with deep azure methane clouds & supersonic winds.',
+  },
+  {
+    name: "Pluto",
+    bayer: "Kuiper Belt",
+    ra: 301.2,
+    dec: -22.8,
+    mag: 15.1,
+    type: 'Planet',
+    isPlanet: true,
+    notes: 'Kuiper Belt dwarf planet with nitrogen-ice glaciers (Tombaugh Regio).',
+  },
+  {
+    name: "Planet Nine (Hypothetical)",
+    bayer: "Planet X Candidate",
+    ra: 75.0,
+    dec: 15.0,
+    mag: 22.5,
+    type: 'Planet',
+    isPlanet: true,
+    mover: true,
+    shiftRa: 0.0035,
+    shiftDec: 0.0021,
+    notes: 'Hypothetical 5-10 M⊕ super-Earth in ~400-800 AU orbit. Prime SPHEREx mover target.',
+  },
+  {
+    name: "Europa",
+    bayer: "Jupiter II",
+    ra: 52.8,
+    dec: 17.2,
+    mag: 5.3,
+    type: 'Planet',
+    isPlanet: true,
+    notes: 'Global subsurface liquid water ocean (100 km deep) beneath 20-km ice shell.',
+  },
+  {
+    name: "Titan",
+    bayer: "Saturn VI",
+    ra: 347.1,
+    dec: -8.4,
+    mag: 8.4,
+    type: 'Planet',
+    isPlanet: true,
+    notes: '1.5-bar dense nitrogen atmosphere with liquid methane and ethane seas.',
+  },
+  {
+    name: "Proxima b",
+    bayer: "α Cen Cb",
+    ra: 217.4289,
+    dec: -62.6795,
+    mag: 11.13,
+    type: 'Exoplanet',
+    isExoplanet: true,
+    notes: 'Habitable-zone rocky exoplanet around closest star (4.25 ly).',
+  },
+  {
+    name: "Kepler-186f",
+    bayer: "KOI-571.05",
+    ra: 298.6521,
+    dec: 43.9550,
+    mag: 14.6,
+    type: 'Exoplanet',
+    isExoplanet: true,
+    notes: 'First validated Earth-sized planet in stellar habitable zone.',
+  },
+  {
+    name: "Kepler-452b",
+    bayer: "Earth 2.0",
+    ra: 296.0250,
+    dec: 44.2778,
+    mag: 13.4,
+    type: 'Exoplanet',
+    isExoplanet: true,
+    notes: "Earth's Older Cousin orbiting G2V solar twin star in 385-day orbit.",
   },
   {
     name: "TRAPPIST-1",
@@ -267,6 +382,8 @@ const SPECTRAL_COLORS = {
   Nebula: { dark: '#2DD4BF', light: '#0F766E', glow: 'rgba(45, 212, 191, 0.3)' },
   Cluster: { dark: '#FDE047', light: '#B45309', glow: 'rgba(253, 224, 71, 0.3)' },
   BlackHole: { dark: '#E879F9', light: '#86198F', glow: 'rgba(232, 121, 249, 0.3)' },
+  Planet: { dark: '#F59E0B', light: '#D97706', glow: 'rgba(245, 158, 11, 0.5)' },
+  Exoplanet: { dark: '#2DD4BF', light: '#0D9488', glow: 'rgba(45, 212, 191, 0.5)' },
 };
 
 function pseudoRandom(seed) {
@@ -326,6 +443,7 @@ export default function InteractiveSkyEngine() {
     showMoversOverlay,
     toggleMoversOverlay,
     setSelectedObject,
+    openNavigator,
   } = useStore();
 
   const [isDragging, setIsDragging] = useState(false);
@@ -1193,6 +1311,15 @@ export default function InteractiveSkyEngine() {
             </>
           )}
         </div>
+
+        {/* Quick Cosmic Worlds & Systems Navigator Pill */}
+        <button
+          onClick={openNavigator}
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/35 text-xs font-mono font-bold text-amber-800 dark:text-amber-300 shadow-md backdrop-blur-md transition-all duration-200 pointer-events-auto w-fit"
+        >
+          <Orbit className="w-3.5 h-3.5 text-amber-500 animate-spin-slow" />
+          <span>Explore Planets & Systems</span>
+        </button>
       </div>
 
       {/* Top Right: Observatory Controls (Blink, Real Imagery, Grid, Zoom) */}

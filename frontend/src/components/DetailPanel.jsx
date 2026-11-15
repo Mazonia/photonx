@@ -9,12 +9,14 @@ import HuntMode from './HuntMode';
 import LoadingPulse from './LoadingPulse';
 import NasaDashboard from './NasaDashboard';
 import Tooltip from './Tooltip';
+import { resolveCelestialTarget } from '../data/celestialCatalog';
 import {
   Telescope,
   Sparkles,
   Target,
   Globe2,
   Rocket,
+  Orbit,
 } from 'lucide-react';
 
 export default function DetailPanel() {
@@ -72,6 +74,11 @@ export default function DetailPanel() {
     enabled: !!ra && !!dec,
   });
 
+  // Check if current target matches a known solar system planet, exoplanet, or benchmark
+  const celestialInfo = React.useMemo(() => {
+    return resolveCelestialTarget(targetName);
+  }, [targetName]);
+
   return (
     <div data-tour="detail-panel" className="flex flex-col h-full bg-sand-50/95 dark:bg-space-900/80 backdrop-blur-xl border-l border-sand-300 dark:border-ocean-900/60 overflow-y-auto transition-colors duration-200">
       {/* Target Header Banner */}
@@ -106,6 +113,42 @@ export default function DetailPanel() {
         <div className="flex flex-col gap-4 p-4">
           {/* Real-time Atmospheric Observability Widget (when toggled via Header) */}
           {showObservability && <ObservabilityWidget />}
+
+          {/* Planetary & Exoworld Science Profile (when observing a planet, exoplanet, or benchmark) */}
+          {celestialInfo && (
+            <div className="p-3.5 rounded-2xl bg-white dark:bg-space-950/70 border border-sand-200 dark:border-ocean-900/60 shadow-sm dark:shadow-xl backdrop-blur-md animate-in fade-in">
+              <div className="flex items-center justify-between gap-2 mb-2">
+                <div className="flex items-center gap-2">
+                  <Orbit className="w-4 h-4 text-amber-500 animate-spin-slow" />
+                  <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-sand-900 dark:text-sand-100">
+                    World Science Profile
+                  </h3>
+                </div>
+                <span className="font-mono text-[10px] font-bold px-2 py-0.5 rounded-full bg-ocean-500/15 text-ocean-700 dark:text-ocean-300 border border-ocean-500/30">
+                  {celestialInfo.category || celestialInfo.type}
+                </span>
+              </div>
+
+              <p className="text-xs text-sand-700 dark:text-sand-300 font-sans leading-relaxed mb-2.5">
+                {celestialInfo.desc}
+              </p>
+
+              {celestialInfo.orbit && (
+                <div className="flex items-center gap-2 p-2 rounded-xl bg-sand-100 dark:bg-space-900/90 border border-sand-200 dark:border-ocean-900/40 text-[11px] font-mono text-sand-800 dark:text-sand-200 mb-2">
+                  <Orbit className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+                  <span className="font-semibold text-ocean-700 dark:text-ocean-300">Orbit / Distance:</span>
+                  <span className="truncate">{celestialInfo.orbit}</span>
+                </div>
+              )}
+
+              {celestialInfo.funFact && (
+                <div className="flex items-start gap-2 p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-[11px] font-sans text-amber-900 dark:text-amber-200 leading-snug">
+                  <Sparkles className="w-3.5 h-3.5 text-amber-500 shrink-0 mt-0.5" />
+                  <span>{celestialInfo.funFact}</span>
+                </div>
+              )}
+            </div>
+          )}
 
           {/* FITS Spectral Tile & Cutout Card */}
           <div className="p-3.5 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-white/10 shadow-sm dark:shadow-xl backdrop-blur-md">

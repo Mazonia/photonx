@@ -15,6 +15,7 @@ import {
   Presentation,
   Keyboard,
   GraduationCap,
+  Orbit,
 } from 'lucide-react';
 
 export default function Header() {
@@ -26,6 +27,7 @@ export default function Header() {
     toggleTheme,
     openTour,
     openTutorial,
+    openNavigator,
   } = useStore();
 
   const [isShortcutsOpen, setIsShortcutsOpen] = useState(false);
@@ -141,6 +143,18 @@ export default function Header() {
               </button>
             </Tooltip>
           </div>
+
+          {/* Cosmic World Navigator Button (Planets & Systems) */}
+          <Tooltip position="bottom" content="Explore Solar System planets, habitable exoworlds, and Planet X candidates" tag="WORLDS & SYSTEMS">
+            <button
+              onClick={openNavigator}
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border border-amber-500/40 bg-amber-500/10 hover:bg-amber-500/20 text-xs font-mono font-bold text-amber-700 dark:text-amber-300 transition-all shadow-sm"
+              aria-label="Open Cosmic World Navigator"
+            >
+              <Orbit className="w-4 h-4 text-amber-600 dark:text-amber-400" />
+              <span className="hidden sm:inline">Planets & Systems</span>
+            </button>
+          </Tooltip>
 
           {/* Interactive Tutorial Button (Always available for both first-time and constant visitors) */}
           <Tooltip position="bottom" content="Take a step-by-step interactive tutorial explaining what every button and section shows" tag="HOW IT WORKS">

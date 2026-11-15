@@ -250,6 +250,9 @@ def create_deck(output_path="PhotonX_Official_Presentation.pptx"):
         "Interactive GPU Sky Engine:",
         "Pan and zoom smoothly across celestial coordinates (RA/Dec) from full constellations down to 0.05° deep sky fields.",
         "",
+        "Cosmic Worlds Navigator:",
+        "1-click navigation across Solar System planets (Mars, Jupiter, Saturn, Pluto), habitable exoworlds (TRAPPIST-1, Proxima b), and all 88 constellations.",
+        "",
         "Clyde Tombaugh Blink Comparator:",
         "Press Spacebar to rapidly alternate between 6-month survey epochs. Moving bodies leap off the screen to the human eye.",
         "",
@@ -259,9 +262,9 @@ def create_deck(output_path="PhotonX_Official_Presentation.pptx"):
 
     add_speaker_note(s3, (
         "PhotonX is our solution. It runs directly in the browser with zero installation. "
-        "Users can pan and zoom through the infrared cosmos. With one tap of the spacebar, our Clyde Tombaugh blink engine "
-        "alternates between 6-month survey passes, making moving objects stand out immediately. And clicking any point instantly "
-        "plots a 102-channel spectrophotometric curve that reveals the body's ice composition."
+        "Users can pan and zoom through the infrared cosmos, or use our Cosmic Worlds Navigator to jump to planets and exoworlds. "
+        "With one tap of the spacebar, our Clyde Tombaugh blink engine alternates between 6-month survey passes, making moving objects stand out immediately. "
+        "And clicking any point instantly plots a 102-channel spectrophotometric curve that reveals the body's ice composition."
     ))
 
     # =========================================================================

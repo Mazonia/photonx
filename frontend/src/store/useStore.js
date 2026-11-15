@@ -72,6 +72,7 @@ const useStore = create((set, get) => ({
   mode: 'explore',
   isTourOpen: false,
   isTutorialOpen: false,
+  isNavigatorOpen: false,
 
   // Detail panel
   selectedObject: null,
@@ -124,6 +125,9 @@ const useStore = create((set, get) => ({
   openTutorial: () => set({ isTutorialOpen: true }),
   closeTutorial: () => set({ isTutorialOpen: false }),
   toggleTutorial: () => set((s) => ({ isTutorialOpen: !s.isTutorialOpen })),
+  openNavigator: () => set({ isNavigatorOpen: true }),
+  closeNavigator: () => set({ isNavigatorOpen: false }),
+  toggleNavigator: () => set((s) => ({ isNavigatorOpen: !s.isNavigatorOpen })),
   setObserverLocation: (lat, lon) => set({ observerLat: lat, observerLon: lon }),
   setEpochs: (epochs) => set({ epochs }),
 

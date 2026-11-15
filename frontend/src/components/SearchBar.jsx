@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { api } from '../api/client';
 import useStore from '../store/useStore';
-import { getSearchSuggestions, resolveCelestialTarget } from '../data/celestialCatalog';
-import { Search, Loader2, Sparkles, X, Compass, Star, Globe, Orbit, ArrowRight } from 'lucide-react';
+import { getSearchSuggestions, resolveCelestialTarget, MASTER_CELESTIAL_TARGETS } from '../data/celestialCatalog';
+import { Search, Loader2, Sparkles, X, Compass, Star, Globe, Orbit, ArrowRight, Sun, Moon as MoonIcon } from 'lucide-react';
 
 export default function SearchBar() {
   const [query, setQuery] = useState('');
@@ -10,15 +10,39 @@ export default function SearchBar() {
   const [error, setError] = useState(null);
   const [isFocused, setIsFocused] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
+  const [categoryFilter, setCategoryFilter] = useState('all'); // 'all' | 'solar' | 'exoplanet' | 'star' | 'constellation'
   const inputRef = useRef(null);
   const dropdownRef = useRef(null);
 
   const { setPosition, setSelectedObject } = useStore();
 
   // Compute live typeahead suggestions
-  const suggestions = useMemo(() => {
-    return getSearchSuggestions(query, 8);
+  const rawSuggestions = useMemo(() => {
+    return getSearchSuggestions(query, 16);
   }, [query]);
+
+  // Apply category filtering if selected
+  const suggestions = useMemo(() => {
+    if (categoryFilter === 'all') return rawSuggestions.slice(0, 8);
+    return rawSuggestions
+      .filter((item) => {
+        const cat = (item.category || '').toLowerCase();
+        if (categoryFilter === 'solar') {
+          return cat.includes('solar') || cat.includes('planet') || cat.includes('moon');
+        }
+        if (categoryFilter === 'exoplanet') {
+          return cat.includes('exoplanet') || cat.includes('system');
+        }
+        if (categoryFilter === 'constellation') {
+          return cat.includes('constellation');
+        }
+        if (categoryFilter === 'deep') {
+          return cat.includes('galaxy') || cat.includes('nebula') || cat.includes('deep') || cat.includes('analog') || cat.includes('black hole');
+        }
+        return true;
+      })
+      .slice(0, 8);
+  }, [rawSuggestions, categoryFilter]);
 
   // Hotkey '/' to focus search, and click outside to close dropdown
   useEffect(() => {
@@ -48,10 +72,10 @@ export default function SearchBar() {
     };
   }, []);
 
-  // Reset keyboard selection index when query changes
+  // Reset keyboard selection index when query or category changes
   useEffect(() => {
     setSelectedIndex(-1);
-  }, [query]);
+  }, [query, categoryFilter]);
 
   // Jump to specific celestial target
   const selectTarget = (target) => {
@@ -64,6 +88,8 @@ export default function SearchBar() {
       dec: target.dec,
       object_type: target.category || target.type || 'Celestial Object',
       description: target.desc || `Celestial target at RA ${target.ra.toFixed(4)}°, Dec ${target.dec >= 0 ? '+' : ''}${target.dec.toFixed(4)}°`,
+      orbit: target.orbit,
+      funFact: target.funFact,
     });
     setQuery('');
     setIsFocused(false);
@@ -105,7 +131,7 @@ export default function SearchBar() {
         desc: result.description,
       });
     } catch (err) {
-      setError(err.message || `Could not find "${cleanQuery}". Try "Proxima Centauri", "Orion", or "217.43, -62.68".`);
+      setError(err.message || `Could not find "${cleanQuery}". Try "Mars", "Proxima b", "TRAPPIST-1", or "Orion".`);
       setTimeout(() => setError(null), 5500);
     } finally {
       setLoading(false);
@@ -132,31 +158,52 @@ export default function SearchBar() {
   // Category badge helper
   const getCategoryBadge = (category = '') => {
     const cat = category.toLowerCase();
+    if (cat.includes('solar') || cat.includes('planet')) {
+      return {
+        label: 'Solar System',
+        icon: Orbit,
+        className: 'bg-amber-100 text-amber-900 dark:bg-amber-950/80 dark:text-amber-300 border-amber-300/80 dark:border-amber-700/80',
+      };
+    }
+    if (cat.includes('exoplanet') || cat.includes('world') || cat.includes('system')) {
+      return {
+        label: 'Exoplanet World',
+        icon: Globe,
+        className: 'bg-teal-100 text-teal-900 dark:bg-teal-950/80 dark:text-teal-300 border-teal-300/80 dark:border-teal-700/80',
+      };
+    }
+    if (cat.includes('moon') || cat.includes('satellite')) {
+      return {
+        label: 'Moon',
+        icon: MoonIcon,
+        className: 'bg-slate-200 text-slate-800 dark:bg-slate-800 dark:text-slate-200 border-slate-300 dark:border-slate-700',
+      };
+    }
     if (cat.includes('constellation')) {
       return {
         label: 'Constellation',
         icon: Compass,
-        className: 'bg-amber-100 text-amber-800 dark:bg-amber-950/70 dark:text-amber-300 border-amber-300/80 dark:border-amber-800/80',
+        className: 'bg-sky-100 text-sky-900 dark:bg-sky-950/80 dark:text-sky-300 border-sky-300/80 dark:border-sky-700/80',
       };
     }
     if (cat.includes('nearest') || cat.includes('bright') || cat.includes('star')) {
       return {
         label: category || 'Star',
         icon: Star,
-        className: 'bg-ocean-100 text-ocean-800 dark:bg-ocean-950/70 dark:text-ocean-300 border-ocean-300/80 dark:border-ocean-800/80',
+        className: 'bg-ocean-100 text-ocean-900 dark:bg-ocean-950/80 dark:text-ocean-300 border-ocean-300/80 dark:border-ocean-700/80',
       };
     }
     if (cat.includes('galaxy') || cat.includes('nebula') || cat.includes('deep')) {
       return {
         label: category || 'Deep Sky',
-        icon: Globe,
-        className: 'bg-purple-100 text-purple-800 dark:bg-purple-950/70 dark:text-purple-300 border-purple-300/80 dark:border-purple-800/80',
+        icon: Sparkles,
+        className: 'bg-purple-100 text-purple-900 dark:bg-purple-950/80 dark:text-purple-300 border-purple-300/80 dark:border-purple-700/80',
       };
     }
     return {
       label: category || 'Planet X Analog',
       icon: Orbit,
-      className: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950/70 dark:text-emerald-300 border-emerald-300/80 dark:border-emerald-800/80',
+      className: 'bg-emerald-100 text-emerald-900 dark:bg-emerald-950/80 dark:text-emerald-300 border-emerald-300/80 dark:border-emerald-700/80',
     };
   };
 
@@ -178,7 +225,7 @@ export default function SearchBar() {
           onChange={(e) => setQuery(e.target.value)}
           onFocus={() => setIsFocused(true)}
           onKeyDown={handleKeyDownInput}
-          placeholder="Search stars, constellations & coordinates (e.g. Proxima Centauri, Orion, M31)..."
+          placeholder="Search solar systems, exoplanets, stars & coordinates (e.g. Mars, TRAPPIST-1, Proxima b)..."
           className="w-full pl-10 pr-16 py-2.5 text-xs font-mono rounded-xl bg-sand-50/90 dark:bg-space-950/85 border border-sand-300 dark:border-ocean-800/70 text-sand-900 dark:text-sand-100 placeholder:text-sand-500 dark:placeholder:text-ocean-300/50 focus:outline-none focus:border-ocean-500 focus:ring-2 focus:ring-ocean-500/25 transition-all shadow-inner"
           disabled={loading}
           autoComplete="off"
@@ -210,13 +257,37 @@ export default function SearchBar() {
       {isFocused && (
         <div
           ref={dropdownRef}
-          className="absolute top-full left-0 right-0 mt-2 p-2 rounded-2xl bg-sand-50/98 dark:bg-space-900/98 border border-sand-300 dark:border-ocean-800/90 shadow-2xl backdrop-blur-xl z-50 animate-in fade-in slide-in-from-top-1"
+          className="absolute top-full left-0 right-0 mt-2 p-2.5 rounded-2xl bg-sand-50/98 dark:bg-space-900/98 border border-sand-300 dark:border-ocean-800/90 shadow-2xl backdrop-blur-xl z-50 animate-in fade-in slide-in-from-top-1"
           onMouseDown={(e) => e.preventDefault()} // Prevent blur before clicking option
         >
-          <div className="flex items-center justify-between px-2.5 py-1.5 mb-1 border-b border-sand-200 dark:border-ocean-900/80 text-[10px] font-mono text-sand-600 dark:text-ocean-300/80 uppercase tracking-wider">
+          {/* Quick Category Filter Pills */}
+          <div className="flex items-center gap-1 overflow-x-auto pb-1.5 mb-1.5 border-b border-sand-200 dark:border-ocean-900/60 custom-scrollbar">
+            {[
+              { id: 'all', label: 'All Targets' },
+              { id: 'solar', label: '🪐 Solar System' },
+              { id: 'exoplanet', label: '🌟 Exoplanets' },
+              { id: 'constellation', label: '✨ Constellations' },
+              { id: 'deep', label: '🌠 Deep Space' },
+            ].map((pill) => (
+              <button
+                key={pill.id}
+                type="button"
+                onClick={() => setCategoryFilter(pill.id)}
+                className={`px-2 py-0.5 rounded-lg text-[10px] font-mono font-semibold whitespace-nowrap transition-all ${
+                  categoryFilter === pill.id
+                    ? 'bg-ocean-500 text-white shadow-sm'
+                    : 'bg-sand-200/60 dark:bg-space-950/80 text-sand-700 dark:text-sand-300 hover:bg-sand-300/60 dark:hover:bg-space-800'
+                }`}
+              >
+                {pill.label}
+              </button>
+            ))}
+          </div>
+
+          <div className="flex items-center justify-between px-2 py-1 mb-1 text-[10px] font-mono text-sand-600 dark:text-ocean-300/80 uppercase tracking-wider">
             <span className="flex items-center gap-1.5">
               <Sparkles className="w-3 h-3 text-ocean-500 dark:text-ocean-400" />
-              {query.trim().length === 0 ? 'Curated Celestial Anchors' : `Matched Catalog Targets (${suggestions.length})`}
+              {query.trim().length === 0 ? 'Featured Celestial Destinations' : `Matched Catalog Targets (${suggestions.length})`}
             </span>
             <span className="text-[9px] lowercase text-sand-400 dark:text-ocean-400/60 hidden sm:inline">
               ↑↓ to navigate • ↵ to jump
