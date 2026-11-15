@@ -714,8 +714,8 @@ export const MASTER_CELESTIAL_TARGETS = [
     category: 'High Proper Motion',
   },
   {
-    name: 'WISE 0855−0714',
-    aliases: ['WISE 0855', 'WISE J085510.83-071442.5', 'WISE0855'],
+    name: 'WISE 0855-0714',
+    aliases: ['WISE 0855', 'WISE J085510.83-071442.5', 'WISE0855', 'WISE 0855-0714'],
     ra: 133.7933,
     dec: -7.2451,
     mag: 14.2,

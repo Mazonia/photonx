@@ -13,7 +13,7 @@ import {
   ALL_CONSTELLATIONS,
   MASTER_CELESTIAL_TARGETS,
   getSearchSuggestions,
-} from '../data/celestialCatalog';
+} from '../data/celestialCatalog.js';
 
 const API_BASE = '/api';
 
@@ -50,7 +50,7 @@ const CURATED_TARGETS = [
     why_interesting: "Guaranteed to show positional shift between SPHEREx 6-month survey epochs.",
   },
   {
-    name: "WISE 0855−0714",
+    name: "WISE 0855-0714",
     ra: 133.7933,
     dec: -7.2451,
     description: "The coldest known brown dwarf (~250 K). Sub-stellar Planet X analog, detectable only in infrared.",
@@ -140,7 +140,10 @@ async function request(endpoint, params = {}) {
     return getClientFallback(endpoint, params);
   }
 
-  const url = new URL(`${window.location.origin}${API_BASE}${endpoint}`);
+  const origin = typeof window !== 'undefined' && window.location?.origin && window.location.origin !== 'null'
+    ? window.location.origin
+    : 'http://localhost';
+  const url = new URL(`${origin}${API_BASE}${endpoint}`);
   Object.entries(params).forEach(([key, val]) => {
     if (val !== undefined && val !== null && val !== '') {
       url.searchParams.set(key, val);
