@@ -43,35 +43,57 @@ export default function DetailPanel() {
   const [diffThreshold, setDiffThreshold] = useState(3.0);
   const [diffChannel, setDiffChannel] = useState(activeChannel || 42);
 
-  // Queries
+  // Debounce coordinate queries during sky canvas dragging to avoid spamming the event loop
+  const [debouncedCoords, setDebouncedCoords] = useState({ ra, dec, targetName });
+  const prevTargetRef = React.useRef(targetName);
+
+  React.useEffect(() => {
+    // If targetName changed (e.g. user clicked a star or selected a planet), update immediately
+    if (prevTargetRef.current !== targetName) {
+      prevTargetRef.current = targetName;
+      setDebouncedCoords({ ra, dec, targetName });
+    } else {
+      // If user is panning/dragging the view, debounce queries by 250ms to prevent network/CPU flood
+      const timer = setTimeout(() => {
+        setDebouncedCoords({ ra, dec, targetName });
+      }, 250);
+      return () => clearTimeout(timer);
+    }
+  }, [ra, dec, targetName]);
+
+  const qRa = debouncedCoords.ra;
+  const qDec = debouncedCoords.dec;
+  const qTarget = debouncedCoords.targetName;
+
+  // Authentic 102-Band Spectrophotometric Profile queries
   const spectrumQuery = useQuery({
-    queryKey: ['spectra', ra, dec, activeEpoch],
-    queryFn: () => api.spectra(ra, dec, activeEpoch),
-    enabled: !!ra && !!dec,
+    queryKey: ['spectra', qTarget, qRa, qDec, activeEpoch],
+    queryFn: () => api.spectra(qRa, qDec, activeEpoch, qTarget),
+    enabled: !!qRa && !!qDec,
   });
 
   const compareQuery = useQuery({
-    queryKey: ['spectra', ra, dec, compareEpoch],
-    queryFn: () => api.spectra(ra, dec, compareEpoch),
-    enabled: !!ra && !!dec,
+    queryKey: ['spectra', qTarget, qRa, qDec, compareEpoch],
+    queryFn: () => api.spectra(qRa, qDec, compareEpoch, qTarget),
+    enabled: !!qRa && !!qDec,
   });
 
   const cutoutQuery = useQuery({
-    queryKey: ['cutout', ra, dec, activeChannel],
-    queryFn: () => api.cutout(ra, dec, activeChannel),
-    enabled: !!ra && !!dec,
+    queryKey: ['cutout', qRa, qDec, activeChannel],
+    queryFn: () => api.cutout(qRa, qDec, activeChannel),
+    enabled: !!qRa && !!qDec,
   });
 
   const diffQuery = useQuery({
-    queryKey: ['diff', ra, dec, activeEpoch, compareEpoch, diffChannel, diffThreshold],
-    queryFn: () => api.diff(ra, dec, activeEpoch, compareEpoch, diffChannel, diffThreshold),
-    enabled: !!ra && !!dec,
+    queryKey: ['diff', qRa, qDec, activeEpoch, compareEpoch, diffChannel, diffThreshold],
+    queryFn: () => api.diff(qRa, qDec, activeEpoch, compareEpoch, diffChannel, diffThreshold),
+    enabled: !!qRa && !!qDec,
   });
 
   const enrichQuery = useQuery({
-    queryKey: ['enrich', ra, dec],
-    queryFn: () => api.enrich(ra, dec),
-    enabled: !!ra && !!dec,
+    queryKey: ['enrich', qRa, qDec],
+    queryFn: () => api.enrich(qRa, qDec),
+    enabled: !!qRa && !!qDec,
   });
 
   // Check if current target matches a known solar system planet, exoplanet, or benchmark
@@ -291,13 +313,30 @@ export default function DetailPanel() {
           {/* Tab Content 1: Spectrum */}
           {activeTab === 'spectrum' && (
             <div className="p-3.5 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-white/10 shadow-sm dark:shadow-xl backdrop-blur-md">
-              <div className="flex items-center justify-between mb-2">
-                <span className="font-mono text-xs font-semibold text-slate-900 dark:text-slate-200">
-                  Spectrophotometric Profile
-                </span>
-                <span className="font-mono text-[10px] text-slate-500 dark:text-slate-400">
-                  0.75 µm → 5.00 µm
-                </span>
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-2.5 pb-2 border-b border-slate-100 dark:border-white/5">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="font-mono text-xs font-bold text-slate-900 dark:text-slate-100">
+                      Spectrophotometric Profile
+                    </span>
+                    <span className="font-mono text-[10px] text-cyan-600 dark:text-cyan-400 font-semibold">
+                      102 Bands (0.75 - 5.00 µm)
+                    </span>
+                  </div>
+                  {spectrumQuery.data?.spectral_classification && (
+                    <div className="font-mono text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">
+                      Class: <span className="text-cyan-600 dark:text-cyan-400 font-semibold">{spectrumQuery.data.spectral_classification}</span>
+                      {spectrumQuery.data.effective_temp_k && (
+                        <span> • T<sub className="text-[9px]">eff</sub>: {spectrumQuery.data.effective_temp_k.toLocaleString()} K</span>
+                      )}
+                    </div>
+                  )}
+                </div>
+                {spectrumQuery.data?.source_model && (
+                  <span className="self-start sm:self-center px-2 py-0.5 rounded text-[9px] font-mono font-medium bg-cyan-500/10 text-cyan-600 dark:text-cyan-300 border border-cyan-500/20">
+                    {spectrumQuery.data.source_model}
+                  </span>
+                )}
               </div>
               {spectrumQuery.isLoading ? (
                 <LoadingPulse label="Extracting 102 Spectral Channels..." />

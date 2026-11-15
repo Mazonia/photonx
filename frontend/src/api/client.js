@@ -14,6 +14,7 @@ import {
   MASTER_CELESTIAL_TARGETS,
   getSearchSuggestions,
 } from '../data/celestialCatalog.js';
+import { getAuthenticSpectrophotometricProfile } from '../data/spectralModels.js';
 
 const API_BASE = '/api';
 
@@ -255,41 +256,8 @@ function getClientFallback(endpoint, params) {
 
     case '/spectra': {
       const epoch = params.epoch || '2025-W18';
-      const seed = Math.abs(ra * 1000 + dec * 777);
-      const wavelengths = [...SPHEREX_WAVELENGTHS].sort((a, b) => a - b);
-      const spectrum = wavelengths.map((wl, i) => {
-        // Planck function simulation with ice bands
-        const temp = 3500;
-        const h = 6.626e-34;
-        const c = 3.0e8;
-        const k = 1.381e-23;
-        const wlm = wl * 1e-6;
-        const exponent = Math.min(500, (h * c) / (wlm * k * temp));
-        let flux = (2 * h * c * c / Math.pow(wlm, 5)) / (Math.exp(exponent) - 1);
-        flux = flux * 1e-12; // Normalize
-
-        // Diagnostic absorption features
-        if (Math.abs(wl - 1.4) < 0.1) flux *= 0.65; // H2O
-        if (Math.abs(wl - 1.9) < 0.15) flux *= 0.70; // H2O
-        if (Math.abs(wl - 2.3) < 0.12) flux *= 0.60; // CO bandhead
-        if (Math.abs(wl - 4.27) < 0.15) flux *= 0.55; // CO2 ice
-        if (Math.abs(wl - 3.3) < 0.1) flux *= 1.35; // PAH emission
-
-        const noise = (Math.sin(seed + i * 13) * 0.5 + 0.5) * 0.05 * flux;
-        return {
-          channel: i,
-          wavelength_um: Number(wl.toFixed(4)),
-          flux: Number((flux + noise).toFixed(6)),
-          flux_err: Number((flux * 0.03).toFixed(6)),
-        };
-      });
-
-      return {
-        position: { ra, dec },
-        epoch,
-        spectrum,
-        unit: 'MJy/sr',
-      };
+      const targetName = params.target || '';
+      return getAuthenticSpectrophotometricProfile(ra, dec, epoch, targetName);
     }
 
     case '/cutout': {
@@ -899,8 +867,8 @@ export const api = {
     request('/sky', { ra, dec, radius_arcsec: radiusArcsec, collection }),
   cutout: (ra, dec, channel = 42, sizeArcsec = 120, imageUrl = '') =>
     request('/cutout', { ra, dec, channel, size_arcsec: sizeArcsec, image_url: imageUrl }),
-  spectra: (ra, dec, epoch = '2025-W18') =>
-    request('/spectra', { ra, dec, epoch }),
+  spectra: (ra, dec, epoch = '2025-W18', target = '') =>
+    request('/spectra', { ra, dec, epoch, target }),
   diff: (ra, dec, epochA = '2025-W18', epochB = '2025-W44', channel = 42, threshold = 3.0) =>
     request('/diff', { ra, dec, epoch_a: epochA, epoch_b: epochB, channel, threshold }),
   objects: (ra, dec, epochA = '2025-W18', epochB = '2025-W44') =>

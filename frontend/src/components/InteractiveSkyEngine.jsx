@@ -546,6 +546,13 @@ export default function InteractiveSkyEngine() {
   const [showEyepieceFrame, setShowEyepieceFrame] = useState(false);
   const cursorDisplayRef = useRef(null);
   const dragInfoRef = useRef({ startX: 0, startY: 0, startTime: 0 });
+  const dragRafRef = useRef(null);
+  const starCacheRef = useRef({
+    ra: null,
+    dec: null,
+    fov: null,
+    stars: [],
+  });
 
   // Unified master celestial targets pool combining catalog anchors and solar system / deep space worlds
   const allCelestialTargets = useMemo(() => {
@@ -700,38 +707,43 @@ export default function InteractiveSkyEngine() {
     return Math.min(18.5, Math.max(9.5, 8.0 + Math.log2(50.0 / Math.max(0.04, fov)) * 1.6));
   }, [fov]);
 
-  // Hierarchical Multi-Resolution Starfield (Regional Stars + Deep-Field Infrared Sources)
+  // Hierarchical Multi-Resolution Starfield with Spatial Grid Cache for Silky 60FPS Panning
   const backgroundStars = useMemo(() => {
+    const cached = starCacheRef.current;
+    const cosDec = Math.cos((dec * Math.PI) / 180);
+    const safeCosDec = Math.max(0.01, Math.abs(cosDec));
+
+    // High-performance spatial caching: reuse starfield while camera is within generous viewport margins
+    if (
+      cached.stars.length > 0 &&
+      cached.fov !== null &&
+      Math.abs(fov - cached.fov) / cached.fov < 0.12 &&
+      Math.abs(normalizeAngleDiff(ra - cached.ra)) < fov * 0.35 &&
+      Math.abs(dec - cached.dec) < fov * 0.35
+    ) {
+      return cached.stars;
+    }
+
     const stars = [];
     const spectralTypes = ['O', 'B', 'A', 'F', 'G', 'K', 'M'];
     const maxVisibleMag = limitingMag + 0.5;
 
-    const cosDec = Math.cos((dec * Math.PI) / 180);
-    const safeCosDec = Math.max(0.01, Math.abs(cosDec));
-
-    // Cover the full canvas viewport with margin (including widescreen aspect ratio)
-    const patchRadiusDec = Math.min(90, Math.max(1.8, fov * 0.75));
-    const patchRadiusRa = Math.min(180, Math.max(1.8, (fov * 0.75) / safeCosDec));
+    // Cover the full canvas viewport with generous margin (including widescreen 16:9 / 21:9 aspect ratios)
+    const patchRadiusDec = Math.min(90, Math.max(3.0, fov * 1.15));
+    const patchRadiusRa = Math.min(180, Math.max(3.0, (fov * 1.75) / safeCosDec));
 
     // Dynamic grid step size for optimal performance & visual richness
     let stepDeg = 0.5;
-    let starsPerCell = 16;
-
     if (fov > 25.0) {
       stepDeg = 3.0;
-      starsPerCell = 6;
     } else if (fov > 10.0) {
       stepDeg = 1.8;
-      starsPerCell = 8;
     } else if (fov > 3.0) {
       stepDeg = 1.0;
-      starsPerCell = 12;
     } else if (fov > 1.0) {
       stepDeg = 0.4;
-      starsPerCell = 14;
     } else {
       stepDeg = 0.15;
-      starsPerCell = 16;
     }
 
     const minRa = Math.floor((ra - patchRadiusRa) / stepDeg) * stepDeg;
@@ -739,21 +751,27 @@ export default function InteractiveSkyEngine() {
     const minDec = Math.max(-90, Math.floor((dec - patchRadiusDec) / stepDeg) * stepDeg);
     const maxDec = Math.min(90, Math.ceil((dec + patchRadiusDec) / stepDeg) * stepDeg);
 
-    const MAX_REGIONAL_STARS = 1400;
+    const numRSteps = Math.max(1, Math.round((maxRa - minRa) / stepDeg) + 1);
+    const numDSteps = Math.max(1, Math.round((maxDec - minDec) / stepDeg) + 1);
+    const totalCells = numRSteps * numDSteps;
 
-    outerLoop:
+    // Distribute star budget evenly across all cells so every quadrant of the viewport is fully populated
+    const targetBudget = fov > 20.0 ? 1900 : fov > 5.0 ? 1500 : 1200;
+    const basePerCell = Math.max(1, Math.min(10, Math.round(targetBudget / totalCells)));
+
     for (let r = minRa; r <= maxRa; r += stepDeg) {
       for (let d = minDec; d <= maxDec; d += stepDeg) {
         const normR = (((Math.round(r * 10) / 10 % 360) + 360) % 360);
         const normD = Math.round(d * 10) / 10;
         const cellSeed = (normR * 1000 + (normD + 90)) * 17;
-        const count = Math.max(2, Math.floor(starsPerCell * (0.7 + pseudoRandom(cellSeed) * 0.6)));
+        const count = Math.max(1, Math.floor(basePerCell * (0.75 + pseudoRandom(cellSeed) * 0.5)));
 
         for (let i = 0; i < count; i++) {
           const starSeed = cellSeed + i * 137.5;
           const p = pseudoRandom(starSeed + 2);
           // Realistic astronomical power-law magnitude distribution
-          const mag = 1.5 + Math.pow(p, 0.35) * (maxVisibleMag - 1.5);
+          const magPow = fov > 20.0 ? 0.65 : 0.45;
+          const mag = 1.5 + Math.pow(p, magPow) * (maxVisibleMag - 1.5);
 
           const sRa = (((normR + pseudoRandom(starSeed) * stepDeg) % 360) + 360) % 360;
           const sDec = Math.max(-90, Math.min(90, normD + pseudoRandom(starSeed + 1) * stepDeg));
@@ -768,8 +786,6 @@ export default function InteractiveSkyEngine() {
             type,
             id: `star-${normR}-${normD}-${i}`,
           });
-
-          if (stars.length >= MAX_REGIONAL_STARS) break outerLoop;
         }
       }
     }
@@ -804,6 +820,14 @@ export default function InteractiveSkyEngine() {
         });
       }
     }
+
+    // Cache current patch
+    starCacheRef.current = {
+      ra,
+      dec,
+      fov,
+      stars,
+    };
 
     return stars;
   }, [ra, dec, fov, limitingMag]);
@@ -1508,7 +1532,12 @@ export default function InteractiveSkyEngine() {
       const newDec = Math.max(-90, Math.min(90, dragStart.dec + dy / pixelsPerDegree));
       const newRa = (dragStart.ra + (dx / pixelsPerDegree) / dragCosDec + 360) % 360;
 
-      setPosition(newRa, newDec, null);
+      if (!dragRafRef.current) {
+        dragRafRef.current = requestAnimationFrame(() => {
+          dragRafRef.current = null;
+          setPosition(newRa, newDec, targetName);
+        });
+      }
       if (hoveredStar) setHoveredStar(null);
       return;
     }
@@ -1586,6 +1615,10 @@ export default function InteractiveSkyEngine() {
 
   const handleMouseUp = (e) => {
     setIsDragging(false);
+    if (dragRafRef.current) {
+      cancelAnimationFrame(dragRafRef.current);
+      dragRafRef.current = null;
+    }
     const canvas = canvasRef.current;
     if (!canvas) return;
 
