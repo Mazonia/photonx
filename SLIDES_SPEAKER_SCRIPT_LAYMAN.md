@@ -1,23 +1,23 @@
-# PhotonX — Official 7-Slide Presentation Speaker Script
-## *Presented in 100% Layman's Terms for Judges, Students, and the General Public*
+# PhotonX: Official 7-Slide Presentation Speaker Script
+## Presented in Plain Terms for Judges, Students, and the General Public
 
 > **Event:** NASA International Space Apps Challenge 2026  
 > **Challenge:** Planet X and SPHEREx  
-> **Project:** PhotonX — Interactive Celestial Infrared Observatory  
+> **Project:** PhotonX: Interactive Celestial Infrared Observatory  
 > **Presenter:** Mazonia (Team PhotonX)  
-> **Live Web App:** [https://mazonia.github.io/photonx/](https://mazonia.github.io/photonx/)  
-> **Interactive Slides:** [https://mazonia.github.io/photonx/presentation.html](https://mazonia.github.io/photonx/presentation.html)  
-> **PowerPoint File:** [PhotonX_Official_Presentation.pptx](https://mazonia.github.io/photonx/PhotonX_Official_Presentation.pptx)  
-> **Code Repository:** [https://github.com/Mazonia/photonx](https://github.com/Mazonia/photonx)  
-> **Total Target Presentation Time:** 4 Minutes (approx. 35–45 seconds per slide)
+> **Live Web App:** https://mazonia.github.io/photonx/  
+> **Interactive Slides:** https://mazonia.github.io/photonx/presentation.html  
+> **PowerPoint File:** PhotonX_Official_Presentation.pptx  
+> **Code Repository:** https://github.com/Mazonia/photonx  
+> **Total Target Presentation Time:** 4 Minutes (approximately 35 to 45 seconds per slide)
 
 ---
 
-## Quick Speaking Tips Before You Begin
-1. **Pace Yourself:** Speak at a calm, conversational speed. Do not rush.
-2. **Make Eye Contact:** Look up at the judges, smile, and speak like you are telling an exciting detective story.
-3. **Use the Analogies:** Whenever you explain something technical, use the everyday analogies provided below. Judges love when complex physics is explained with crystal clarity.
-4. **Use Slide Navigation:** Press the **Right Arrow** (&rarr;) or **Spacebar** on your keyboard to advance slides, or click **Next &rarr;** on the top right.
+## Speaking Guidelines Before You Begin
+1. **Pace Yourself:** Speak at a calm, conversational speed. Do not rush through the numbers.
+2. **Engage the Judges:** Look up at the evaluators, speak clearly, and deliver the presentation with steady confidence.
+3. **Use the Analogies:** When explaining technical mechanisms, use the direct everyday comparisons provided below to make complex physics instantly understandable.
+4. **Slide Navigation:** Press the Right Arrow or Spacebar on your keyboard to advance slides, or click Next on the top navigation bar.
 
 ---
 
@@ -27,264 +27,246 @@ SLIDE 1: TITLE & MANDATORY METADATA
 ================================================================================
 ```
 
-### 📋 Slide Details
+### Slide Details
 - **Slide Heading:** SLIDE 01 / 07 • TITLE & TEAM CREDENTIALS
 - **Badge:** CHALLENGE: PLANET X & SPHEREx
-- **Main Title:** PHOTONX — Interactive SPHEREx Infrared Sky Browser & Outer Solar System Discovery Engine
+- **Main Title:** PHOTONX: Interactive SPHEREx Infrared Sky Browser & Outer Solar System Discovery Engine
 - **Visuals on Slide:** Team Creator card, Challenge badge, Data Provenance (SPHEREx QR2 DOI: 10.26131/IRSA629), Rule Compliance banner.
 
 ---
 
-### 💡 Concept in Everyday Words
-You are introducing yourself, stating the exact NASA challenge you chose, and making it immediately clear that you built a free, zero-install website that lets anyone look through NASA's newest space telescope without needing a degree in astrophysics.
+### Concept in Everyday Words
+You are introducing yourself, stating the exact NASA challenge you chose, and explaining that you built a free, zero-install website that lets anyone look through NASA's newest space telescope without needing specialized command-line tools.
 
-### 🌟 The Everyday Analogy
-> *"Think of NASA's new SPHEREx telescope like a super-powerful camera in orbit. Normally, you'd need specialized university software just to open its files. We built PhotonX as a digital window—like Google Maps for the infrared universe—so anyone can explore it directly from their browser."*
-
----
-
-### 🎙️ Word-for-Word Spoken Script (Target: 35 Seconds)
-
-> *"Hello judges and fellow space enthusiasts! My name is Mazonia, and I am the creator of **PhotonX**, built for the NASA Space Apps Challenge under the **'Planet X and SPHEREx'** challenge.*
->
-> *Our project strictly follows all submission rules: it is fully in English, uses official NASA datasets under DOI 10.26131/IRSA629, requires zero installation, and is presented here in seven concise slides.*
->
-> *Today, I am going to show you how PhotonX turns NASA's massive infrared sky survey into an intuitive, interactive tool that empowers anyone—from professional researchers to students in a classroom—to hunt for mysterious moving worlds at the edge of our solar system."*
+### The Everyday Analogy
+> *"Think of NASA's new SPHEREx telescope like a powerful multi-spectral camera in orbit. Normally, you would need university data reduction pipelines just to view its files. We built PhotonX as a direct digital window so anyone can explore it directly from their web browser."*
 
 ---
 
-### ❓ Possible Judge Questions & Quick Answers
+### Spoken Script (Target: 35 Seconds)
+
+> *"Hello judges. My name is Mazonia, and I am the creator of PhotonX, developed for the NASA Space Apps Challenge under the 'Planet X and SPHEREx' category.*
+>
+> *Our project strictly follows all submission requirements: it is fully in English, uses official NASA datasets under DOI 10.26131/IRSA629, requires zero installation, and is presented in seven structured slides.*
+>
+> *Today, I will show you how PhotonX turns NASA's massive infrared sky survey into an intuitive tool that empowers anyone, from researchers to classroom students, to search for moving worlds at the edge of our solar system."*
+
+---
+
+### Possible Judge Questions & Quick Answers
 - **Judge:** *"Is this web app live right now?"*  
-  **You:** *"Yes! It is deployed live on GitHub Pages at mazonia.github.io/photonx, and anyone can open it on their laptop, tablet, or phone right now."*
+  **You:** *"Yes. It is deployed live on GitHub Pages at mazonia.github.io/photonx, accessible immediately on laptops, tablets, or phones without an account."*
 
 ---
-\pagebreak
 
 ```
 ================================================================================
-SLIDE 2: THE PROBLEM — WHY IS PLANET X STILL MISSING?
+SLIDE 2: THE PROBLEM: WHY IS PLANET X STILL MISSING?
 ================================================================================
 ```
 
-### 📋 Slide Details
+### Slide Details
 - **Slide Heading:** SLIDE 02 / 07 • THE PROBLEM
 - **Badge:** ASTRONOMICAL CHALLENGE
 - **Main Title:** The Problem: Why Is Planet X Still Missing?
-- **Visuals on Slide:** Two comparative cards: "1. Optical Illumination Collapse ($1/r^4$)" and "2. The Infrared Data Flood Bottleneck".
+- **Visuals on Slide:** Three comparative cards: Optical Faintness (1/r^4), Thermal Infrared Emission (35 K), and Time-Domain Survey Archive.
 
 ---
 
-### 💡 Concept in Everyday Words
-People always ask: *"If Planet X is as big as Neptune or Earth, why haven't our big telescopes like Hubble found it yet?"*  
-The answer has two parts:
-1. **It's too dark:** Out where Planet X lives, sunlight is almost nonexistent. Sunlight has to travel all the way out there and all the way back, becoming 25 billion times dimmer. Normal cameras see pure black.
-2. **The data is overwhelming:** NASA's SPHEREx telescope *can* see its heat glow across 102 infrared colors, but that creates terabytes of raw computer files that normal people can't easily open or compare.
+### Concept in Everyday Words
+Why haven't optical telescopes like Hubble found Planet X?
+1. **Distance drops reflected sunlight severely:** Out at 400 AU, sunlight travels back and forth, becoming 25 billion times dimmer than on Earth. Optical sensors register pitch black.
+2. **Infrared holds the signature:** Giant planets radiate their own internal heat at 35 Kelvin across 102 infrared wavelengths.
+3. **Data volume:** NASA's SPHEREx captures this heat, but comparing multiple six-month sky passes requires automated visual tools.
 
-### 🌟 The Everyday Analogy
-> *"Imagine standing on one side of a huge football stadium in the pitch dark, holding a tiny keychain flashlight. You're trying to spot a black bowling ball sitting on the opposite end zone 400 yards away. Your flashlight beam is too weak to bounce back—to your eyes, the ball is invisible!*
->
-> *However, if you put on **night-vision heat goggles**, that bowling ball has its own internal warmth. It glows like a lantern! That's what infrared does. But right now, that heat-vision data is locked away in millions of complicated raw files."*
+### The Everyday Analogy
+> *"Imagine standing on one side of a large stadium at night trying to spot a black bowling ball 400 yards away with a keychain flashlight. The beam cannot return sufficient light to your eyes. But if you put on thermal goggles, the ball radiates its own heat like a warm ember. SPHEREx captures that heat, and PhotonX makes that data instantly visible."*
 
 ---
 
-### 🎙️ Word-for-Word Spoken Script (Target: 45 Seconds)
+### Spoken Script (Target: 45 Seconds)
 
-> *"So why haven't we found Planet X yet?*
+> *"Why hasn't Planet X been found yet?*
 >
-> *The first reason is basic physics: distance kills light. Out at 400 times Earth's distance from the Sun, sunlight drops off by the fourth power of distance ($1/r^4$). That means reflected sunlight is **25 billion times fainter** than on Earth. Even a planet the size of Neptune is completely pitch-black to visible light telescopes like Hubble or Gaia.*
+> *First, optical physics works against us. Sunlight reflected from an object at 400 Astronomical Units drops off by the inverse fourth power of distance (1/r^4). That means reflected light is 25 billion times fainter than on Earth. Even a Neptune-sized world appears black in visible light.*
 >
-> *However, even at 35 degrees above absolute zero, cold worlds still radiate their own internal thermal heat. That heat shines in the near-infrared spectrum between 1 and 5 micrometers.*
+> *However, cold giant planets retain primordial internal heat, glowing in the near-infrared between 1 and 5 micrometers at roughly 35 Kelvin.*
 >
-> *NASA's SPHEREx mission is currently scanning the whole sky in 102 infrared colors every 6 months to capture this faint glow. But that brings us to the second problem: billions of raw spectral pixels locked in complex FITS archive files that are nearly impossible for ordinary humans to visually inspect. That's the bottleneck we solved."*
+> *NASA's SPHEREx mission is mapping the entire sky in 102 infrared bands every six months to record this glow. But this produces massive data volumes locked in technical archives. Without an interactive comparison tool, moving objects remain hidden in raw data. PhotonX addresses that exact bottleneck."*
 
 ---
 
-### ❓ Possible Judge Questions & Quick Answers
-- **Judge:** *"Why does sunlight drop off by $1/r^4$ instead of $1/r^2$?"*  
-  **You:** *"Because the light has to make a round trip! The sunlight first gets dimmer as it travels 400 AU out to the planet ($1/r^2$), and then the tiny reflected light gets dimmer again as it travels 400 AU back to our telescopes ($1/r^2$). Multiplied together, that's $1/r^4$, or 25 billion times dimmer!"*
+### Possible Judge Questions & Quick Answers
+- **Judge:** *"Why does reflected light follow an inverse fourth power law?"*  
+  **You:** *"Because the light makes a complete round trip: it dims by 1/r^2 traveling from the Sun out to the planet, and dims by another 1/r^2 returning to Earth. Multiplied together, that gives 1/r^4, causing extreme optical dimming at large distances."*
 
 ---
-\pagebreak
 
 ```
 ================================================================================
-SLIDE 3: THE PROPOSED SOLUTION — PHOTONX
+SLIDE 3: THE PROPOSED SOLUTION: PHOTONX
 ================================================================================
 ```
 
-### 📋 Slide Details
+### Slide Details
 - **Slide Heading:** SLIDE 03 / 07 • THE PROPOSED SOLUTION
-- **Badge:** PHOTONX PLATFORM
-- **Main Title:** The Proposed Solution: PhotonX
-- **Visuals on Slide:** Side-by-side layout with live screenshot of PhotonX UI (Sky Engine, 102-band spectrum plot, and Clyde Tombaugh blink engine) and four key deliverable pillars.
+- **Badge:** PHOTONX WORKSTATION
+- **Main Title:** The Proposed Solution: PhotonX Workstation
+- **Visuals on Slide:** Side-by-side layout with live user interface screenshot and core workstation capabilities.
 
 ---
 
-### 💡 Concept in Everyday Words
-PhotonX is our free, interactive web app that takes this huge mountain of infrared space telescope data and turns it into a smooth, visual, fun experience right in your web browser.
+### Concept in Everyday Words
+PhotonX provides a fast, interactive web observatory that lets anyone pan through infrared space, inspect spectra, and compare observation epochs without downloading gigabytes of data.
 
-### 🌟 The Everyday Analogy
-> *"Remember the 'spot-the-difference' puzzles in the Sunday newspaper? You have two drawings side by side, and you look back and forth until your eyes spot what changed.*
->
-> *In 1930, an astronomer named Clyde Tombaugh discovered Pluto by taking two glass photos of the sky taken months apart and clicking a lever back and forth to 'blink' them. We built that exact same super-power right into your keyboard—just press the Spacebar, and any moving planet jumps out at you!"*
+### The Everyday Analogy
+> *"In 1930, Clyde Tombaugh discovered Pluto by taking glass plates photographed months apart and mechanically blinking back and forth to spot what moved. We built that exact comparator into the browser: pressing the Spacebar immediately reveals moving planets against stationary stars."*
 
 ---
 
-### 🎙️ Word-for-Word Spoken Script (Target: 45 Seconds)
+### Spoken Script (Target: 45 Seconds)
 
-> *"Here is our solution: **PhotonX**.*
+> *"Our solution is PhotonX.*
 >
-> *PhotonX is a high-speed, zero-install web observatory that runs smoothly in any modern browser—even on a classroom Chromebook.*
+> *PhotonX is a zero-install web observatory running directly in modern web browsers, including school Chromebooks.*
 >
-> *First, it features a fluid canvas engine that lets you pan and zoom across the infrared sky—from full 45-degree constellations down to tiny, deep-space patches.*
+> *First, it provides a fluid celestial canvas that pans and zooms across infrared space, from 45-degree constellations down to deep-field resolutions.*
 >
-> *Second, we integrated the **Clyde Tombaugh Blink Comparator**. By tapping the Spacebar, you rapidly flip between two sky photos taken six months apart. Stationary stars stay locked in place, but any moving body—like an asteroid or Planet X—visibly jumps back and forth before your eyes.*
+> *Second, we integrated a digital Clyde Tombaugh Blink Comparator. Pressing the Spacebar rapidly alternates between survey epochs taken six months apart. Fixed background stars remain stationary, while any moving body clearly shifts position.*
 >
-> *Third, clicking on any object instantly extracts its **102-channel infrared spectrum**, revealing chemical fingerprints like water frost, methane ice, or carbon dioxide ice in real time.*
+> *Third, selecting any source extracts its 102-channel infrared spectrum, revealing chemical fingerprints such as water ice, methane, and carbon dioxide in real time.*
 >
-> *And with our **Cosmic Worlds Navigator**, anyone can jump with one click to explore Solar System worlds like Mars, Jupiter, and Saturn, or travel to habitable exoplanets like TRAPPIST-1 and Proxima b."*
-
----
-
-### ❓ Possible Judge Questions & Quick Answers
-- **Judge:** *"Does this require downloading or installing Python or specialized software?"*  
-  **You:** *"Not at all! Everything is compiled into fast, modern web standards (HTML5 Canvas and WebAssembly). You just click a URL and start exploring in two seconds."*
+> *We also include a Keplerian Solar System Orrery, allowing users to explore orbital paths from Mercury out to 800 AU."*
 
 ---
-\pagebreak
+
+### Possible Judge Questions & Quick Answers
+- **Judge:** *"Does this run entirely on the client or does it require a backend server?"*  
+  **You:** *"The core interactive observatory runs entirely client-side on HTML5 Canvas. We also provide a Python FastAPI backend that interfaces directly with Caltech/IPAC IRSA and live NASA open APIs."*
+
+---
 
 ```
 ================================================================================
-SLIDE 4: HOW IT WORKS — AUTOMATED MOVER DETECTION
+SLIDE 4: HOW IT WORKS: AUTOMATED MOVER DETECTION
 ================================================================================
 ```
 
-### 📋 Slide Details
+### Slide Details
 - **Slide Heading:** SLIDE 04 / 07 • DETECTION PIPELINE
 - **Badge:** IMAGE DIFFERENCING ENGINE
 - **Main Title:** How It Works: Automated Mover Detection
-- **Visuals on Slide:** Screenshot of the Pixel Difference Residuals tab and the 3-step pipeline: Align & Normalize, Subtract Matrices ($\Delta I = I_B - I_A$), and Threshold ($> 3\sigma$) & Centroid.
+- **Visuals on Slide:** Screenshot of the difference engine interface and the three-stage subtraction pipeline.
 
 ---
 
-### 💡 Concept in Everyday Words
-Human eyes are great, but the sky is gigantic! To help humans find moving objects without getting tired, our software uses basic subtraction math to automatically erase all the stars that didn't move, leaving behind only the things that did move.
+### Concept in Everyday Words
+Our software uses image subtraction to eliminate stationary stars so that moving objects stand out clearly.
 
-### 🌟 The Everyday Analogy
-> *"Imagine taking a photo of your living room today, and another photo tomorrow. If you feed both photos into a computer and tell it to subtract yesterday's photo from today's photo, what happens?*
->
-> *The couch, the TV, and the walls haven't moved at all, so (Couch minus Couch = Zero). They completely vanish into blackness! But if your cat walked across the rug, the cat is the ONLY thing left on the screen.*
->
-> *Our difference engine does the exact same thing with the sky: it cancels out millions of fixed stars, leaving only moving planets and asteroids!"*
+### The Everyday Analogy
+> *"If you take two photos of a plaza months apart and subtract them, stationary buildings cancel out to zero and disappear. Only people who moved across the frame remain visible. That is how our pipeline isolates moving planets from billions of background stars."*
 
 ---
 
-### 🎙️ Word-for-Word Spoken Script (Target: 45 Seconds)
+### Spoken Script (Target: 45 Seconds)
 
-> *"To find moving objects across millions of stars, we built an automated **Image Differencing Pipeline** that runs in three simple steps:*
+> *"To detect moving targets systematically, PhotonX implements a three-step image differencing pipeline:*
 >
-> *Step 1: **Align & Normalize.** When comparing two sky passes taken six months apart, our engine lines up the celestial coordinates and adjusts the brightness so both images match perfectly.*
+> *Step 1: Align and Normalize. The engine registers celestial coordinates and normalizes Point Spread Functions between survey epochs separated by six months.*
 >
-> *Step 2: **Subtract the Images.** We subtract Epoch A from Epoch B. Because stars stay fixed in the sky, their brightness cancels out to zero—they disappear completely! A moving object, however, leaves a signature 'dipole': a black hole where it used to be, and a bright white dot where it is now.*
+> *Step 2: Matrix Subtraction. We compute Delta I = Epoch B minus Epoch A. Because background stars do not change position, their flux cancels out to zero. A moving body leaves a distinct positive-and-negative dipole signature.*
 >
-> *Step 3: **Threshold and Vector Tracking.** The algorithm flags every bright spot that rises three standard deviations ($>3\sigma$) above the background noise, calculates how many arcseconds it moved, and hands it straight to the user as a verified candidate."*
+> *Step 3: Threshold and Vector Extraction. Connected-component clustering isolates peaks exceeding three standard deviations above background noise, calculates angular motion in arcseconds, and logs candidates for verification."*
 
 ---
 
-### ❓ Possible Judge Questions & Quick Answers
-- **Judge:** *"What is a dipole?"*  
-  **You:** *"It simply means a 'positive and negative pair'. When you subtract photo 1 from photo 2, the old position becomes negative (a dark hollow), and the new position becomes positive (a bright spot). Seeing that pair is bulletproof proof that an object physically moved across space!"*
+### Possible Judge Questions & Quick Answers
+- **Judge:** *"What is a dipole in this context?"*  
+  **You:** *"A dipole is a dark negative spot at the earlier epoch position paired with a bright positive spot at the later epoch position. This paired signature confirms real physical motion rather than random noise."*
 
 ---
-\pagebreak
 
 ```
 ================================================================================
-SLIDE 5: NASA DATA & APIS USED
+SLIDE 5: NASA DATA ASSETS & SPACE AGENCY TELEMETRY
 ================================================================================
 ```
 
-### 📋 Slide Details
+### Slide Details
 - **Slide Heading:** SLIDE 05 / 07 • DATA & APIS USED
 - **Badge:** OFFICIAL NASA TELEMETRY
-- **Main Title:** NASA Data & APIs Used
-- **Visuals on Slide:** 4-column card grid:
-  1. NASA SPHEREx QR2 Survey (DOI: 10.26131/IRSA629)
-  2. Live NASA Open APIs (api.nasa.gov key registered)
-  3. NASA Goddard SkyView
-  4. Atmospheric Seeing Radar (Meteomatics & OpenWeather)
+- **Main Title:** NASA Data Assets & Space Agency Telemetry
+- **Visuals on Slide:** Four data asset cards covering SPHEREx QR2, live NASA APIs, NASA Goddard SkyView, and Atmospheric Seeing Radar.
 
 ---
 
-### 💡 Concept in Everyday Words
-Proving that our project isn't a toy or a fictional simulation. Every star, coordinate, and spectrum comes directly from authentic NASA databases and live government satellites.
+### Concept in Everyday Words
+Every coordinate, pixel, and spectrum in PhotonX is tied directly to verified NASA data releases and live telemetry.
 
-### 🌟 The Everyday Analogy
-> *"We didn't just paint pretty pictures of stars on a canvas. PhotonX is wired directly into NASA's digital pipeline. When you click an object, you are touching the exact same data that scientists at Caltech and NASA Jet Propulsion Laboratory analyze every day."*
-
----
-
-### 🎙️ Word-for-Word Spoken Script (Target: 45 Seconds)
-
-> *"Everything in PhotonX is grounded in verified, real-world space telemetry:*
->
-> *First, our foundation is the **NASA SPHEREx Quick Release 2** survey from Caltech/IPAC, registered under official DOI **10.26131/IRSA629**. This provides the authentic 102 near-infrared color bands across multiple 6-month survey epochs.*
->
-> *Second, we integrated **live NASA Open APIs** using our verified developer key. We track real-time near-Earth asteroids through NASA NeoWs and monitor solar storms through NASA DONKI.*
->
-> *Third, we connect to **NASA Goddard's SkyView**, allowing users to compare infrared detections against historical optical photographs from the Digitized Sky Survey.*
->
-> *And finally, because space discoveries must be confirmed from Earth, we built an **Atmospheric Seeing Radar** using Meteomatics and OpenWeather. It tells astronomers whether tonight's local clouds and air turbulence will allow ground telescopes to verify the candidate."*
+### The Everyday Analogy
+> *"PhotonX is not a synthetic space game. When you interact with the viewport, you are querying the same Caltech and NASA archives that planetary scientists use."*
 
 ---
 
-### ❓ Possible Judge Questions & Quick Answers
-- **Judge:** *"Why do we care about ground atmospheric seeing if SPHEREx is in space?"*  
-  **You:** *"Because space telescopes have very limited time! Once a space telescope flags an interesting candidate, astronomers use large ground observatories like Keck in Hawaii or VLT in Chile to confirm it. Our weather radar tells them if tonight's sky conditions are clear enough to do that."*
+### Spoken Script (Target: 45 Seconds)
+
+> *"PhotonX is grounded in verified NASA data assets:*
+>
+> *Our primary dataset is the NASA SPHEREx Quick Release 2 survey from Caltech/IPAC, catalogued under DOI 10.26131/IRSA629. This supplies the 102 near-infrared bands across multi-epoch cadences.*
+>
+> *We also stream live data from NASA Open APIs: near-Earth asteroid trajectories through NeoWs, and space weather through NASA DONKI.*
+>
+> *For cross-matching, we connect to NASA Goddard's SkyView service to compare infrared detections against optical surveys like DSS2 and infrared surveys like 2MASS.*
+>
+> *Finally, our Atmospheric Seeing Radar calculates local airmass to inform astronomers if local atmospheric conditions permit ground telescope follow-up tonight."*
 
 ---
-\pagebreak
+
+### Possible Judge Questions & Quick Answers
+- **Judge:** *"Why include ground seeing calculations if SPHEREx operates in space?"*  
+  **You:** *"Space telescope discoveries require independent ground verification. Professional observatories like Keck or VLT need immediate confirmation of candidates, and our radar tells observers if tonight's seeing disk allows follow-up."*
+
+---
 
 ```
 ================================================================================
-SLIDE 6: CITIZEN SCIENCE — DEMOCRATIZING DEEP SPACE DISCOVERY
+SLIDE 6: CITIZEN SCIENCE: PUBLIC PARTICIPATION IN DEEP SPACE DISCOVERY
 ================================================================================
 ```
 
-### 📋 Slide Details
+### Slide Details
 - **Slide Heading:** SLIDE 06 / 07 • CITIZEN SCIENCE
 - **Badge:** COMMUNITY IMPACT
-- **Main Title:** Citizen Science: Democratizing Deep Space Discovery
-- **Visuals on Slide:** Split layout showing Hunt Mode screenshot (tagging candidates, hunter ranks, and Markdown observation report generator) alongside key educational benefits.
+- **Main Title:** Citizen Science: Public Participation in Deep Space Discovery
+- **Visuals on Slide:** Hunt Mode interface screenshot with candidate tagging, progressive ranks, and observation brief generator.
 
 ---
 
-### 💡 Concept in Everyday Words
-Astronomy shouldn't be locked behind closed doors. With Hunt Mode, students, teachers, and space fans can make real contributions to planetary science while having fun.
+### Concept in Everyday Words
+Students and amateur astronomers can review real NASA data, tag potential candidates, and produce formal scientific briefs.
 
-### 🌟 The Everyday Analogy
-> *"Think of it like Pokémon Go meets real NASA astrophysics. Instead of catching fictional monsters, a student searches authentic space photos, spots a real moving asteroid or planet candidate, tags it, earns discovery ranks, and exports an official scientific report with their own name on it."*
+### The Everyday Analogy
+> *"Instead of just reading about discoveries in textbooks, students can examine authentic space telescope passes, tag moving anomalies, and generate structured reports with formal NASA dataset citations."*
 
 ---
 
-### 🎙️ Word-for-Word Spoken Script (Target: 40 Seconds)
+### Spoken Script (Target: 40 Seconds)
 
-> *"Science works best when everyone can participate.*
+> *"Scientific research benefits from broad participation.*
 >
-> *With our built-in **Hunt Mode**, anyone can become a citizen scientist. As users inspect survey epochs and tag genuine candidate movers, they level up through progressive ranks—from *Infrared Tracker* to *Kuiper Belt Scout* to *Deep Space Pioneer*.*
+> *With our built-in Hunt Mode, students and amateur astronomers can examine survey passes, tag candidate movers, and advance through structured engagement tiers from Infrared Tracker to Deep Space Pioneer.*
 >
-> *With a single click, users can export a formal **Scientific Observation Brief** in Markdown format. This report automatically includes exact celestial coordinates, 6-month epoch timestamps, observed arcsecond shifts, and full citations to the official NASA IRSA dataset.*
+> *With one click, users can export a formal Scientific Observation Brief in Markdown format. The brief automatically compiles coordinates, epoch timestamps, motion vectors, and official DOI citations.*
 >
-> *Because it requires zero software installation and supports complete keyboard navigation, PhotonX is ready for any school classroom, science club, or amateur astronomy group in the world."*
+> *Because it requires zero software installation and supports complete keyboard navigation, PhotonX is immediately accessible in classroom and independent research settings."*
 
 ---
 
-### ❓ Possible Judge Questions & Quick Answers
-- **Judge:** *"How do you prevent users from spamming fake detections?"*  
-  **You:** *"Every exported report includes mathematical metrics: the exact signal-to-noise ratio ($>3\sigma$), positional shift in arcseconds, and the infrared spectral class. A professional astronomer can glance at the report in five seconds and verify if the detection is astrophysically valid."*
+### Possible Judge Questions & Quick Answers
+- **Judge:** *"How do you filter false positive detections?"*  
+  **You:** *"Exported briefs record signal-to-noise ratio, angular displacement, and multi-band spectral slopes, allowing astronomers to verify astrophysical plausibility in seconds."*
 
 ---
-\pagebreak
 
 ```
 ================================================================================
@@ -292,69 +274,49 @@ SLIDE 7: SUMMARY & THE ROAD TO PLANET X
 ================================================================================
 ```
 
-### 📋 Slide Details
+### Slide Details
 - **Slide Heading:** SLIDE 07 / 07 • SUMMARY & ROADMAP
 - **Badge:** LOOKING FORWARD
 - **Main Title:** Summary & The Road to Planet X
-- **Visuals on Slide:** 3 roadmap pillars:
-  1. Full Survey Ingestion (2025–2027)
-  2. In-Browser Orbit Fitting (Gauss & Väisälä methods)
-  3. Robotic Telescope Alerts (INDI/ASCOM)
-  - Bottom inspirational quote banner and links.
+- **Visuals on Slide:** Three technical roadmap pillars and concluding vision statement.
 
 ---
 
-### 💡 Concept in Everyday Words
-Summarize what we built, state the exciting future roadmap, and leave the judges with a memorable, inspiring final thought.
+### Concept in Everyday Words
+Summarize the delivered platform, describe next engineering steps, and conclude with a clear scientific message.
 
-### 🌟 The Everyday Analogy
-> *"When Clyde Tombaugh discovered Pluto nearly a century ago, he had to sit in a cold room for ten months manually squinting through a microscope. Today, with NASA's open data and modern web browsers, we are putting that search into the hands of millions of people across the globe."*
+### Spoken Script (Target: 40 Seconds)
 
----
-
-### 🎙️ Word-for-Word Spoken Script (Target: 40 Seconds)
-
-> *"To summarize: PhotonX is ready and live today, but it is architected for the future.*
+> *"To summarize: PhotonX is fully operational today, with a clear engineering roadmap for future survey releases:*
 >
-> *As SPHEREx continues its survey over 2025 through 2027, our roadmap includes:*
-> *1. Ingesting future multi-year survey releases to dramatically boost sensitivity to ultra-slow distant movers.*
-> *2. Running classical orbit calculations directly in the browser using WebAssembly to compute an object's distance and orbital shape in seconds.*
-> *3. Connecting candidate alerts directly to robotic telescopes worldwide for instant automated follow-up.*
+> *1. Ingesting full-mission SPHEREx public releases through 2027 to extend the time baseline for ultra-distant trans-Neptunian objects.*
+> *2. Implementing WebAssembly orbital solvers to determine orbital semi-major axis, eccentricity, and inclination directly in the browser.*
+> *3. Connecting alerts directly to robotic telescope networks using ASCOM and INDI protocols for automated verification.*
 >
-> *Planet X may be hiding in the dark, but with NASA's open infrared data and PhotonX, we now have the light to find it.*
+> *Planet X may be faint in optical light, but with NASA's open infrared survey and PhotonX, we now have the tools to search for it.*
 >
-> *Thank you very much, judges, for your time and dedication. I am now delighted to take any questions!"*
+> *Thank you for your time and evaluation. I am happy to answer your questions."*
 
 ---
 
-### ❓ Possible Judge Questions & Quick Answers
-- **Judge:** *"What is your favorite feature in PhotonX?"*  
-  **You:** *"The Blink Comparator combined with the interactive spotlight tutorial! In less than one minute, someone who has never studied astronomy can open the website, learn how every button works, press Spacebar, and experience the exact thrill of discovery that professional astronomers feel."*
+## Master Reference Table for Presentation Delivery
 
----
-\pagebreak
-
-## 🎯 Master Cheat Sheet for the 4-Minute Presentation
-
-| Slide # | Slide Title | Core Message | Everyday Analogy | Time |
-| :---: | :--- | :--- | :--- | :---: |
-| **01** | **Title & Team** | Team PhotonX, Planet X & SPHEREx challenge, official NASA data | A digital window into NASA's newest space telescope | **35s** |
-| **02** | **The Problem** | Reflected sunlight is 25 billion times dimmer ($1/r^4$), raw FITS data is overwhelming | Trying to see a black bowling ball 400 yards away with a tiny flashlight | **45s** |
-| **03** | **The Solution** | Zero-install web browser, GPU sky canvas, Clyde Tombaugh blink comparator | Spot-the-difference game where the planet jumps back and forth | **45s** |
-| **04** | **How It Works** | Align, subtract images, cancel fixed stars, isolate $>3\sigma$ moving dipoles | Subtracting living room photos so only the moving cat remains | **45s** |
-| **05** | **NASA Data & APIs** | Caltech/IPAC SPHEREx QR2 (DOI: 10.26131/IRSA629), live NASA APIs, seeing radar | Real rocket and satellite telemetry, not a video game simulation | **45s** |
-| **06** | **Citizen Science** | Gamified hunter ranks, 1-click scientific reports, Chromebook & classroom ready | Pokémon Go meets authentic NASA astrophysics | **40s** |
-| **07** | **Summary & Roadmap** | In-browser orbit calculations, robotic telescope alerts, open science future | Giving the tools that discovered Pluto to everyone on Earth | **40s** |
-| **Total** | **All 7 Slides** | **Complete NASA Space Apps 2026 Presentation** | **Confident, Clear & Engaging** | **~4m 15s** |
+| Slide # | Slide Title | Core Message | Target Duration |
+| :---: | :--- | :--- | :---: |
+| **01** | **Title & Team** | Team PhotonX, Planet X & SPHEREx challenge, official NASA data | **35s** |
+| **02** | **The Problem** | Inverse fourth power optical dimming (1/r^4), 35K thermal infrared solution | **45s** |
+| **03** | **The Solution** | Zero-install web browser, GPU sky canvas, Clyde Tombaugh blink comparator | **45s** |
+| **04** | **How It Works** | Align, subtract images, cancel fixed stars, isolate moving dipoles | **45s** |
+| **05** | **NASA Data & APIs** | Caltech/IPAC SPHEREx QR2 (DOI: 10.26131/IRSA629), live NASA APIs, seeing radar | **45s** |
+| **06** | **Citizen Science** | Structured research ranks, 1-click observation briefs, classroom ready | **40s** |
+| **07** | **Summary & Roadmap** | In-browser orbit calculations, robotic telescope alerts, open science future | **40s** |
+| **Total** | **All 7 Slides** | **NASA Space Apps Challenge 2026 Presentation** | **~4m 15s** |
 
 ---
 
-## 🏆 Presentation Day Checklist
-- [x] Web app tested live at: `https://mazonia.github.io/photonx/`
-- [x] 7-Slide presentation tested at: `https://mazonia.github.io/photonx/presentation.html`
-- [x] Offline PowerPoint backup downloaded: `PhotonX_Official_Presentation.pptx`
-- [x] Spacebar and Arrow Keys tested for instant slide transitions
-- [x] Interactive spotlight tutorial verified for judges exploring the app
-- [x] Microphone and screen sharing checked
-
-**Good luck with your presentation! You've built a stellar, world-class tool for NASA Space Apps! 🚀🪐**
+## Presentation Checklist
+- [x] Web app verified live at: https://mazonia.github.io/photonx/
+- [x] 7-Slide presentation tested at: https://mazonia.github.io/photonx/presentation.html
+- [x] Offline PowerPoint file available: PhotonX_Official_Presentation.pptx
+- [x] Spacebar and Arrow Keys tested for slide progression
+- [x] All 12 backend verification checks passing

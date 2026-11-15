@@ -157,21 +157,21 @@ def create_deck(output_path="PhotonX_Official_Presentation.pptx"):
     c_h = Inches(2.4)
     c_y = Inches(3.7)
 
-    add_card(s1, Inches(0.9), c_y, c_w, c_h, "👤 CREATOR & TEAM", [
+    add_card(s1, Inches(0.9), c_y, c_w, c_h, "CREATOR & TEAM", [
         "Team: PhotonX",
         "Participant: Mazonia (Solo)",
         "Role: Full-Stack Developer",
         "Open Source: MIT License"
     ], AVOCADO_GREEN)
 
-    add_card(s1, Inches(4.85), c_y, c_w, c_h, "🛰️ CHALLENGE SELECTED", [
+    add_card(s1, Inches(4.85), c_y, c_w, c_h, "CHALLENGE SELECTED", [
         "Challenge: Planet X and SPHEREx",
         "Target: Moving solar system bodies",
         "Wavelength: 0.75 to 5.0 µm Near-IR",
         "Cadence: 6-Month Survey Passes"
     ], SEED_OCHRE, TINT_GUAC)
 
-    add_card(s1, Inches(8.8), c_y, c_w, c_h, "🔗 ACCESS & DATA", [
+    add_card(s1, Inches(8.8), c_y, c_w, c_h, "ACCESS & DATA", [
         "Primary Data: SPHEREx QR2",
         "DOI: 10.26131/IRSA629 (IPAC)",
         "Code: github.com/Mazonia/photonx",
@@ -213,8 +213,8 @@ def create_deck(output_path="PhotonX_Official_Presentation.pptx"):
     add_card(s2, Inches(0.9), c_y2, c_w2, c_h2, "1. THE OPTICAL ILLUMINATION COLLAPSE", [
         "Sunlight drops off with distance squared out and back: Flux ∝ 1/r⁴.",
         "At 400 AU (Planet X distance), sunlight is 25 billion times dimmer than on Earth.",
-        "A Neptune-mass planet is dimmer than magnitude V ≈ 23.5—completely black in optical surveys.",
-        "However, even at 35 Kelvin, these bodies radiate thermal near-infrared light (1–5 µm)."
+        "A Neptune-mass planet is dimmer than magnitude V ≈ 23.5, completely black in optical surveys.",
+        "However, even at 35 Kelvin, these bodies radiate thermal near-infrared light (1 to 5 µm)."
     ], AVOCADO_GREEN)
 
     add_card(s2, Inches(6.8), c_y2, c_w2, c_h2, "2. THE DATA FLOOD BOTTLENECK", [
@@ -232,7 +232,7 @@ def create_deck(output_path="PhotonX_Official_Presentation.pptx"):
     ))
 
     # =========================================================================
-    # SLIDE 3: The Proposed Solution — PhotonX
+    # SLIDE 3: The Proposed Solution: PhotonX
     # =========================================================================
     s3 = prs.slides.add_slide(blank_layout)
     set_slide_background(s3)
