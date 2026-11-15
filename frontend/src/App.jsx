@@ -29,12 +29,8 @@ export default function App() {
     toggleMoversOverlay,
   } = useStore();
 
-  const [hasBooted, setHasBooted] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return sessionStorage.getItem('photonx-booted') === 'true';
-    }
-    return false;
-  });
+  // By default, launch directly into the observatory so visitors and judges experience zero delay or freeze
+  const [hasBooted, setHasBooted] = useState(true);
 
   const handleBootComplete = () => {
     if (typeof window !== 'undefined') {
@@ -43,18 +39,7 @@ export default function App() {
     setHasBooted(true);
   };
 
-  // First-time visitor tutorial auto-launcher
-  useEffect(() => {
-    if (typeof window !== 'undefined' && hasBooted) {
-      const tutorialDone = localStorage.getItem('photonx_tutorial_completed');
-      if (!tutorialDone) {
-        const timer = setTimeout(() => {
-          openTutorial();
-        }, 750);
-        return () => clearTimeout(timer);
-      }
-    }
-  }, [hasBooted, openTutorial]);
+  // Keyboard shortcuts and global interactions
 
   // Global keyboard shortcuts
   useEffect(() => {

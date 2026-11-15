@@ -1,19 +1,35 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Telescope, Radio, CheckCircle2, ChevronRight, Activity, Disc } from 'lucide-react';
 
 const BOOT_STEPS = [
-  { id: 'cryo', label: 'NIR FOCAL PLANE CHILLDOWN', detail: 'Passive 80K → Active 21.4K Cryocooler Lock', duration: 400 },
-  { id: 'irsa', label: 'IRSA SIA2/TAP HANDSHAKE', detail: 'Linking Caltech/IPAC SPHEREx QR2 (DOI: 10.26131/IRSA629)', duration: 450 },
-  { id: 'cadence', label: 'TEMPORAL BASELINE SYNC', detail: 'Calibrating 6-Month Survey Epochs (2025-W18 ⇄ 2025-W44)', duration: 400 },
-  { id: 'optics', label: 'PRISM SPECTROMETER LOCK', detail: '102 Spectral Channels (0.75µm → 5.00µm) Resolved', duration: 350 },
-  { id: 'sky', label: 'CELESTIAL SPHERE ALIGNMENT', detail: 'Equatorial J2000 Coordinates & Motion Trackers Engaged', duration: 300 },
+  { id: 'cryo', label: 'NIR FOCAL PLANE CHILLDOWN', detail: 'Passive 80K → Active 21.4K Cryocooler Lock', duration: 300 },
+  { id: 'irsa', label: 'IRSA SIA2/TAP HANDSHAKE', detail: 'Linking Caltech/IPAC SPHEREx QR2 (DOI: 10.26131/IRSA629)', duration: 300 },
+  { id: 'cadence', label: 'TEMPORAL BASELINE SYNC', detail: 'Calibrating 6-Month Survey Epochs (2025-W18 ⇄ 2025-W44)', duration: 300 },
+  { id: 'optics', label: 'PRISM SPECTROMETER LOCK', detail: '102 Spectral Channels (0.75µm → 5.00µm) Resolved', duration: 300 },
+  { id: 'sky', label: 'CELESTIAL SPHERE ALIGNMENT', detail: 'Equatorial J2000 Coordinates & Motion Trackers Engaged', duration: 250 },
 ];
 
 export default function InitializationScreen({ onComplete }) {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
-  const [progress, setProgress] = useState(12);
+  const [progress, setProgress] = useState(15);
   const [isFadingOut, setIsFadingOut] = useState(false);
   const [temperature, setTemperature] = useState(82.4);
+
+  const onCompleteRef = useRef(onComplete);
+  useEffect(() => {
+    onCompleteRef.current = onComplete;
+  }, [onComplete]);
+
+  // Master failsafe: auto-complete within 2 seconds regardless of any stalls
+  useEffect(() => {
+    const failsafe = setTimeout(() => {
+      setIsFadingOut(true);
+      setTimeout(() => {
+        if (onCompleteRef.current) onCompleteRef.current();
+      }, 250);
+    }, 2200);
+    return () => clearTimeout(failsafe);
+  }, []);
 
   useEffect(() => {
     let timer;
@@ -27,11 +43,13 @@ export default function InitializationScreen({ onComplete }) {
     } else {
       timer = setTimeout(() => {
         setIsFadingOut(true);
-        setTimeout(onComplete, 500);
-      }, 400);
+        setTimeout(() => {
+          if (onCompleteRef.current) onCompleteRef.current();
+        }, 300);
+      }, 200);
     }
     return () => clearTimeout(timer);
-  }, [currentStepIndex, onComplete]);
+  }, [currentStepIndex]);
 
   return (
     <div
@@ -144,7 +162,9 @@ export default function InitializationScreen({ onComplete }) {
           <button
             onClick={() => {
               setIsFadingOut(true);
-              setTimeout(onComplete, 300);
+              setTimeout(() => {
+                if (onCompleteRef.current) onCompleteRef.current();
+              }, 150);
             }}
             className="flex items-center gap-1 text-[11px] text-slate-400 hover:text-cyan-300 transition-colors py-1 px-3 rounded-lg hover:bg-white/5"
           >
